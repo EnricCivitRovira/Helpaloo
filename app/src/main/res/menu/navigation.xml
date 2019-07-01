@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/searchPost"
+        android:icon="@drawable/ic_home_black_24dp"
+        android:title="Buscar Anuncio" />
+
+    <item
+        android:id="@+id/messages"
+        android:icon="@drawable/ic_dashboard_black_24dp"
+        android:title="Mensajes" />
+
+    <item
+        android:id="@+id/help"
+        android:icon="@drawable/ic_notifications_black_24dp"
+        android:title="Ayuda" />
+    <item
+        android:id="@+id/signOut"
+        android:icon="@drawable/ic_notifications_black_24dp"
+        android:title="Salir" />
+
+</menu>

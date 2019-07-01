@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "351941377071",
+    "firebase_url": "https://helpaloo.firebaseio.com",
+    "project_id": "helpaloo",
+    "storage_bucket": "helpaloo.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:351941377071:android:8edc222caa7e1638",
+        "android_client_info": {
+          "package_name": "com.example.helpaloo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "351941377071-p5gqhudvbavmsa9dk4hdc302450udhph.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.helpaloo",
+            "certificate_hash": "4472862076f255f8c88076002ffdc5a8dfcc9c11"
+          }
+        },
+        {
+          "client_id": "351941377071-lomvl3n1rn5b2f0gcuic2sgdhafm36nl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDnfjO07BSAZ27HcU8mhY0Lq-xqyTPtnag"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "351941377071-lomvl3n1rn5b2f0gcuic2sgdhafm36nl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
