@@ -7,11 +7,15 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,8 +37,9 @@ public class SearchPost extends Fragment {
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mDatabase;
     private String userID;
-    private ListView mListView;
+    private RecyclerView.LayoutManager layoutManager;
     private ArrayList<Post> posts = new ArrayList<>();
+    private RecyclerView rv;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -43,8 +48,11 @@ public class SearchPost extends Fragment {
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
         userID = user.getUid();
+        rv = view.findViewById(R.id.rv);
 
         ((MenuActivity) getActivity()).getSupportActionBar().setTitle("Buscar Anuncios");
+
+
 
 
         mFirebaseDatabase.getReference("allPosts").addValueEventListener(new ValueEventListener() {
@@ -60,6 +68,12 @@ public class SearchPost extends Fragment {
 
         });
 
+
+
+
+
+
+
         return view;
     }
 
@@ -67,9 +81,15 @@ public class SearchPost extends Fragment {
         for(DataSnapshot ds : dataSnapshot.getChildren()){
             Post post = ds.getValue(Post.class);
             posts.add(post);
-            Log.i(TAG, post.toString());
+            // Log.i(TAG, post.toString());
         }
-        //Log.i(TAG,posts.toString());
+
+        Log.i(TAG, posts.toString());
+        rv.setHasFixedSize(true);
+        layoutManager = new LinearLayoutManager(getContext());
+        rv.setLayoutManager(layoutManager);
+        MyAdapter adapter =  new MyAdapter(posts);
+        rv.setAdapter(adapter);
 
     }
 }

@@ -1,5 +1,7 @@
 package com.example.helpaloo;
 
+import java.util.ArrayList;
+
 public class Post {
 
         public String userId;
@@ -43,6 +45,7 @@ public class Post {
                 ", postId='" + postId + '\'' +
                 '}';
     }
+    public ArrayList<Post> posts;
 
     public String getUserId() {
         return userId;
