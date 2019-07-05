@@ -1,5 +1,7 @@
 package com.example.helpaloo;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
@@ -42,6 +44,14 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             postName = itemView.findViewById(R.id.postTitle);
             postPrice = itemView.findViewById(R.id.postPrice);
             postPhoto = itemView.findViewById(R.id.postPhoto);
+
+            postPhoto.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(v.getContext(), PostActivity.class);
+                    v.getContext().startActivity(intent);
+                }
+            });
         }
 
     }
@@ -49,6 +59,7 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     // Provide a suitable constructor (depends on the kind of dataset)
     public MyAdapter(ArrayList<Post> postslist) {
         this.postslist = postslist;
+
     }
 
     // Create new views (invoked by the layout manager)
@@ -73,7 +84,7 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
         //MyViewHolder.postPhoto.setImageBitmap(bmp);
         if(!url.equals("")){
-            Picasso.get().load(url).into(MyViewHolder.postPhoto);
+            Picasso.get().load(url).fit().centerCrop().into(MyViewHolder.postPhoto);
         }
 
 
