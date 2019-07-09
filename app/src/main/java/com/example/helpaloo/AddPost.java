@@ -107,14 +107,14 @@ public class AddPost extends Fragment {
 }
 
     private void uploadImage(final String postid) {
+        final ProgressDialog progressDialog = new ProgressDialog(getContext());
+        progressDialog.setTitle("Subiendo Post...");
+        progressDialog.show();
+
         if(imageUri != null)
         {
-            final ProgressDialog progressDialog = new ProgressDialog(getContext());
-            progressDialog.setTitle("Uploading...");
-            progressDialog.show();
             String[] filename = imageUri.getLastPathSegment().split("/");
             final StorageReference ref = storageReference.child("images/"+mAuth.getUid()+"/"+postid+"/"+filename[filename.length-1]);
-
 
             Log.w("POST PATH: "+ref, "TEST");
             ref.putFile(imageUri)
@@ -122,7 +122,7 @@ public class AddPost extends Fragment {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             progressDialog.dismiss();
-                            Toast.makeText(getActivity(), "Uploaded", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "Subido", Toast.LENGTH_SHORT).show();
                             route = ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                 @Override
                                 public void onSuccess(Uri uri) {
@@ -151,7 +151,10 @@ public class AddPost extends Fragment {
                         }
                     });
         }else {
-            insertPost(postid, userid, introducedTitle.getText().toString(), introducedDescription.getText().toString(), introducedPrize.getText().toString(), introducedTime.getText().toString(), routeString, 0);
+            insertPost(postid, userid, introducedTitle.getText().toString(), introducedDescription.getText().toString(), introducedPrize.getText().toString(), introducedTime.getText().toString(), "", 0);
+            progressDialog.dismiss();
+            Toast.makeText(getActivity(), "Articulo Subido", Toast.LENGTH_SHORT).show();
+
         }
 
     }
@@ -161,6 +164,9 @@ public class AddPost extends Fragment {
 
     private void insertPost(String postId, String userId, String title, String description, String prize, String time, String route, int type) {
 
+        if(route.equals("")){
+            route = "https://firebasestorage.googleapis.com/v0/b/helpaloo.appspot.com/o/images%2FW8ImpGhMsShzkZ3qVkbcytf05uB3%2F-LjGqfKpgmWgP58ip6pC%2Fdownload.jpg?alt=media&token=2aa54b1d-e114-49a4-886c-567ca06b7b82";
+        }
         Post post = new Post (postId,userId,title,description, prize, time, route);
         Log.w("POST: "+userId+" postid: "+ postId, "TEST");
         if (type == 0){

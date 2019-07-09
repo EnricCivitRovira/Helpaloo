@@ -22,7 +22,7 @@ public class MenuActivity extends AppCompatActivity {
 
     private TextView mTextMessage;
     private FirebaseAuth mAuth;
-
+    private Post newPost;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -30,19 +30,17 @@ public class MenuActivity extends AppCompatActivity {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
-                case R.id.searchPost:
+                case R.id.searchPostMenu:
                     setFragment(0);
                     return true;
-                case R.id.messages:
+                case R.id.addPostMenu:
                     setFragment(1);
                     return true;
-                case R.id.help:
+                case R.id.messagesMenu:
 
                     return true;
-                case R.id.signOut:
-
-                    signOut();
-
+                case R.id.profileMenu:
+                    setFragment(2);
                     return true;
 
             }
@@ -67,10 +65,7 @@ public class MenuActivity extends AppCompatActivity {
         // updateUI(currentUser);
     }
 
-    private void signOut() {
-        mAuth.signOut();
-        finish();
-    }
+
 
     public void setFragment(int position) {
         FragmentManager fragmentManager;
@@ -90,6 +85,15 @@ public class MenuActivity extends AppCompatActivity {
                 fragmentTransaction.replace(R.id.fragment, searchPost);
                 fragmentTransaction.commit();
                 break;
+            case 2:
+                fragmentManager = getSupportFragmentManager();
+                fragmentTransaction = fragmentManager.beginTransaction();
+                Profile myProfile = new Profile();
+                fragmentTransaction.replace(R.id.fragment, myProfile);
+                fragmentTransaction.commit();
+                break;
         }
     }
+
+
 }

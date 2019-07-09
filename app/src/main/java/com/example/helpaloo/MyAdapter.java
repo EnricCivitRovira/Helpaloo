@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,8 +19,11 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import static androidx.constraintlayout.widget.Constraints.TAG;
@@ -45,13 +49,6 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             postPrice = itemView.findViewById(R.id.postPrice);
             postPhoto = itemView.findViewById(R.id.postPhoto);
 
-            postPhoto.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(v.getContext(), PostActivity.class);
-                    v.getContext().startActivity(intent);
-                }
-            });
         }
 
     }
@@ -74,21 +71,26 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        MyViewHolder.postName.setText(postslist.get(position).title);
-        MyViewHolder.postPrice.setText(postslist.get(position).prize);
-        //MyViewHolder.postPhoto.setImageBitmap();
-        // MyViewHolder.postPhoto.setImageResource(postslist.get(position).route);
-
-        String url = postslist.get(position).route;
+        final Post post = postslist.get(position);
+        MyViewHolder.postName.setText(post.title);
+        MyViewHolder.postPrice.setText(post.prize);
+        String url = post.route;
         Log.i(TAG, postslist.get(position).route);
-
-        //MyViewHolder.postPhoto.setImageBitmap(bmp);
         if(!url.equals("")){
             Picasso.get().load(url).fit().centerCrop().into(MyViewHolder.postPhoto);
         }
-
+        MyViewHolder.postPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AppCompatActivity activity = (AppCompatActivity) v.getContext();
+                PostDescription openPost = new PostDescription(post);
+                activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment, openPost).addToBackStack(null).commit();
+            }
+        });
 
     }
+
+
 
     @Override
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {

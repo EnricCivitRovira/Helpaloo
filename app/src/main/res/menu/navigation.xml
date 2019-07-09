@@ -2,22 +2,22 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/searchPost"
+        android:id="@+id/searchPostMenu"
         android:icon="@drawable/ic_home_black_24dp"
         android:title="Buscar Anuncio" />
 
     <item
-        android:id="@+id/messages"
+        android:id="@+id/addPostMenu"
         android:icon="@drawable/ic_dashboard_black_24dp"
-        android:title="Mensajes" />
+        android:title="Añadir Anuncio" />
 
     <item
-        android:id="@+id/help"
+        android:id="@+id/messagesMenu"
         android:icon="@drawable/ic_notifications_black_24dp"
-        android:title="Ayuda" />
+        android:title="Mensajes" />
     <item
-        android:id="@+id/signOut"
+        android:id="@+id/profileMenu"
         android:icon="@drawable/ic_notifications_black_24dp"
-        android:title="Salir" />
+        android:title="Perfil" />
 
 </menu>
