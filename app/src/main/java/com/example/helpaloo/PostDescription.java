@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -26,6 +27,7 @@ public class PostDescription extends Fragment {
     private TextView postTitle;
     private TextView postPrice;
     private TextView postDescription;
+    private String userID;
 
     @SuppressLint("ValidFragment")
     public PostDescription(Post post) {
@@ -50,6 +52,15 @@ public class PostDescription extends Fragment {
         postTitle.setText(post.getTitle());
         postPrice.setText(post.getPrize());
         postDescription.setText(post.getDescription());
+
+        contact.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AppCompatActivity activity = (AppCompatActivity) v.getContext();
+                MessageBox newMessage = new MessageBox(post);
+                activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment, newMessage).addToBackStack(null).commit();
+            }
+        });
 
         return view;
 

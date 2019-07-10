@@ -77,15 +77,9 @@ public class Profile extends Fragment {
     }
 
     private void showData(DataSnapshot dataSnapshot) {
-
         user = dataSnapshot.getValue(User.class);
-
         profileEmail.setText(user.email);
         profileName.setText(user.username);
-
-
-
-
     }
     private void signOut() {
         mAuth.signOut();

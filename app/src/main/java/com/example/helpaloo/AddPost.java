@@ -172,7 +172,6 @@ public class AddPost extends Fragment {
         if (type == 0){
             DatabaseReference refAll = mDatabase.child("allPosts").child(postId);
             refAll.setValue(post);
-
         }
         DatabaseReference ref = mDatabase.child("posts").child(userId).child(postId);
         ref.setValue(post);

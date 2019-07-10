@@ -37,12 +37,11 @@ public class MenuActivity extends AppCompatActivity {
                     setFragment(1);
                     return true;
                 case R.id.messagesMenu:
-
+                    setFragment(3);
                     return true;
                 case R.id.profileMenu:
                     setFragment(2);
                     return true;
-
             }
             return false;
         }
@@ -53,15 +52,11 @@ public class MenuActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
         setFragment(0);
-
         mTextMessage = (TextView) findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
-
-
         // updateUI(currentUser);
     }
 
@@ -70,26 +65,28 @@ public class MenuActivity extends AppCompatActivity {
     public void setFragment(int position) {
         FragmentManager fragmentManager;
         FragmentTransaction fragmentTransaction;
+        fragmentManager = getSupportFragmentManager();
+        fragmentTransaction = fragmentManager.beginTransaction();
+
         switch (position) {
             case 1:
-                fragmentManager = getSupportFragmentManager();
-                fragmentTransaction = fragmentManager.beginTransaction();
                 AddPost addPost = new AddPost();
                 fragmentTransaction.replace(R.id.fragment, addPost);
                 fragmentTransaction.commit();
                 break;
             case 0:
-                fragmentManager = getSupportFragmentManager();
-                fragmentTransaction = fragmentManager.beginTransaction();
                 SearchPost searchPost = new SearchPost();
                 fragmentTransaction.replace(R.id.fragment, searchPost);
                 fragmentTransaction.commit();
                 break;
             case 2:
-                fragmentManager = getSupportFragmentManager();
-                fragmentTransaction = fragmentManager.beginTransaction();
                 Profile myProfile = new Profile();
                 fragmentTransaction.replace(R.id.fragment, myProfile);
+                fragmentTransaction.commit();
+                break;
+            case 3:
+                MessageListFragment chatList = new MessageListFragment();
+                fragmentTransaction.replace(R.id.fragment, chatList);
                 fragmentTransaction.commit();
                 break;
         }

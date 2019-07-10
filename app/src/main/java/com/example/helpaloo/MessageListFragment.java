@@ -1,12 +1,14 @@
 package com.example.helpaloo;
 
-import android.content.Context;
-import android.net.Uri;
+
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -14,8 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
-import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -31,48 +32,35 @@ import java.util.ArrayList;
 import static androidx.constraintlayout.widget.Constraints.TAG;
 
 
-public class SearchPost extends Fragment {
-
+public class MessageListFragment extends Fragment {
     private FirebaseAuth mAuth;
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mDatabase;
     private String userID;
     private RecyclerView.LayoutManager layoutManager;
-    private ArrayList<Post> posts = new ArrayList<>();
-    private RecyclerView rv;
+    private ArrayList<Chat> chatList = new ArrayList<>();
+    private ListView mListView;
 
+    @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.fragment_search_post, container, false);
-
+        final View view = inflater.inflate(R.layout.fragment_messagelist_list, container, false);
+        ((MenuActivity) getActivity()).getSupportActionBar().setTitle("Mensajes");
+        mListView = view.findViewById(R.id.listView);
         mAuth = FirebaseAuth.getInstance();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
         userID = user.getUid();
-        rv = view.findViewById(R.id.rv);
-
-        ((MenuActivity) getActivity()).getSupportActionBar().setTitle("Buscar Anuncios");
-
-
-
-
-        mFirebaseDatabase.getReference("allPosts").addValueEventListener(new ValueEventListener() {
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        mFirebaseDatabase.getReference("chats_user/"+userID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 showData(dataSnapshot);
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
             }
-
         });
-
-
-
-
-
 
 
         return view;
@@ -80,17 +68,22 @@ public class SearchPost extends Fragment {
 
     private void showData(DataSnapshot dataSnapshot) {
         for(DataSnapshot ds : dataSnapshot.getChildren()){
-            Post post = ds.getValue(Post.class);
-            posts.add(post);
-            // Log.i(TAG, post.toString());
+            Chat chat = ds.getValue(Chat.class);
+            Log.i("Chat", chat.chatID + "  "+ chat.chatFromID);
+            chatList.add(chat);
         }
-
-        Log.i(TAG, posts.toString());
-        rv.setHasFixedSize(true);
-        layoutManager = new LinearLayoutManager(getContext());
-        rv.setLayoutManager(layoutManager);
-        MyAdapter adapter =  new MyAdapter(posts);
-        rv.setAdapter(adapter);
+        Log.i(TAG, chatList.toString());
+        final ChatListAdapter adapter = new ChatListAdapter(getContext(), R.layout.chat, chatList);
+        mListView.setAdapter(adapter);
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Chat chat = adapter.getItem(position);
+                AppCompatActivity activity = (AppCompatActivity) view.getContext();
+                //MessageBox openChat = new MessageBox(chat);
+                //activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment, openChat).addToBackStack(null).commit();
+            }
+        });
 
     }
 }
