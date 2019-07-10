@@ -12,12 +12,13 @@ public class Post {
         public int status;
         public String route;
         public String postId;
-
+        public String postNameUser;
+        public String postSurnameUser;
         public Post() {
             // Default constructor required for calls to DataSnapshot.getValue(User.class)
         }
 
-        public Post(String postId, String userId, String title, String description, String prize, String time, String route) {
+        public Post(String postId, String userId, String title, String description, String prize, String time, String route, String postNameUser, String postSurnameUser) {
             this.postId = postId;
             this.userId = userId;
             this.title = title;
@@ -30,6 +31,9 @@ public class Post {
             }else{
                 this.route = route;
             }
+            this.postNameUser = postNameUser;
+            this.postSurnameUser = postSurnameUser;
+
         }
 
     @Override
@@ -109,5 +113,29 @@ public class Post {
 
     public void setPostId(String postId) {
         this.postId = postId;
+    }
+
+    public String getPostNameUser() {
+        return postNameUser;
+    }
+
+    public void setPostNameUser(String postNameUser) {
+        this.postNameUser = postNameUser;
+    }
+
+    public String getPostSurnameUser() {
+        return postSurnameUser;
+    }
+
+    public void setPostSurnameUser(String postSurnameUser) {
+        this.postSurnameUser = postSurnameUser;
+    }
+
+    public ArrayList<Post> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(ArrayList<Post> posts) {
+        this.posts = posts;
     }
 }

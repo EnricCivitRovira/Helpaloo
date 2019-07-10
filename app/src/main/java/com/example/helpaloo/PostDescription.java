@@ -15,6 +15,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 
@@ -28,6 +33,11 @@ public class PostDescription extends Fragment {
     private TextView postPrice;
     private TextView postDescription;
     private String userID;
+    private Chat chat;
+    private FirebaseAuth mAuth;
+    private FirebaseDatabase mFirebaseDatabase;
+    private String userName;
+    private String userSurname;
 
     @SuppressLint("ValidFragment")
     public PostDescription(Post post) {
@@ -53,11 +63,29 @@ public class PostDescription extends Fragment {
         postPrice.setText(post.getPrize());
         postDescription.setText(post.getDescription());
 
+        mAuth = FirebaseAuth.getInstance();
+        userID = mAuth.getUid();
+
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        mFirebaseDatabase.getReference("users/"+userID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                userName = dataSnapshot.getValue(User.class).name;
+                userSurname = dataSnapshot.getValue(User.class).surname;
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
         contact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                MessageBox newMessage = new MessageBox(post);
+                chat = new Chat (userID, post.userId, post.postId, userName , post.postNameUser, post.getTitle());
+                MessageBox newMessage = new MessageBox(chat, 0);
                 activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment, newMessage).addToBackStack(null).commit();
             }
         });

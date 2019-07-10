@@ -5,20 +5,21 @@ public class Chat {
     public String chatID;
     public String chatFromID;
     public String chatToID;
-    public String chatToName;
-    public String chatFromName;
-    public String chatTitle;
     public String chatPostID;
+    public String nameFrom;
+    public String nameTo;
+    public String chatTitle;
 
     public Chat(){}
 
-    public Chat(String chatID, String chatFromID,String chatToID, String chatFromName,  String chatTitle, String chatPostID){
-        this.chatID = chatID;
+    public Chat(String chatFromID,String chatToID, String chatPostID, String nameFrom, String nameTo, String chatTitle){
+        this.chatID = idChatOrganizer(chatToID, chatFromID);
         this.chatFromID = chatFromID;
         this.chatToID = chatToID;
-        this.chatFromName = chatFromName;
-        this.chatTitle = chatTitle;
         this.chatPostID = chatPostID;
+        this.nameFrom = nameFrom;
+        this.nameTo = nameTo;
+        this.chatTitle = chatTitle;
     }
 
     public String getChatID() {
@@ -45,20 +46,36 @@ public class Chat {
         this.chatToID = chatToID;
     }
 
-    public String getChatToName() {
-        return chatToName;
+    public String getChatPostID() {
+        return chatPostID;
     }
 
-    public void setChatToName(String chatToName) {
-        this.chatToName = chatToName;
+    public void setChatPostID(String chatPostID) {
+        this.chatPostID = chatPostID;
     }
 
-    public String getChatFromName() {
-        return chatFromName;
+    public String idChatOrganizer(String id1, String id2) {
+        if(id1.compareTo(id2)>0){
+            return id1+id2;
+        }else{
+            return id2+id1;
+        }
     }
 
-    public void setChatFromName(String chatFromName) {
-        this.chatFromName = chatFromName;
+    public String getNameFrom() {
+        return nameFrom;
+    }
+
+    public void setNameFrom(String nameFrom) {
+        this.nameFrom = nameFrom;
+    }
+
+    public String getNameTo() {
+        return nameTo;
+    }
+
+    public void setNameTo(String nameTo) {
+        this.nameTo = nameTo;
     }
 
     public String getChatTitle() {
@@ -67,13 +84,5 @@ public class Chat {
 
     public void setChatTitle(String chatTitle) {
         this.chatTitle = chatTitle;
-    }
-
-    public String getChatPostID() {
-        return chatPostID;
-    }
-
-    public void setChatPostID(String chatPostID) {
-        this.chatPostID = chatPostID;
     }
 }

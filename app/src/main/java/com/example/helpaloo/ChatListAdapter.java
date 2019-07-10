@@ -36,8 +36,8 @@ public class ChatListAdapter extends ArrayAdapter<Chat> {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
-        String name = getItem(position).getChatFromName();
-        String title = getItem(position).getChatTitle();
+        String name = getItem(position).nameFrom;
+        String title = getItem(position).chatTitle;
 
         final View result;
 
@@ -57,6 +57,8 @@ public class ChatListAdapter extends ArrayAdapter<Chat> {
         Log.i("ChatID:" , "AdapterChatID "+ name + title);
         holder.name.setText(name);
         holder.title.setText(title);
+
+
 
         return convertView;
 

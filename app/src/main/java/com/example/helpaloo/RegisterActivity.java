@@ -75,11 +75,14 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
     // UI references.
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
+    private EditText name;
+    private EditText surname;
     private View mProgressView;
     private View mLoginFormView;
 
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
+    private User newUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +91,9 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         mDatabase = FirebaseDatabase.getInstance().getReference();
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
+        name = findViewById(R.id.registerName);
+        surname = findViewById(R.id.registerSurname);
+
         populateAutoComplete();
 
         mPasswordView = (EditText) findViewById(R.id.password);
@@ -108,6 +114,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 createAccount(mEmailView.getText().toString(), mPasswordView.getText().toString());
             }
         });
@@ -123,10 +130,6 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
     private void createAccount(String email, String password) {
         Log.d(TAG, "createAccount:" + email);
 
-
-
-        // showProgressDialog();
-
         // [START create_user_with_email]
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener( this, new OnCompleteListener<AuthResult>() {
@@ -136,16 +139,15 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            insertUserInformation(user.getUid(),user.getEmail() );
+                            newUser = new User (user.getUid(), user.getEmail(), name.getText().toString(), surname.getText().toString());
+                            insertUserInformation(newUser);
                             finish();
-                            // Enviar mensaje a MainActivity con el registro
-                            // updateUI(user);
+
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
                             Toast.makeText(RegisterActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
-                            // updateUI(null);
                         }
 
                         // [START_EXCLUDE]
@@ -157,10 +159,8 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
     }
 
 
-    private void insertUserInformation(String userId, String email) {
-        User user = new User(userId, email);
-        Log.w("ID: "+userId+" EMAIL:   "+email, "TEST");
-        mDatabase.child("users").child(userId).setValue(user);
+    private void insertUserInformation(User user) {
+        mDatabase.child("users").child(user.userID).setValue(user);
     }
 
     private void populateAutoComplete() {

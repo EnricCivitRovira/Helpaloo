@@ -7,16 +7,16 @@ public class Message {
     String timestamp;
     String userIDTo;
     String userIDFrom;
-    String email;
-    String emailTo;
+    String nameFrom;
+    String nameTo;
 
-    public Message(String message, String timestamp, String userIDFrom, String userIDTo, String email, String emailTo) {
+    public Message(String message, String timestamp, String userIDFrom, String userIDTo, String nameFrom, String nameTo) {
         this.message = message;
         this.timestamp = timestamp;
         this.userIDFrom = userIDFrom;
         this.userIDTo = userIDTo;
-        this.email = email;
-        this.emailTo = emailTo;
+        this.nameFrom = nameFrom;
+        this.nameTo = nameTo;
     }
 
     public Message(){
@@ -38,30 +38,6 @@ public class Message {
         this.timestamp = timestamp;
     }
 
-    public String getUserID() {
-        return userIDFrom;
-    }
-
-    public void setUserID(String userID) {
-        this.userIDFrom = userID;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getEmailTo() {
-        return emailTo;
-    }
-
-    public void setEmailTo(String emailTo) {
-        this.emailTo = emailTo;
-    }
-
     public String getUserIDTo() {
         return userIDTo;
     }
@@ -76,5 +52,33 @@ public class Message {
 
     public void setUserIDFrom(String userIDFrom) {
         this.userIDFrom = userIDFrom;
+    }
+
+    public String getNameFrom() {
+        return nameFrom;
+    }
+
+    public void setNameFrom(String nameFrom) {
+        this.nameFrom = nameFrom;
+    }
+
+    public String getNameTo() {
+        return nameTo;
+    }
+
+    public void setNameTo(String nameTo) {
+        this.nameTo = nameTo;
+    }
+
+    @Override
+    public String toString() {
+        return "Message{" +
+                "message='" + message + '\'' +
+                ", timestamp='" + timestamp + '\'' +
+                ", userIDTo='" + userIDTo + '\'' +
+                ", userIDFrom='" + userIDFrom + '\'' +
+                ", nameFrom='" + nameFrom + '\'' +
+                ", nameTo='" + nameTo + '\'' +
+                '}';
     }
 }

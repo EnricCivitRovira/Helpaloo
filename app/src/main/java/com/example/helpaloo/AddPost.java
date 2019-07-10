@@ -23,8 +23,11 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -58,6 +61,10 @@ public class AddPost extends Fragment {
     private String userid;
     private Task<Uri> route;
     private static String routeString;
+    private FirebaseDatabase mFirebaseDatabase;
+
+    private String userName;
+    private String userSurname;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -86,6 +93,22 @@ public class AddPost extends Fragment {
 
         userid = currentUser.getUid();
         postid = mDatabase.child("posts").child(userid).push().getKey();
+
+
+
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        mFirebaseDatabase.getReference("users/"+userid).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                userName = dataSnapshot.getValue(User.class).name;
+                userSurname = dataSnapshot.getValue(User.class).surname;
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
         uploadImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -167,7 +190,7 @@ public class AddPost extends Fragment {
         if(route.equals("")){
             route = "https://firebasestorage.googleapis.com/v0/b/helpaloo.appspot.com/o/images%2FW8ImpGhMsShzkZ3qVkbcytf05uB3%2F-LjGqfKpgmWgP58ip6pC%2Fdownload.jpg?alt=media&token=2aa54b1d-e114-49a4-886c-567ca06b7b82";
         }
-        Post post = new Post (postId,userId,title,description, prize, time, route);
+        Post post = new Post (postId,userId,title,description, prize, time, route, userName, userSurname);
         Log.w("POST: "+userId+" postid: "+ postId, "TEST");
         if (type == 0){
             DatabaseReference refAll = mDatabase.child("allPosts").child(postId);

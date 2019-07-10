@@ -34,17 +34,18 @@ public class MessageBox extends Fragment {
     public String userIDFrom;
     public String userIDTo;
     public String chatID;
-    public Post post;
-    private User user;
-    public String emailFrom;
-    public String emailTo;
     public Chat chat;
+    public String senderName;
+    public String recieverName;
+    public Integer type;
+
 
     FirebaseAuth mAuth;
     FirebaseDatabase mFirebaseDatabase;
 
-    public MessageBox(Post post) {
-        this.post = post;
+    public MessageBox(Chat chat, Integer type) {
+        this.chat = chat;
+        this.type = type;
     }
 
     @Nullable
@@ -54,39 +55,46 @@ public class MessageBox extends Fragment {
             send = view.findViewById(R.id.MBsendMessage);
             messageTV  = view.findViewById(R.id.MBmessageToSend);
 
-            mAuth = FirebaseAuth.getInstance();
-            final FirebaseUser user = mAuth.getCurrentUser();
-            userIDFrom = user.getUid();
+            chatID = chat.chatID;
+            if(type == 0) {
+                userIDFrom = chat.chatFromID;
+                userIDTo = chat.chatToID;
+                senderName = chat.nameFrom;
+                recieverName = chat.nameTo;
+            } else {
+                mAuth = FirebaseAuth.getInstance();
+                final FirebaseUser user = mAuth.getCurrentUser();
+
+                userIDFrom = user.getUid();
+                userIDTo = chat.chatFromID;
+
+                mFirebaseDatabase = FirebaseDatabase.getInstance();
+                mFirebaseDatabase.getReference("users/"+userIDFrom).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        senderName = dataSnapshot.getValue(User.class).name;
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                    }
+                });
+
+                mFirebaseDatabase.getReference("users/"+userIDTo).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        recieverName = dataSnapshot.getValue(User.class).name;
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                    }
+                });
+
+            }
             mDatabase = FirebaseDatabase.getInstance().getReference();
-            userIDTo = post.getUserId();
-            chatID = idChatOrganizer(userIDFrom, userIDTo);
 
-            mFirebaseDatabase = FirebaseDatabase.getInstance();
-            mFirebaseDatabase.getReference("users/"+userIDFrom).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                emailFrom = dataSnapshot.getValue(User.class).email;
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
-            });
-
-            mFirebaseDatabase = FirebaseDatabase.getInstance();
-            mFirebaseDatabase.getReference("users/"+userIDTo).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                emailTo = dataSnapshot.getValue(User.class).email;
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
-            });
-
+            Log.i("ChatInfo: ", senderName + recieverName);
 
             send.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -101,24 +109,15 @@ public class MessageBox extends Fragment {
     private void insertMessage(final String message) {
         final String currentTime = Calendar.getInstance().getTime().toString();
 
-        Chat newChat = new Chat(chatID, userIDFrom, userIDTo, emailFrom, post.getTitle(), post.getPostId());
         DatabaseReference refAll1 = mDatabase.child("chats_user").child(userIDFrom).child(chatID);
         DatabaseReference refAll2 = mDatabase.child("chats_user").child(userIDTo).child(chatID);
-        refAll1.setValue(newChat);
-        refAll2.setValue(newChat);
+        refAll1.setValue(chat);
+        refAll2.setValue(chat);
 
-        Message messageObject = new Message(message, currentTime, userIDFrom, userIDTo, emailFrom, emailTo);
+        Message messageObject = new Message(message, currentTime, userIDFrom, userIDTo, senderName, recieverName);
+        Log.i("Message", messageObject.toString());
         DatabaseReference refAll3 = mDatabase.child("messages").child(chatID).push();
         refAll3.setValue(messageObject);
     }
-
-    public String idChatOrganizer(String id1, String id2) {
-        if(id1.compareTo(id2)>0){
-            return id1+id2;
-        }else{
-            return id2+id1;
-        }
-    }
-
 
 }
