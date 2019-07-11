@@ -8,9 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -18,6 +20,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -38,6 +41,9 @@ public class MessageBox extends Fragment {
     public String senderName;
     public String recieverName;
     public Integer type;
+    public ArrayList<Message> messageList;
+    public ListView messageListView;
+    public MessagesListAdapter adapter;
 
 
     FirebaseAuth mAuth;
@@ -54,6 +60,13 @@ public class MessageBox extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_messagebox, container, false);
             send = view.findViewById(R.id.MBsendMessage);
             messageTV  = view.findViewById(R.id.MBmessageToSend);
+            messageListView = view.findViewById(R.id.messagesList);
+
+            messageList = new ArrayList<Message>();
+
+            adapter = new MessagesListAdapter(getContext(), R.layout.message, messageList);
+
+            mFirebaseDatabase = FirebaseDatabase.getInstance();
 
             chatID = chat.chatID;
             if(type == 0) {
@@ -68,7 +81,7 @@ public class MessageBox extends Fragment {
                 userIDFrom = user.getUid();
                 userIDTo = chat.chatFromID;
 
-                mFirebaseDatabase = FirebaseDatabase.getInstance();
+
                 mFirebaseDatabase.getReference("users/"+userIDFrom).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -91,6 +104,46 @@ public class MessageBox extends Fragment {
                     }
                 });
 
+                mFirebaseDatabase.getReference("messages/"+chatID).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        showMessagesFirstTime(dataSnapshot);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+                mFirebaseDatabase.getReference().addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                    }
+
+                    @Override
+                    public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                        insertIntroducedMessage(dataSnapshot);
+                    }
+
+                    @Override
+                    public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                    }
+
+                    @Override
+                    public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+
             }
             mDatabase = FirebaseDatabase.getInstance().getReference();
 
@@ -103,7 +156,29 @@ public class MessageBox extends Fragment {
                     insertMessage(message);
                 }
             });
+
         return view;
+    }
+
+    private void insertIntroducedMessage(DataSnapshot dataSnapshot) {
+        for(DataSnapshot ds : dataSnapshot.getChildren()){
+            Message message = ds.getValue(Message.class);
+            if(message.message != null) {
+                Log.i("Mensaje", message.toString());
+                messageList.add(message);
+                adapter.notifyDataSetChanged();
+            }
+        }
+
+    }
+
+    private void showMessagesFirstTime(DataSnapshot dataSnapshot) {
+        for(DataSnapshot ds : dataSnapshot.getChildren()){
+            Message message = ds.getValue(Message.class);
+            messageList.add(message);
+        }
+        Log.i("Messages: ",  messageList.toString());
+        messageListView.setAdapter(adapter);
     }
 
     private void insertMessage(final String message) {

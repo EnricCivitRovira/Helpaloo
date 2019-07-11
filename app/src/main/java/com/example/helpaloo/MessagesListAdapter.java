@@ -14,30 +14,31 @@ import java.util.ArrayList;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-public class ChatListAdapter extends ArrayAdapter<Chat> {
+public class MessagesListAdapter extends ArrayAdapter<Message> {
 
     private Context mContext;
     private int mResource;
     private int lastPosition = -1;
 
-    public ChatListAdapter(@NonNull Context context, int resource, ArrayList<Chat> chats) {
-        super(context, resource, chats);
+    public MessagesListAdapter(@NonNull Context context, int resource, ArrayList<Message> messages) {
+        super(context, resource, messages);
         mContext = context;
         mResource = resource;
     }
 
     private static class ViewHolder {
-        TextView name;
-        TextView title;
+        TextView message;
+        TextView from;
     }
+
 
     @SuppressLint("ViewHolder")
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
-        String name = getItem(position).nameFrom;
-        String title = getItem(position).chatTitle;
+        String messageInfo = getItem(position).message;
+        String fromName = getItem(position).nameFrom;
 
         final View result;
 
@@ -46,17 +47,17 @@ public class ChatListAdapter extends ArrayAdapter<Chat> {
         LayoutInflater inflater = LayoutInflater.from(mContext);
         convertView = inflater.inflate(mResource, parent, false);
         holder= new ViewHolder();
-        holder.name = (TextView) convertView.findViewById(R.id.chatPerson);
-        holder.title = (TextView) convertView.findViewById(R.id.chatTitle);
+        holder.message = (TextView) convertView.findViewById(R.id.messageInfo);
+        holder.from = (TextView) convertView.findViewById(R.id.messageFrom);
 
         result = convertView;
 
         convertView.setTag(holder);
 
         lastPosition = position;
-        Log.i("ChatID:" , "AdapterChatID "+ name + title);
-        holder.name.setText(name);
-        holder.title.setText(title);
+        // Log.i("ChatID:" , "AdapterChatID "+ name + title);
+        holder.message.setText(messageInfo);
+        holder.from .setText(fromName);
 
         return convertView;
 
