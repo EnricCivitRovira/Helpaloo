@@ -19,6 +19,7 @@ public class MessagesListAdapter extends ArrayAdapter<Message> {
     private Context mContext;
     private int mResource;
     private int lastPosition = -1;
+    private ArrayList<Message> messages = new ArrayList<Message>();
 
     public MessagesListAdapter(@NonNull Context context, int resource, ArrayList<Message> messages) {
         super(context, resource, messages);
@@ -29,6 +30,12 @@ public class MessagesListAdapter extends ArrayAdapter<Message> {
     private static class ViewHolder {
         TextView message;
         TextView from;
+    }
+
+    public void refreshList(ArrayList<Message> messages){
+        this.messages.clear();
+        this.messages.addAll(messages);
+        notifyDataSetChanged();
     }
 
 

@@ -41,9 +41,15 @@ public class MessageBox extends Fragment {
     public String senderName;
     public String recieverName;
     public Integer type;
-    public ArrayList<Message> messageList;
+    public final ArrayList<Message> messageList = new ArrayList<Message>();
     public ListView messageListView;
     public MessagesListAdapter adapter;
+    public String messageText = "";
+    public String nameFrom = "";
+    public String nameTo = "";
+    public String timestamp = "";
+    public String userIDFromValue = "";
+    public String userIDToValue = "";
 
 
     FirebaseAuth mAuth;
@@ -62,10 +68,8 @@ public class MessageBox extends Fragment {
             messageTV  = view.findViewById(R.id.MBmessageToSend);
             messageListView = view.findViewById(R.id.messagesList);
 
-            messageList = new ArrayList<Message>();
-
             adapter = new MessagesListAdapter(getContext(), R.layout.message, messageList);
-
+            messageListView.setAdapter(adapter);
             mFirebaseDatabase = FirebaseDatabase.getInstance();
 
             chatID = chat.chatID;
@@ -104,27 +108,15 @@ public class MessageBox extends Fragment {
                     }
                 });
 
-                mFirebaseDatabase.getReference("messages/"+chatID).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        showMessagesFirstTime(dataSnapshot);
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-
-                mFirebaseDatabase.getReference().addChildEventListener(new ChildEventListener() {
+                mFirebaseDatabase.getReference("messages/"+chatID).addChildEventListener(new ChildEventListener() {
                     @Override
                     public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
+                        insertIntroducedMessage(dataSnapshot);
                     }
 
                     @Override
                     public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                        insertIntroducedMessage(dataSnapshot);
+
                     }
 
                     @Override
@@ -144,6 +136,7 @@ public class MessageBox extends Fragment {
                 });
 
 
+
             }
             mDatabase = FirebaseDatabase.getInstance().getReference();
 
@@ -157,29 +150,59 @@ public class MessageBox extends Fragment {
                 }
             });
 
+
+
         return view;
     }
 
     private void insertIntroducedMessage(DataSnapshot dataSnapshot) {
-        for(DataSnapshot ds : dataSnapshot.getChildren()){
-            Message message = ds.getValue(Message.class);
-            if(message.message != null) {
-                Log.i("Mensaje", message.toString());
-                messageList.add(message);
-                adapter.notifyDataSetChanged();
-            }
-        }
+        for (DataSnapshot ds : dataSnapshot.getChildren()) {
 
+            //Message message = ds.getValue(Message.class);
+            switch (ds.getKey()) {
+                case "message":
+                    messageText = ds.getValue().toString();
+                    break;
+                case "nameFrom":
+                    nameFrom = ds.getValue().toString();
+                    break;
+                case "nameTo":
+                    nameTo = ds.getValue().toString();
+                    break;
+                case "timestamp":
+                    timestamp = ds.getValue().toString();
+                    break;
+                case "userIDFrom":
+                    userIDFromValue = ds.getValue().toString();
+                    break;
+                case "userIDTo":
+                    userIDToValue = ds.getValue().toString();
+                    break;
+            }
+
+
+
+        }
+        Message message = new Message(messageText, timestamp, userIDFromValue, userIDToValue, nameFrom, nameTo);
+        Log.i("Mensaje a añadir: ", message.toString());
+        messageList.add(message);
+        adapter.notifyDataSetChanged();
     }
 
+    /*
     private void showMessagesFirstTime(DataSnapshot dataSnapshot) {
         for(DataSnapshot ds : dataSnapshot.getChildren()){
             Message message = ds.getValue(Message.class);
+            Log.i("Message to Add", message.message);
             messageList.add(message);
         }
-        Log.i("Messages: ",  messageList.toString());
-        messageListView.setAdapter(adapter);
-    }
+        Log.i("ArrayList", messageList.size()+" "+messageList.toString());
+        adapter.notifyDataSetChanged();
+        //adapter.refreshList(messageList);
+
+
+
+    }*/
 
     private void insertMessage(final String message) {
         final String currentTime = Calendar.getInstance().getTime().toString();
@@ -190,7 +213,6 @@ public class MessageBox extends Fragment {
         refAll2.setValue(chat);
 
         Message messageObject = new Message(message, currentTime, userIDFrom, userIDTo, senderName, recieverName);
-        Log.i("Message", messageObject.toString());
         DatabaseReference refAll3 = mDatabase.child("messages").child(chatID).push();
         refAll3.setValue(messageObject);
     }
