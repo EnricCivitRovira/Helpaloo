@@ -67,7 +67,7 @@ public class MessageBox extends Fragment {
             send = view.findViewById(R.id.MBsendMessage);
             messageTV  = view.findViewById(R.id.MBmessageToSend);
             messageListView = view.findViewById(R.id.messagesList);
-
+            ((MenuActivity) getActivity()).getSupportActionBar().setTitle(chat.getNameFrom());
             adapter = new MessagesListAdapter(getContext(), R.layout.message, messageList);
             messageListView.setAdapter(adapter);
             mFirebaseDatabase = FirebaseDatabase.getInstance();
@@ -145,8 +145,12 @@ public class MessageBox extends Fragment {
             send.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     message = messageTV.getText().toString();
-                    insertMessage(message);
+                    if(!message.equals("")) {
+                        insertMessage(message);
+                        messageTV.setText("");
+                    }
                 }
             });
 
@@ -158,7 +162,6 @@ public class MessageBox extends Fragment {
     private void insertIntroducedMessage(DataSnapshot dataSnapshot) {
         for (DataSnapshot ds : dataSnapshot.getChildren()) {
 
-            //Message message = ds.getValue(Message.class);
             switch (ds.getKey()) {
                 case "message":
                     messageText = ds.getValue().toString();

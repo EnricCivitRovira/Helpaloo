@@ -46,6 +46,9 @@ public class MessagesListAdapter extends ArrayAdapter<Message> {
 
         String messageInfo = getItem(position).message;
         String fromName = getItem(position).nameFrom;
+        String[] date_parts = getItem(position).timestamp.split(" ");
+        String[] timestamp_parts = date_parts[3].split(":");
+        String timestamp = timestamp_parts[0]+":"+timestamp_parts[1];
 
         final View result;
 
@@ -64,7 +67,7 @@ public class MessagesListAdapter extends ArrayAdapter<Message> {
         lastPosition = position;
         // Log.i("ChatID:" , "AdapterChatID "+ name + title);
         holder.message.setText(messageInfo);
-        holder.from .setText(fromName);
+        holder.from .setText(timestamp);
 
         return convertView;
 
