@@ -1,6 +1,7 @@
 package com.example.helpaloo;
 
 import android.annotation.SuppressLint;
+import android.media.Image;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -38,6 +39,9 @@ public class PostDescription extends Fragment {
     private FirebaseDatabase mFirebaseDatabase;
     private String userName;
     private String userSurname;
+    private String route;
+    private ImageView profilePicSender;
+    private TextView usernamePostDescription;
 
     @SuppressLint("ValidFragment")
     public PostDescription(Post post) {
@@ -54,6 +58,9 @@ public class PostDescription extends Fragment {
         postTitle = view.findViewById(R.id.PDTitle);
         postPrice = view.findViewById(R.id.PDPrice);
         postDescription = view.findViewById(R.id.PDDescription);
+
+        profilePicSender = view.findViewById(R.id.profilePicturePostDescription);
+        usernamePostDescription = view.findViewById(R.id.userNamePostDescription);
 
         if(!post.route.equals("")) {
             Picasso.get().load(post.route).fit().centerCrop().into(postPhoto);
@@ -72,6 +79,23 @@ public class PostDescription extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 userName = dataSnapshot.getValue(User.class).name;
                 userSurname = dataSnapshot.getValue(User.class).surname;
+                }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        mFirebaseDatabase.getReference("users/"+post.userId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                userName = dataSnapshot.getValue(User.class).name;
+                userSurname = dataSnapshot.getValue(User.class).surname;
+                route = dataSnapshot.getValue(User.class).route;
+
+                Picasso.get().load(route).fit().centerCrop().into(profilePicSender);
+                usernamePostDescription.setText(userName);
             }
 
             @Override

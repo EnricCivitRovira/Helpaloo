@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.provider.ContactsContract;
@@ -16,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -48,7 +50,7 @@ public class AddPost extends Fragment {
     private EditText introducedTitle;
     private EditText introducedDescription;
     private EditText introducedPrize;
-    private EditText introducedTime;
+    private Spinner introducedTime;
 
     private static final int PICK_IMAGE_REQUEST = 1;
 
@@ -74,15 +76,15 @@ public class AddPost extends Fragment {
 
         ((MenuActivity) getActivity()).getSupportActionBar().setTitle("Añadir Anuncio");
 
-        uploadImage = (Button) view.findViewById(R.id.addImage);
-        uploadPost = (Button) view.findViewById(R.id.addPost);
+        uploadImage = view.findViewById(R.id.addImage);
+        uploadPost = view.findViewById(R.id.addPost);
 
-        introducedTitle = (EditText) view.findViewById(R.id.postTitle);
-        introducedDescription = (EditText) view.findViewById(R.id.postDescription);
-        introducedPrize = (EditText) view.findViewById(R.id.postPrice);
-        introducedTime = (EditText) view.findViewById(R.id.postTime);
+        introducedTitle = view.findViewById(R.id.postTitle);
+        introducedDescription =  view.findViewById(R.id.postDescription);
+        introducedPrize = view.findViewById(R.id.postPrice);
+        introducedTime =  view.findViewById(R.id.postTime);
 
-        imageView = (ImageView) view.findViewById(R.id.postImage);
+        imageView = view.findViewById(R.id.postImage);
 
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
@@ -121,7 +123,7 @@ public class AddPost extends Fragment {
             @Override
             public void onClick(View v) {
                 uploadImage(postid);
-            }
+                }
         });
 
 
@@ -150,7 +152,7 @@ public class AddPost extends Fragment {
                                 @Override
                                 public void onSuccess(Uri uri) {
                                     routeString = route.getResult().toString();
-                                    insertPost(postid, userid, introducedTitle.getText().toString(), introducedDescription.getText().toString(), introducedPrize.getText().toString(), introducedTime.getText().toString(), routeString, 0);
+                                    insertPost(postid, userid, introducedTitle.getText().toString(), introducedDescription.getText().toString(), introducedPrize.getText().toString(), introducedTime.getSelectedItem().toString(), routeString, 0);
                                 }
                             });
 
@@ -174,7 +176,7 @@ public class AddPost extends Fragment {
                         }
                     });
         }else {
-            insertPost(postid, userid, introducedTitle.getText().toString(), introducedDescription.getText().toString(), introducedPrize.getText().toString(), introducedTime.getText().toString(), "", 0);
+            insertPost(postid, userid, introducedTitle.getText().toString(), introducedDescription.getText().toString(), introducedPrize.getText().toString(), introducedTime.getSelectedItem().toString(), "", 0);
             progressDialog.dismiss();
             Toast.makeText(getActivity(), "Articulo Subido", Toast.LENGTH_SHORT).show();
 

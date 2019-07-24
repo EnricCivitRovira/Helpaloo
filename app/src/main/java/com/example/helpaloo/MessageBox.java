@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -67,7 +68,7 @@ public class MessageBox extends Fragment {
             send = view.findViewById(R.id.MBsendMessage);
             messageTV  = view.findViewById(R.id.MBmessageToSend);
             messageListView = view.findViewById(R.id.messagesList);
-            ((MenuActivity) getActivity()).getSupportActionBar().setTitle(chat.getNameFrom());
+
             adapter = new MessagesListAdapter(getContext(), R.layout.message, messageList);
             messageListView.setAdapter(adapter);
             mFirebaseDatabase = FirebaseDatabase.getInstance();
@@ -78,18 +79,20 @@ public class MessageBox extends Fragment {
                 userIDTo = chat.chatToID;
                 senderName = chat.nameFrom;
                 recieverName = chat.nameTo;
+                ((MenuActivity) getActivity()).getSupportActionBar().setTitle(recieverName);
             } else {
                 mAuth = FirebaseAuth.getInstance();
                 final FirebaseUser user = mAuth.getCurrentUser();
 
                 userIDFrom = user.getUid();
-                userIDTo = chat.chatFromID;
+                userIDTo = chat.chatToID;
 
 
                 mFirebaseDatabase.getReference("users/"+userIDFrom).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         senderName = dataSnapshot.getValue(User.class).name;
+
                     }
 
                     @Override
@@ -97,10 +100,13 @@ public class MessageBox extends Fragment {
                     }
                 });
 
+
+
                 mFirebaseDatabase.getReference("users/"+userIDTo).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         recieverName = dataSnapshot.getValue(User.class).name;
+                        ((MenuActivity) getActivity()).getSupportActionBar().setTitle(recieverName);
                     }
 
                     @Override

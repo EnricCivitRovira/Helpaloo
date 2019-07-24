@@ -1,8 +1,12 @@
 package com.example.helpaloo;
 
+import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 
 import androidx.annotation.NonNull;
@@ -17,18 +21,25 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import android.app.LoaderManager.LoaderCallbacks;
 
 import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -53,7 +64,7 @@ import static android.Manifest.permission.READ_CONTACTS;
 /**
  * A login screen that offers login via email/password.
  */
-public class RegisterActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
+public class RegisterActivity extends AppCompatActivity implements LoaderCallbacks<Cursor>, LocationListener {
 
     /**
      * Id to identity READ_CONTACTS permission request.
@@ -67,6 +78,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
     private static final String[] DUMMY_CREDENTIALS = new String[]{
             "foo@example.com:hello", "bar@example.com:world"
     };
+    private static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 0;
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -79,10 +91,20 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
     private EditText surname;
     private View mProgressView;
     private View mLoginFormView;
+    private String defaultPicRoute = "";
+
+    private LocationManager locationManager;
+
+    private Location location;
 
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
     private User newUser;
+
+    private double latitude;
+    private double longitude;
+
+    private String provider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +115,41 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         name = findViewById(R.id.registerName);
         surname = findViewById(R.id.registerSurname);
+
+        // Location
+
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        Criteria criteria = new Criteria();
+        provider = locationManager.getBestProvider(criteria, false);
+
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            // No explanation needed, we can request the permission.
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    MY_PERMISSIONS_REQUEST_FINE_LOCATION);
+
+            // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+            // app-defined int constant. The callback method gets the
+            // result of the request.
+        } else {
+
+            location = locationManager.getLastKnownLocation(provider);
+            // Initialize the location fields
+            if (location != null) {
+
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
+                onLocationChanged(location);
+            } else {
+                Log.i("RegisterActivity", "Location no Available");
+            }
+        }
+
+
+
 
         populateAutoComplete();
 
@@ -114,8 +171,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                createAccount(mEmailView.getText().toString(), mPasswordView.getText().toString());
+                createAccount(mEmailView.getText().toString(), mPasswordView.getText().toString(), latitude, longitude);
             }
         });
 
@@ -127,7 +183,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
 
     }
 
-    private void createAccount(String email, String password) {
+    private void createAccount(String email, String password, final double latitude, final double longitude) {
         Log.d(TAG, "createAccount:" + email);
 
         // [START create_user_with_email]
@@ -139,7 +195,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            newUser = new User (user.getUid(), user.getEmail(), name.getText().toString(), surname.getText().toString());
+                            newUser = new User (user.getUid(), user.getEmail(), name.getText().toString(), surname.getText().toString(), latitude, longitude, defaultPicRoute);
                             insertUserInformation(newUser);
                             finish();
 
@@ -199,10 +255,23 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_READ_CONTACTS) {
-            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                populateAutoComplete();
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_FINE_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted
+                } else {
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                    // showAlert(getString(R.string.error), getString(R.string.message));
+                    Log.i("RegisterActivity: ", "NO HAY PERMISOS DE UBICACION");
+                }
             }
+
+            // other 'case' lines to check for other
+            // permissions this app might request
         }
     }
 
@@ -346,6 +415,26 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
                         android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
 
         mEmailView.setAdapter(adapter);
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
     }
 
 

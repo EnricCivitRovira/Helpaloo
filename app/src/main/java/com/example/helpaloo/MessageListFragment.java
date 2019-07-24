@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -40,6 +41,8 @@ public class MessageListFragment extends Fragment {
     private RecyclerView.LayoutManager layoutManager;
     private ArrayList<Chat> chatList = new ArrayList<>();
     private ListView mListView;
+    private TextView messageFromView;
+    private TextView titleMessageView;
 
     @Nullable
     @Override
@@ -47,6 +50,8 @@ public class MessageListFragment extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_messagelist_list, container, false);
         ((MenuActivity) getActivity()).getSupportActionBar().setTitle("Mensajes");
         mListView = view.findViewById(R.id.listView);
+        messageFromView = view.findViewById(R.id.messageFromView);
+        titleMessageView = view.findViewById(R.id.messageTitleView);
         mAuth = FirebaseAuth.getInstance();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();

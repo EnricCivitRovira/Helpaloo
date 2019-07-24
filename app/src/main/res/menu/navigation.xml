@@ -3,21 +3,21 @@
 
     <item
         android:id="@+id/searchPostMenu"
-        android:icon="@drawable/ic_home_black_24dp"
+        android:icon="@drawable/ic_action_name"
         android:title="Buscar Anuncio" />
 
     <item
         android:id="@+id/addPostMenu"
-        android:icon="@drawable/ic_dashboard_black_24dp"
+        android:icon="@drawable/ic_add_post"
         android:title="Añadir Anuncio" />
 
     <item
         android:id="@+id/messagesMenu"
-        android:icon="@drawable/ic_notifications_black_24dp"
+        android:icon="@drawable/ic_messagelist"
         android:title="Mensajes" />
     <item
         android:id="@+id/profileMenu"
-        android:icon="@drawable/ic_notifications_black_24dp"
+        android:icon="@drawable/ic_profile"
         android:title="Perfil" />
 
 </menu>

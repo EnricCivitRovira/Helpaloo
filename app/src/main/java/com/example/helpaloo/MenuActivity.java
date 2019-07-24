@@ -24,7 +24,7 @@ public class MenuActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private Post newPost;
 
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+    public BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
         @Override
@@ -75,6 +75,7 @@ public class MenuActivity extends AppCompatActivity {
                 fragmentTransaction.commit();
                 break;
             case 0:
+
                 SearchPost searchPost = new SearchPost();
                 fragmentTransaction.replace(R.id.fragment, searchPost);
                 fragmentTransaction.commit();

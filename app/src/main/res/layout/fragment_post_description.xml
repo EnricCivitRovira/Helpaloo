@@ -21,20 +21,21 @@
             android:text="TextView"
             app:layout_constraintBottom_toTopOf="@+id/PDContact"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.479"
+            app:layout_constraintHorizontal_bias="0.465"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/PDTitle" />
+            app:layout_constraintTop_toBottomOf="@+id/PDTitle"
+            app:layout_constraintVertical_bias="0.0" />
 
         <TextView
             android:id="@+id/PDTitle"
             android:layout_width="177dp"
             android:layout_height="42dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="56dp"
+            android:layout_marginTop="32dp"
             android:layout_marginEnd="8dp"
             android:text="TextView"
             app:layout_constraintEnd_toStartOf="@+id/PDPrice"
-            app:layout_constraintHorizontal_bias="0.342"
+            app:layout_constraintHorizontal_bias="0.361"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/PDImage" />
 
@@ -42,8 +43,8 @@
             android:id="@+id/PDPrice"
             android:layout_width="61dp"
             android:layout_height="31dp"
-            android:layout_marginTop="56dp"
-            android:layout_marginEnd="52dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="64dp"
             android:text="TextView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/PDImage" />
@@ -66,11 +67,51 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginBottom="128dp"
+            android:layout_marginBottom="24dp"
             android:text="Estoy Interesado"
+            app:layout_constraintBottom_toTopOf="@+id/userTextPostDescription"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/userTextPostDescription"
+            android:layout_width="150dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="120dp"
+            android:text="Articulo subido por :"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.459"
+            app:layout_constraintHorizontal_bias="0.138"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:id="@+id/profilePicturePostDescription"
+            android:layout_width="72dp"
+            android:layout_height="78dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/userNamePostDescription"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.145"
+            app:layout_constraintStart_toEndOf="@+id/userTextPostDescription"
+            app:layout_constraintTop_toBottomOf="@+id/PDContact"
+            app:layout_constraintVertical_bias="1.0"
+            tools:src="@tools:sample/avatars" />
+
+        <TextView
+            android:id="@+id/userNamePostDescription"
+            android:layout_width="77dp"
+            android:layout_height="22dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="44dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.663"
             app:layout_constraintStart_toStartOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

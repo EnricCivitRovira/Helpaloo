@@ -53,10 +53,7 @@ public class SearchPost extends Fragment {
 
         ((MenuActivity) getActivity()).getSupportActionBar().setTitle("Buscar Anuncios");
 
-
-
-
-        mFirebaseDatabase.getReference("allPosts").addValueEventListener(new ValueEventListener() {
+        mFirebaseDatabase.getReference("allPosts").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 showData(dataSnapshot);
@@ -68,12 +65,6 @@ public class SearchPost extends Fragment {
             }
 
         });
-
-
-
-
-
-
 
         return view;
     }

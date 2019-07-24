@@ -20,4 +20,10 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+    <string-array name="taskduration">
+        <item>15 minutos</item>
+        <item>30 minutos</item>
+        <item>1h</item>
+        <item>Más de 1h</item>
+    </string-array>
 </resources>
