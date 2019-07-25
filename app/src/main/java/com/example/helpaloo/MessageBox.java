@@ -80,6 +80,8 @@ public class MessageBox extends Fragment {
                 senderName = chat.nameFrom;
                 recieverName = chat.nameTo;
                 ((MenuActivity) getActivity()).getSupportActionBar().setTitle(recieverName);
+
+
             } else {
                 mAuth = FirebaseAuth.getInstance();
                 final FirebaseUser user = mAuth.getCurrentUser();
@@ -114,36 +116,34 @@ public class MessageBox extends Fragment {
                     }
                 });
 
-                mFirebaseDatabase.getReference("messages/"+chatID).addChildEventListener(new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                        insertIntroducedMessage(dataSnapshot);
-                    }
+            }
 
-                    @Override
-                    public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+            mFirebaseDatabase.getReference("messages/"+chatID).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                insertIntroducedMessage(dataSnapshot);
+            }
 
-                    }
-
-                    @Override
-                    public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-                    }
-
-                    @Override
-                    public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-
-
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
             }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
             mDatabase = FirebaseDatabase.getInstance().getReference();
 
             Log.i("ChatInfo: ", senderName + recieverName);

@@ -142,6 +142,7 @@ public class Profile extends Fragment {
 
     private void uploadImage(final String userID) {
         final ProgressDialog progressDialog = new ProgressDialog(getContext());
+
         progressDialog.setTitle("Subiendo Nueva Imagen de perfil...");
         progressDialog.show();
 

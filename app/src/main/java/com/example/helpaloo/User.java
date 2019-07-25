@@ -24,30 +24,6 @@ public class User {
             this.route = route;
         }
 
-    public Double getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(Double latitude) {
-        this.latitude = latitude;
-    }
-
-    public Double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(Double longitude) {
-        this.longitude = longitude;
-    }
-
-    public String getUsername() {
-        return userID;
-    }
-
-    public void setUsername(String username) {
-        this.userID = username;
-    }
-
     public String getUserID() {
         return userID;
     }
@@ -80,12 +56,28 @@ public class User {
         this.surname = surname;
     }
 
-    public String getProfilePicRoute() {
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
+
+    public String getRoute() {
         return route;
     }
 
-    public void setProfilePicRoute(String profilePicRoute) {
-        this.route = profilePicRoute;
+    public void setRoute(String route) {
+        this.route = route;
     }
 
     @Override
@@ -97,7 +89,7 @@ public class User {
                 ", surname='" + surname + '\'' +
                 ", latitude=" + latitude +
                 ", longitude=" + longitude +
-                ", profilePicRoute='" + route + '\'' +
+                ", route='" + route + '\'' +
                 '}';
     }
 }

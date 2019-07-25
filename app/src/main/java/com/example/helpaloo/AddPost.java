@@ -9,10 +9,12 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -172,6 +174,13 @@ public class AddPost extends Fragment {
     private void deletePostElement(String postId, String userid) {
         mDatabase.child("posts").child(userid).child(postId).removeValue();
         mDatabase.child("allPosts").child(postId).removeValue();
+        Toast.makeText(getActivity(), "Articulo Eliminado", Toast.LENGTH_SHORT).show();
+
+                // Insert the fragment by replacing any existing fragment
+        FragmentManager fragmentManager = getFragmentManager();
+        SearchPost myPosts = new SearchPost(1);
+        fragmentManager.beginTransaction().replace(R.id.fragment, myPosts)
+                .commit();
     }
 
     private void updatePost(String postId, final String userid) {

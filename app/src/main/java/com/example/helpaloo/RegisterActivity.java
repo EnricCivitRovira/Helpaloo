@@ -57,6 +57,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.Executor;
 
 import static android.Manifest.permission.READ_CONTACTS;
@@ -91,7 +92,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
     private EditText surname;
     private View mProgressView;
     private View mLoginFormView;
-    private String defaultPicRoute = "";
+
 
     private LocationManager locationManager;
 
@@ -195,7 +196,13 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            newUser = new User (user.getUid(), user.getEmail(), name.getText().toString(), surname.getText().toString(), latitude, longitude, defaultPicRoute);
+                            newUser = new User (user.getUid(),
+                                    user.getEmail(),
+                                    name.getText().toString(),
+                                    surname.getText().toString(),
+                                    latitude,
+                                    longitude,
+                                    randomProfilePicture());
                             insertUserInformation(newUser);
                             finish();
 
@@ -205,13 +212,21 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
                             Toast.makeText(RegisterActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         }
-
-                        // [START_EXCLUDE]
-                        // hideProgressDialog();
-                        // [END_EXCLUDE]
                     }
                 });
-        // [END create_user_with_email]
+    }
+
+    private String randomProfilePicture() {
+            String route;
+            Random random = new Random();
+            int n = random.nextInt(1);
+            if(n == 0){
+                route = "https://firebasestorage.googleapis.com/v0/b/helpaloo.appspot.com/o/RandomProfilePics%2Fboyavatar.jpg?alt=media&token=8b7f9aec-0cbf-4539-8c4b-8b4f91df6ccd";
+            }else {
+                route = "https://firebasestorage.googleapis.com/v0/b/helpaloo.appspot.com/o/RandomProfilePics%2Fgirlavatar.jpg?alt=media&token=7cb0d0f6-ead8-4165-8259-89fdad0c23d7";
+            }
+            return route;
+
     }
 
 

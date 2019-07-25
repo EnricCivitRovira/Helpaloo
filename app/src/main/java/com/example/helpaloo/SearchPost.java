@@ -60,6 +60,8 @@ public class SearchPost extends Fragment {
         userID = user.getUid();
         rv = view.findViewById(R.id.rv);
 
+
+
         if(type == 0) {
             ((MenuActivity) getActivity()).getSupportActionBar().setTitle("Buscar Anuncios");
 
