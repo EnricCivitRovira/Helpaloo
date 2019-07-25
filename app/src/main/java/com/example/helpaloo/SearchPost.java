@@ -1,5 +1,6 @@
 package com.example.helpaloo;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -31,6 +32,7 @@ import java.util.ArrayList;
 import static androidx.constraintlayout.widget.Constraints.TAG;
 
 
+@SuppressLint("ValidFragment")
 public class SearchPost extends Fragment {
 
     private FirebaseAuth mAuth;
@@ -40,6 +42,13 @@ public class SearchPost extends Fragment {
     private RecyclerView.LayoutManager layoutManager;
     private ArrayList<Post> posts = new ArrayList<>();
     private RecyclerView rv;
+    private int type ;
+
+
+    @SuppressLint("ValidFragment")
+    public SearchPost(int type) {
+        this.type = type;
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -51,21 +60,37 @@ public class SearchPost extends Fragment {
         userID = user.getUid();
         rv = view.findViewById(R.id.rv);
 
-        ((MenuActivity) getActivity()).getSupportActionBar().setTitle("Buscar Anuncios");
+        if(type == 0) {
+            ((MenuActivity) getActivity()).getSupportActionBar().setTitle("Buscar Anuncios");
 
-        mFirebaseDatabase.getReference("allPosts").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                showData(dataSnapshot);
-            }
+            mFirebaseDatabase.getReference("allPosts").addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    showData(dataSnapshot);
+                }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
+                }
 
-        });
+            });
+        }else {
+            ((MenuActivity) getActivity()).getSupportActionBar().setTitle("Mis Anuncios");
 
+            mFirebaseDatabase.getReference("posts/"+userID).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    showData(dataSnapshot);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+
+            });
+        }
         return view;
     }
 
@@ -73,7 +98,6 @@ public class SearchPost extends Fragment {
         for(DataSnapshot ds : dataSnapshot.getChildren()){
             Post post = ds.getValue(Post.class);
             posts.add(post);
-            // Log.i(TAG, post.toString());
         }
 
         Log.i(TAG, posts.toString());

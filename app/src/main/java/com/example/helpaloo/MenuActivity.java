@@ -70,13 +70,13 @@ public class MenuActivity extends AppCompatActivity {
 
         switch (position) {
             case 1:
-                AddPost addPost = new AddPost();
+                Post post = new Post();
+                AddPost addPost = new AddPost(post, 0);
                 fragmentTransaction.replace(R.id.fragment, addPost);
                 fragmentTransaction.commit();
                 break;
             case 0:
-
-                SearchPost searchPost = new SearchPost();
+                SearchPost searchPost = new SearchPost(0);
                 fragmentTransaction.replace(R.id.fragment, searchPost);
                 fragmentTransaction.commit();
                 break;

@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
@@ -30,8 +31,9 @@ import static androidx.constraintlayout.widget.Constraints.TAG;
 
 class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     private final ArrayList<Post> postslist;
-    private Bitmap bmp;
 
+    private String userID;
+    private FirebaseAuth mAuth;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -64,6 +66,9 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     public MyAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.post, parent, false);
         MyViewHolder pvh = new MyViewHolder(v);
+
+        mAuth = FirebaseAuth.getInstance();
+        userID = mAuth.getUid();
         return pvh;
 
     }
@@ -75,16 +80,21 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         MyViewHolder.postName.setText(post.title);
         MyViewHolder.postPrice.setText(post.prize);
         String url = post.route;
-        Log.i(TAG, postslist.get(position).route);
         if(!url.equals("")){
             Picasso.get().load(url).fit().centerCrop().into(MyViewHolder.postPhoto);
         }
         MyViewHolder.postPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                PostDescription openPost = new PostDescription(post);
-                activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment, openPost).addToBackStack(null).commit();
+                if(post.userId.equals(userID)){
+                    AppCompatActivity activity = (AppCompatActivity) v.getContext();
+                    AddPost myPost = new AddPost(post, 1);
+                    activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment, myPost).addToBackStack(null).commit();
+                }else {
+                    AppCompatActivity activity = (AppCompatActivity) v.getContext();
+                    PostDescription openPost = new PostDescription(post);
+                    activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment, openPost).addToBackStack(null).commit();
+                }
             }
         });
 

@@ -1,14 +1,11 @@
 package com.example.helpaloo;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +30,9 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -129,7 +129,11 @@ public class Profile extends Fragment {
         myPosts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                SearchPost myPosts = new SearchPost(1);
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment, myPosts, "findThisFragment")
+                        .addToBackStack(null)
+                        .commit();
             }
         });
 

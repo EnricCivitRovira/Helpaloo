@@ -28,6 +28,7 @@ public class Post {
             this.status = 0;
             if (route == null) {
                 this.route = "";
+            }else if(route.equals("noedited")) {
             }else{
                 this.route = route;
             }
@@ -35,6 +36,8 @@ public class Post {
             this.postSurnameUser = postSurnameUser;
 
         }
+
+
 
     @Override
     public String toString() {
