@@ -12,70 +12,67 @@
 
         <ImageView
             android:id="@+id/profilePicture"
-            android:layout_width="192dp"
-            android:layout_height="171dp"
+            android:layout_width="142dp"
+            android:layout_height="141dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.146"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@tools:sample/avatars" />
+
+        <EditText
+            android:id="@+id/profileSurname"
+            android:layout_width="142dp"
+            android:layout_height="43dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toTopOf="@+id/addProfilePicture"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.428"
+            app:layout_constraintHorizontal_bias="0.806"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0"
-            tools:src="@tools:sample/avatars" />
+            app:layout_constraintTop_toBottomOf="@+id/profileName" />
 
-        <TextView
-            android:id="@+id/profileName"
-            android:layout_width="245dp"
-            android:layout_height="24dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="16dp"
-            app:layout_constraintBottom_toTopOf="@+id/profileEmail"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.162"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <TextView
+        <EditText
             android:id="@+id/profileEmail"
-            android:layout_width="244dp"
-            android:layout_height="25dp"
+            android:layout_width="301dp"
+            android:layout_height="43dp"
             android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginBottom="32dp"
-            app:layout_constraintBottom_toTopOf="@+id/resetPassword"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.164"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintHorizontal_bias="0.4"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/profileSurname" />
 
         <Button
             android:id="@+id/addProfilePicture"
-            android:layout_width="200dp"
-            android:layout_height="39dp"
+            android:layout_width="143dp"
+            android:layout_height="54dp"
             android:layout_marginStart="8dp"
+            android:layout_marginTop="32dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
             android:text="Nueva Imagen de Perfil"
-            app:layout_constraintBottom_toTopOf="@+id/profileName"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.405"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintHorizontal_bias="0.292"
+            app:layout_constraintStart_toEndOf="@+id/profilePicture"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/resetPassword"
             style="@style/Widget.AppCompat.Button"
-            android:layout_width="245dp"
+            android:layout_width="304dp"
             android:layout_height="36dp"
             android:layout_marginStart="8dp"
+            android:layout_marginTop="12dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
             android:text="NUEVA CONTRASEÑA"
-            app:layout_constraintBottom_toTopOf="@+id/myPosts"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.104"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintHorizontal_bias="0.406"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/profileEmail" />
 
         <Button
             android:id="@+id/signOut"
@@ -84,37 +81,52 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginBottom="32dp"
+            android:layout_marginBottom="128dp"
             android:text="Cerrar Sesión"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.447"
             app:layout_constraintStart_toStartOf="parent" />
 
         <Button
             android:id="@+id/saveChanges"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginBottom="36dp"
+            android:layout_marginBottom="8dp"
             android:text="Guardar Cambios"
             app:layout_constraintBottom_toTopOf="@+id/signOut"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.103"
+            app:layout_constraintHorizontal_bias="0.456"
             app:layout_constraintStart_toStartOf="parent" />
 
         <Button
             android:id="@+id/myPosts"
-            android:layout_width="254dp"
-            android:layout_height="38dp"
+            android:layout_width="305dp"
+            android:layout_height="39dp"
             android:layout_marginStart="8dp"
+            android:layout_marginTop="12dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginBottom="16dp"
-            android:text="Mis Publicaciones"
+            android:layout_marginBottom="8dp"
+            android:text="Publicaciones"
             app:layout_constraintBottom_toTopOf="@+id/saveChanges"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.099"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintHorizontal_bias="0.4"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/resetPassword" />
+
+        <EditText
+            android:id="@+id/profileName"
+            android:layout_width="139dp"
+            android:layout_height="41dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.268"
+            app:layout_constraintStart_toEndOf="@+id/profilePicture"
+            app:layout_constraintTop_toBottomOf="@+id/addProfilePicture" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

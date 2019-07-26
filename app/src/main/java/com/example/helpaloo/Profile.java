@@ -1,7 +1,9 @@
 package com.example.helpaloo;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import androidx.fragment.app.FragmentManager;
@@ -11,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,13 +38,16 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import static android.app.Activity.RESULT_OK;
+import static androidx.constraintlayout.widget.Constraints.TAG;
 
 
+@SuppressLint("ValidFragment")
 public class Profile extends Fragment {
 
     public ImageView profilePic;
-    public TextView profileEmail;
-    public TextView profileName;
+    public EditText profileEmail;
+    public EditText profileName;
+    public EditText profileSurname;
     public Button newProfilePic;
     public Button signOut;
     public Button resetPass;
@@ -58,6 +64,13 @@ public class Profile extends Fragment {
     private static String routeString;
     private Task<Uri> route;
     private Button myPosts;
+    private int type;
+
+    @SuppressLint("ValidFragment")
+    public Profile(String userId, int type) {
+        this.userID = userId;
+        this.type = type;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -74,6 +87,7 @@ public class Profile extends Fragment {
         resetPass = view.findViewById(R.id.resetPassword);
         saveChanges = view.findViewById(R.id.saveChanges);
         myPosts = view.findViewById(R.id.myPosts);
+        profileSurname = view.findViewById(R.id.profileSurname);
 
         // FIREBASE
 
@@ -81,9 +95,26 @@ public class Profile extends Fragment {
         storageReference = storage.getReference();
 
         // DATA
-        mAuth = FirebaseAuth.getInstance();
-        userID = mAuth.getUid();
+        if (type == 0) {
+            mAuth = FirebaseAuth.getInstance();
+            userID = mAuth.getUid();
+        }else{
 
+
+            resetPass.setVisibility(view.GONE);
+            saveChanges.setVisibility(view.GONE);
+            profileSurname.setVisibility(view.GONE);
+            signOut.setVisibility(view.GONE);
+            newProfilePic.setVisibility(view.GONE);
+
+            profileEmail.setVisibility(view.GONE);
+
+            profileName.setEnabled(false);
+            profileName.setCursorVisible(false);
+            profileName.setKeyListener(null);
+
+            profileName.setBackgroundColor(Color.TRANSPARENT);
+        }
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mFirebaseDatabase.getReference("users/"+userID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -129,11 +160,19 @@ public class Profile extends Fragment {
         myPosts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SearchPost myPosts = new SearchPost(1);
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment, myPosts, "findThisFragment")
-                        .addToBackStack(null)
-                        .commit();
+                if (type == 0) {
+                    SearchPost myPosts = new SearchPost(1);
+                    getActivity().getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.fragment, myPosts, "findThisFragment")
+                            .addToBackStack(null)
+                            .commit();
+                }else if(type == 1){
+                    SearchPost theirPosts = new SearchPost(2, userID);
+                    getActivity().getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.fragment, theirPosts, "findThisFragment")
+                            .addToBackStack(null)
+                            .commit();
+                }
             }
         });
 
@@ -162,7 +201,7 @@ public class Profile extends Fragment {
                                 @Override
                                 public void onSuccess(Uri uri) {
                                     routeString = route.getResult().toString();
-                                    uploadProfilePic(userID, routeString);
+                                    uploadProfileData(userID, routeString, profileName.getText().toString(), profileSurname.getText().toString(), profileEmail.getText().toString());
                                 }
                             });
 
@@ -186,17 +225,21 @@ public class Profile extends Fragment {
                         }
                     });
         }else {
-            //insertPost(postid, userid, introducedTitle.getText().toString(), introducedDescription.getText().toString(), introducedPrize.getText().toString(), introducedTime.getSelectedItem().toString(), "", 0);
-            uploadProfilePic(userID, routeString);
+            uploadProfileData(userID, routeString, profileName.getText().toString(), profileSurname.getText().toString(), profileEmail.getText().toString());
             progressDialog.dismiss();
-            Toast.makeText(getActivity(), "Imagen Subida", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Perfil Editado", Toast.LENGTH_SHORT).show();
 
         }
 
     }
 
-    private void uploadProfilePic(String userID, String route) {
+    private void uploadProfileData(String userID, String route, String name, String surname, String email) {
         mFirebaseDatabase.getReference("users").child(userID).child("route").setValue(route);
+        mFirebaseDatabase.getReference("users").child(userID).child("name").setValue(name);
+        mFirebaseDatabase.getReference("users").child(userID).child("surname").setValue(surname);
+        mFirebaseDatabase.getReference("users").child(userID).child("email").setValue(email);
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        auth.getCurrentUser().updateEmail(email);
     }
 
     private void resetPass() {
@@ -216,6 +259,7 @@ public class Profile extends Fragment {
         user = dataSnapshot.getValue(User.class);
         profileEmail.setText(user.email);
         profileName.setText(user.name);
+        profileSurname.setText(user.surname);
         Log.i("Picture: ", user.toString());
         Picasso.get().load(user.route).fit().centerCrop().into(profilePic);
 

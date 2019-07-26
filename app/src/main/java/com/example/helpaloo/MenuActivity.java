@@ -67,7 +67,6 @@ public class MenuActivity extends AppCompatActivity {
         FragmentTransaction fragmentTransaction;
         fragmentManager = getSupportFragmentManager();
         fragmentTransaction = fragmentManager.beginTransaction();
-
         switch (position) {
             case 1:
                 Post post = new Post();
@@ -81,7 +80,7 @@ public class MenuActivity extends AppCompatActivity {
                 fragmentTransaction.commit();
                 break;
             case 2:
-                Profile myProfile = new Profile();
+                Profile myProfile = new Profile("", 0);
                 fragmentTransaction.replace(R.id.fragment, myProfile);
                 fragmentTransaction.commit();
                 break;

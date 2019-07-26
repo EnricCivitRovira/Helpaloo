@@ -112,8 +112,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        // Set up the login form.
-        mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
+        mEmailView = findViewById(R.id.email);
         name = findViewById(R.id.registerName);
         surname = findViewById(R.id.registerSurname);
 
@@ -149,12 +148,9 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
             }
         }
 
-
-
-
         populateAutoComplete();
 
-        mPasswordView = (EditText) findViewById(R.id.password);
+        mPasswordView = findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -518,9 +514,6 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
             mAuthTask = null;
             showProgress(false);
         }
-
-
-
 
     }
 }

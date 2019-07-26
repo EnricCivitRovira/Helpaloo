@@ -1,6 +1,7 @@
 package com.example.helpaloo;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -50,17 +52,23 @@ public class SearchPost extends Fragment {
         this.type = type;
     }
 
+    public SearchPost(int type, String userID) {
+        this.type = type;
+        this.userID = userID;
+    }
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_search_post, container, false);
 
-        mAuth = FirebaseAuth.getInstance();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
+        mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
-        userID = user.getUid();
+
+        if (type != 2) {
+            userID = user.getUid();
+        }
         rv = view.findViewById(R.id.rv);
-
-
 
         if(type == 0) {
             ((MenuActivity) getActivity()).getSupportActionBar().setTitle("Buscar Anuncios");
@@ -77,9 +85,8 @@ public class SearchPost extends Fragment {
                 }
 
             });
-        }else {
+        }else if (type == 1){
             ((MenuActivity) getActivity()).getSupportActionBar().setTitle("Mis Anuncios");
-
             mFirebaseDatabase.getReference("posts/"+userID).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -92,6 +99,22 @@ public class SearchPost extends Fragment {
                 }
 
             });
+        }else if (type == 2){
+            ((MenuActivity) getActivity()).getSupportActionBar().setTitle("Sus Anuncios");
+            Log.i("Posts de:", userID);
+            mFirebaseDatabase.getReference("posts/"+userID).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    showData(dataSnapshot);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+
+            });
+
         }
         return view;
     }
@@ -102,7 +125,10 @@ public class SearchPost extends Fragment {
             posts.add(post);
         }
 
-        Log.i(TAG, posts.toString());
+        if (posts.size() == 0){
+            Toast.makeText(getActivity(), "No hay publicaciones :( ", Toast.LENGTH_SHORT).show();
+        }
+
         rv.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(getContext());
         rv.setLayoutManager(layoutManager);

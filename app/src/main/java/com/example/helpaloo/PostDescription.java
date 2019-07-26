@@ -42,6 +42,7 @@ public class PostDescription extends Fragment {
     private String route;
     private ImageView profilePicSender;
     private TextView usernamePostDescription;
+    private Profile senderProfile;
 
     @SuppressLint("ValidFragment")
     public PostDescription(Post post) {
@@ -111,6 +112,15 @@ public class PostDescription extends Fragment {
                 chat = new Chat (userID, post.userId, post.postId, userName , post.postNameUser, post.getTitle());
                 MessageBox newMessage = new MessageBox(chat, 0);
                 activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment, newMessage).addToBackStack(null).commit();
+            }
+        });
+
+        profilePicSender.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AppCompatActivity activity = (AppCompatActivity) v.getContext();
+                senderProfile = new Profile (post.userId, 1);
+                activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment, senderProfile).addToBackStack(null).commit();
             }
         });
 
