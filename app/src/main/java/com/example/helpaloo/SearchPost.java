@@ -6,6 +6,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -126,7 +127,8 @@ public class SearchPost extends Fragment {
         }
 
         if (posts.size() == 0){
-            Toast.makeText(getActivity(), "No hay publicaciones :( ", Toast.LENGTH_SHORT).show();
+            openDialog();
+            // Toast.makeText(getActivity(), "No tienes publicaciones :( ", Toast.LENGTH_SHORT).show();
         }
 
         rv.setHasFixedSize(true);
@@ -135,5 +137,10 @@ public class SearchPost extends Fragment {
         MyAdapter adapter =  new MyAdapter(posts);
         rv.setAdapter(adapter);
 
+    }
+
+    private void openDialog() {
+        NoPublicationDialog dialog = new NoPublicationDialog();
+        dialog.show(getFragmentManager(), "No Publication Dialog");
     }
 }

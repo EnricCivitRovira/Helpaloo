@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -23,6 +24,7 @@ public class MenuActivity extends AppCompatActivity {
     private TextView mTextMessage;
     private FirebaseAuth mAuth;
     private Post newPost;
+    BottomNavigationView navigation;
 
     public BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -53,7 +55,7 @@ public class MenuActivity extends AppCompatActivity {
         setContentView(R.layout.activity_menu);
         setFragment(0);
         mTextMessage = (TextView) findViewById(R.id.message);
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
@@ -69,6 +71,7 @@ public class MenuActivity extends AppCompatActivity {
         fragmentTransaction = fragmentManager.beginTransaction();
         switch (position) {
             case 1:
+                navigation.getMenu().findItem(R.id.addPostMenu).setChecked(true);
                 Post post = new Post();
                 AddPost addPost = new AddPost(post, 0);
                 fragmentTransaction.replace(R.id.fragment, addPost);
@@ -80,11 +83,13 @@ public class MenuActivity extends AppCompatActivity {
                 fragmentTransaction.commit();
                 break;
             case 2:
+                navigation.getMenu().findItem(R.id.profileMenu).setChecked(true);
                 Profile myProfile = new Profile("", 0);
                 fragmentTransaction.replace(R.id.fragment, myProfile);
                 fragmentTransaction.commit();
                 break;
             case 3:
+                navigation.getMenu().findItem(R.id.messagesMenu).setChecked(true);
                 MessageListFragment chatList = new MessageListFragment();
                 fragmentTransaction.replace(R.id.fragment, chatList);
                 fragmentTransaction.commit();
