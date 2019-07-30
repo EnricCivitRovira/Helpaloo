@@ -9,7 +9,10 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -46,11 +49,12 @@ public class SearchPost extends Fragment {
     private ArrayList<Post> posts = new ArrayList<>();
     private RecyclerView rv;
     private int type ;
+    private int context;
 
 
     @SuppressLint("ValidFragment")
     public SearchPost(int type) {
-        this.type = type;
+        this.type = type; // 0 -> All posots, 1 -> My posts, 2-> Their Posts
     }
 
     public SearchPost(int type, String userID) {
@@ -58,9 +62,16 @@ public class SearchPost extends Fragment {
         this.userID = userID;
     }
 
+    public SearchPost(int type, int context) {
+        this.type = type;
+        this.context = context; // 0 -> Coming From Edit MyPost, 1 -> Coming From new Post
+    }
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_search_post, container, false);
+
+
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mAuth = FirebaseAuth.getInstance();
@@ -87,6 +98,7 @@ public class SearchPost extends Fragment {
 
             });
         }else if (type == 1){
+            ((MenuActivity) getActivity()).setFragmentPosition(-1);
             ((MenuActivity) getActivity()).getSupportActionBar().setTitle("Mis Anuncios");
             mFirebaseDatabase.getReference("posts/"+userID).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -101,6 +113,7 @@ public class SearchPost extends Fragment {
 
             });
         }else if (type == 2){
+            ((MenuActivity) getActivity()).setFragmentPosition(-1);
             ((MenuActivity) getActivity()).getSupportActionBar().setTitle("Sus Anuncios");
             Log.i("Posts de:", userID);
             mFirebaseDatabase.getReference("posts/"+userID).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -127,20 +140,25 @@ public class SearchPost extends Fragment {
         }
 
         if (posts.size() == 0){
-            openDialog();
+            if (context != 1) {
+                openDialog();
+            }
             // Toast.makeText(getActivity(), "No tienes publicaciones :( ", Toast.LENGTH_SHORT).show();
         }
 
         rv.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(getContext());
         rv.setLayoutManager(layoutManager);
-        MyAdapter adapter =  new MyAdapter(posts);
+        MyAdapter adapter =  new MyAdapter(posts, type);
         rv.setAdapter(adapter);
 
     }
 
     private void openDialog() {
-        NoPublicationDialog dialog = new NoPublicationDialog();
-        dialog.show(getFragmentManager(), "No Publication Dialog");
+        FragmentManager manager = getActivity().getSupportFragmentManager();
+        Log.i("MANAGER: ", manager.toString());
+        NoPublicationDialog dialog = new NoPublicationDialog(type);
+        dialog.show(manager, "No Publication Dialog");
     }
+
 }

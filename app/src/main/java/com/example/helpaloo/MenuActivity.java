@@ -1,5 +1,6 @@
 package com.example.helpaloo;
 
+import android.app.Application;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -25,6 +26,16 @@ public class MenuActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private Post newPost;
     BottomNavigationView navigation;
+    private int fragmentPosition = 99;
+
+
+    public int getFragmentPosition() {
+        return fragmentPosition;
+    }
+
+    public void setFragmentPosition(int fragmentPosition) {
+        this.fragmentPosition = fragmentPosition;
+    }
 
     public BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -62,37 +73,64 @@ public class MenuActivity extends AppCompatActivity {
         // updateUI(currentUser);
     }
 
-
-
     public void setFragment(int position) {
         FragmentManager fragmentManager;
         FragmentTransaction fragmentTransaction;
         fragmentManager = getSupportFragmentManager();
         fragmentTransaction = fragmentManager.beginTransaction();
         switch (position) {
-            case 1:
-                navigation.getMenu().findItem(R.id.addPostMenu).setChecked(true);
-                Post post = new Post();
-                AddPost addPost = new AddPost(post, 0);
-                fragmentTransaction.replace(R.id.fragment, addPost);
-                fragmentTransaction.commit();
-                break;
             case 0:
-                SearchPost searchPost = new SearchPost(0);
-                fragmentTransaction.replace(R.id.fragment, searchPost);
-                fragmentTransaction.commit();
+                    if(fragmentPosition != 0) {
+                        SearchPost searchPost = new SearchPost(0);
+                        fragmentTransaction.replace(R.id.fragment, searchPost);
+                        fragmentTransaction.commit();
+                        fragmentPosition = 0;
+                    }
+                break;
+            case 1:
+                if(fragmentPosition != 1) {
+                    navigation.getMenu().findItem(R.id.addPostMenu).setChecked(true);
+                    Post post = new Post();
+                    AddPost addPost = new AddPost(post, 0, 0);
+                    fragmentTransaction.replace(R.id.fragment, addPost);
+                    fragmentTransaction.commit();
+                    fragmentPosition = 1;
+                }
                 break;
             case 2:
-                navigation.getMenu().findItem(R.id.profileMenu).setChecked(true);
-                Profile myProfile = new Profile("", 0);
-                fragmentTransaction.replace(R.id.fragment, myProfile);
-                fragmentTransaction.commit();
+                if(fragmentPosition != 2) {
+                    navigation.getMenu().findItem(R.id.profileMenu).setChecked(true);
+                    Profile myProfile = new Profile("", 0);
+                    fragmentTransaction.replace(R.id.fragment, myProfile);
+                    fragmentTransaction.commit();
+                    fragmentPosition = 2;
+                }
                 break;
             case 3:
-                navigation.getMenu().findItem(R.id.messagesMenu).setChecked(true);
-                MessageListFragment chatList = new MessageListFragment();
-                fragmentTransaction.replace(R.id.fragment, chatList);
-                fragmentTransaction.commit();
+                if(fragmentPosition != 3) {
+                    navigation.getMenu().findItem(R.id.messagesMenu).setChecked(true);
+                    MessageListFragment chatList = new MessageListFragment();
+                    fragmentTransaction.replace(R.id.fragment, chatList);
+                    fragmentTransaction.commit();
+                    fragmentPosition = 3;
+                }
+                break;
+            case 4:
+
+                    navigation.getMenu().findItem(R.id.searchPostMenu).setChecked(true);
+                    SearchPost searchPosts = new SearchPost(0);
+                    fragmentTransaction.replace(R.id.fragment, searchPosts);
+                    fragmentTransaction.commit();
+                    fragmentPosition = 0;
+
+                break;
+            case 5:
+
+                    SearchPost profilePosts = new SearchPost(1);
+                    fragmentTransaction.replace(R.id.fragment, profilePosts);
+                    fragmentTransaction.commit();
+                    fragmentPosition = 5;
+
                 break;
         }
     }

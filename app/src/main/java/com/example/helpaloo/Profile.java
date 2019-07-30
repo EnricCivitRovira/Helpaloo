@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,6 +53,7 @@ public class Profile extends Fragment {
     public Button signOut;
     public Button resetPass;
     public Button saveChanges;
+    public SeekBar distancePosts;
     private FirebaseStorage storage;
     StorageReference storageReference;
     private FirebaseUser currentUser;
@@ -65,6 +67,7 @@ public class Profile extends Fragment {
     private Task<Uri> route;
     private Button myPosts;
     private int type;
+    private int pval;
 
     @SuppressLint("ValidFragment")
     public Profile(String userId, int type) {
@@ -88,9 +91,9 @@ public class Profile extends Fragment {
         saveChanges = view.findViewById(R.id.saveChanges);
         myPosts = view.findViewById(R.id.myPosts);
         profileSurname = view.findViewById(R.id.profileSurname);
+        distancePosts = view.findViewById(R.id.distancePosts);
 
         // FIREBASE
-
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
 
@@ -99,20 +102,16 @@ public class Profile extends Fragment {
             mAuth = FirebaseAuth.getInstance();
             userID = mAuth.getUid();
         }else{
-
-
             resetPass.setVisibility(view.GONE);
             saveChanges.setVisibility(view.GONE);
             profileSurname.setVisibility(view.GONE);
             signOut.setVisibility(view.GONE);
             newProfilePic.setVisibility(view.GONE);
-
+            distancePosts.setVisibility(view.GONE);
             profileEmail.setVisibility(view.GONE);
-
             profileName.setEnabled(false);
             profileName.setCursorVisible(false);
             profileName.setKeyListener(null);
-
             profileName.setBackgroundColor(Color.TRANSPARENT);
         }
         mFirebaseDatabase = FirebaseDatabase.getInstance();
@@ -201,7 +200,7 @@ public class Profile extends Fragment {
                                 @Override
                                 public void onSuccess(Uri uri) {
                                     routeString = route.getResult().toString();
-                                    uploadProfileData(userID, routeString, profileName.getText().toString(), profileSurname.getText().toString(), profileEmail.getText().toString());
+                                    uploadProfileData(userID, routeString, profileName.getText().toString(), profileSurname.getText().toString(), profileEmail.getText().toString(), pval);
                                 }
                             });
 
@@ -225,7 +224,7 @@ public class Profile extends Fragment {
                         }
                     });
         }else {
-            uploadProfileData(userID, routeString, profileName.getText().toString(), profileSurname.getText().toString(), profileEmail.getText().toString());
+            uploadProfileData(userID, routeString, profileName.getText().toString(), profileSurname.getText().toString(), profileEmail.getText().toString(), pval);
             progressDialog.dismiss();
             Toast.makeText(getActivity(), "Perfil Editado", Toast.LENGTH_SHORT).show();
 
@@ -233,11 +232,12 @@ public class Profile extends Fragment {
 
     }
 
-    private void uploadProfileData(String userID, String route, String name, String surname, String email) {
+    private void uploadProfileData(String userID, String route, String name, String surname, String email, int distance) {
         mFirebaseDatabase.getReference("users").child(userID).child("route").setValue(route);
         mFirebaseDatabase.getReference("users").child(userID).child("name").setValue(name);
         mFirebaseDatabase.getReference("users").child(userID).child("surname").setValue(surname);
         mFirebaseDatabase.getReference("users").child(userID).child("email").setValue(email);
+        mFirebaseDatabase.getReference("users").child(userID).child("distanceToShowPosts").setValue(distance);
         FirebaseAuth auth = FirebaseAuth.getInstance();
         auth.getCurrentUser().updateEmail(email);
     }
@@ -260,6 +260,23 @@ public class Profile extends Fragment {
         profileEmail.setText(user.email);
         profileName.setText(user.name);
         profileSurname.setText(user.surname);
+        pval = user.distanceToShowPosts;
+        distancePosts.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                pval = progress;
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
         Log.i("Picture: ", user.toString());
         Picasso.get().load(user.route).fit().centerCrop().into(profilePic);
 

@@ -5,6 +5,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -145,6 +146,9 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
                 onLocationChanged(location);
             } else {
                 Log.i("RegisterActivity", "Location no Available");
+                latitude = 40.4165000;
+                longitude = -3.7025600;
+                onLocationChanged(location);
             }
         }
 
@@ -182,13 +186,16 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
 
     private void createAccount(String email, String password, final double latitude, final double longitude) {
         Log.d(TAG, "createAccount:" + email);
-
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Iniciando Proceso de registro...");
+        progressDialog.show();
         // [START create_user_with_email]
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener( this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            progressDialog.dismiss();
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
@@ -198,14 +205,16 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
                                     surname.getText().toString(),
                                     latitude,
                                     longitude,
-                                    randomProfilePicture());
+                                    randomProfilePicture(),
+                                    -1);
                             insertUserInformation(newUser);
                             finish();
 
                         } else {
                             // If sign in fails, display a message to the user.
+                            progressDialog.dismiss();
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(RegisterActivity.this, "Authentication failed.",
+                            Toast.makeText(RegisterActivity.this, "Creación de usuario fallida",
                                     Toast.LENGTH_SHORT).show();
                         }
                     }

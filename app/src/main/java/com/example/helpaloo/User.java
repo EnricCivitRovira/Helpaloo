@@ -9,12 +9,13 @@ public class User {
         public Double latitude;
         public Double longitude;
         public String route;
+        public int distanceToShowPosts;
 
         public User() {
             // Default constructor required for calls to DataSnapshot.getValue(User.class)
         }
 
-        public User(String userID, String email, String name, String surname, Double latitude, Double longitude, String route) {
+        public User(String userID, String email, String name, String surname, Double latitude, Double longitude, String route, int distanceToShowPosts) {
             this.userID = userID;
             this.email = email;
             this.name = name;
@@ -22,7 +23,20 @@ public class User {
             this.longitude = longitude;
             this.latitude = latitude;
             this.route = route;
-        }
+            if(distanceToShowPosts == -1) {
+                this.distanceToShowPosts = 50;
+            }else {
+                this.distanceToShowPosts = distanceToShowPosts;
+            }
+        };
+
+    public int getDistanceToShowPosts() {
+        return distanceToShowPosts;
+    }
+
+    public void setDistanceToShowPosts(int distanceToShowPosts) {
+        this.distanceToShowPosts = distanceToShowPosts;
+    }
 
     public String getUserID() {
         return userID;

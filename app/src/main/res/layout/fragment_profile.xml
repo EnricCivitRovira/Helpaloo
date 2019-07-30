@@ -68,11 +68,14 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="12dp"
             android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
             android:text="NUEVA CONTRASEÑA"
+            app:layout_constraintBottom_toTopOf="@+id/distancePosts"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.406"
+            app:layout_constraintHorizontal_bias="0.384"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/profileEmail" />
+            app:layout_constraintTop_toBottomOf="@+id/profileEmail"
+            app:layout_constraintVertical_bias="0.625" />
 
         <Button
             android:id="@+id/signOut"
@@ -106,15 +109,13 @@
             android:layout_width="305dp"
             android:layout_height="39dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="12dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:text="Publicaciones"
             app:layout_constraintBottom_toTopOf="@+id/saveChanges"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.4"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/resetPassword" />
+            app:layout_constraintHorizontal_bias="0.377"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <EditText
             android:id="@+id/profileName"
@@ -127,6 +128,18 @@
             app:layout_constraintHorizontal_bias="0.268"
             app:layout_constraintStart_toEndOf="@+id/profilePicture"
             app:layout_constraintTop_toBottomOf="@+id/addProfilePicture" />
+
+        <SeekBar
+            android:id="@+id/distancePosts"
+            android:layout_width="301dp"
+            android:layout_height="35dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="12dp"
+            app:layout_constraintBottom_toTopOf="@+id/myPosts"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.404"
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

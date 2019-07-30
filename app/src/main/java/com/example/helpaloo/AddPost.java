@@ -75,10 +75,12 @@ public class AddPost extends Fragment {
 
     private Post post;
     private int type;
+    private int context;
 
     @SuppressLint("ValidFragment")
-    AddPost(Post post, int type) {
-        this.type = type;
+    AddPost(Post post, int type, int context) {
+        this.type = type; // 0 -> No editable 1 -> editable
+        this.context = context; // 0 -> All Posts, 1-> MyPosts
         if (type == 1) {
             this.post = post;
         }
@@ -145,6 +147,13 @@ public class AddPost extends Fragment {
                 @Override
                 public void onClick(View v) {
                     deletePostElement(post.postId, post.userId);
+                    if (context == 0) {
+                        ((MenuActivity) getActivity()).setFragment(4);
+                    }else if(context == 1){
+                        ((MenuActivity) getActivity()).setFragment(5);
+                    }
+
+
                 }
             });
 
@@ -164,6 +173,7 @@ public class AddPost extends Fragment {
                 }else{
                     updatePost(post.postId, post.userId);
                 }
+
             }
         });
 
@@ -176,9 +186,8 @@ public class AddPost extends Fragment {
         mDatabase.child("allPosts").child(postId).removeValue();
         Toast.makeText(getActivity(), "Articulo Eliminado", Toast.LENGTH_SHORT).show();
 
-                // Insert the fragment by replacing any existing fragment
         FragmentManager fragmentManager = getFragmentManager();
-        SearchPost myPosts = new SearchPost(1);
+        SearchPost myPosts = new SearchPost(1, 1);
         fragmentManager.beginTransaction().replace(R.id.fragment, myPosts)
                 .commit();
     }
@@ -251,13 +260,15 @@ public class AddPost extends Fragment {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             progressDialog.dismiss();
-                            Toast.makeText(getActivity(), "Subido", Toast.LENGTH_SHORT).show();
                             route = ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                 @Override
                                 public void onSuccess(Uri uri) {
                                     routeString = route.getResult().toString();
                                     insertPost(postid, userid, introducedTitle.getText().toString(), introducedDescription.getText().toString(), introducedPrize.getText().toString(), introducedTime.getSelectedItem().toString(), routeString, 0);
+                                    Toast.makeText(getActivity(), "Subido", Toast.LENGTH_SHORT).show();
+                                    ((MenuActivity) getActivity()).setFragment(4);
                                 }
+
                             });
 
                         }
@@ -283,7 +294,9 @@ public class AddPost extends Fragment {
             insertPost(postid, userid, introducedTitle.getText().toString(), introducedDescription.getText().toString(), introducedPrize.getText().toString(), introducedTime.getSelectedItem().toString(), "", 0);
             progressDialog.dismiss();
             Toast.makeText(getActivity(), "Articulo Subido", Toast.LENGTH_SHORT).show();
+            ((MenuActivity) getActivity()).setFragment(4);
         }
+
 
     }
 

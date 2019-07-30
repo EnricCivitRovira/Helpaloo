@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -34,6 +35,7 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     private String userID;
     private FirebaseAuth mAuth;
+    private int context;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -56,8 +58,9 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public MyAdapter(ArrayList<Post> postslist) {
+    public MyAdapter(ArrayList<Post> postslist, int context) {
         this.postslist = postslist;
+        this.context = context; // 0 -> AllPosts, 1 -> MyPosts
 
     }
 
@@ -88,13 +91,14 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             public void onClick(View v) {
                 if(post.userId.equals(userID)){
                     AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                    AddPost myPost = new AddPost(post, 1);
+                    AddPost myPost = new AddPost(post, 1, context);
                     activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment, myPost).addToBackStack(null).commit();
                 }else {
                     AppCompatActivity activity = (AppCompatActivity) v.getContext();
                     PostDescription openPost = new PostDescription(post);
                     activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment, openPost).addToBackStack(null).commit();
                 }
+
             }
         });
 
