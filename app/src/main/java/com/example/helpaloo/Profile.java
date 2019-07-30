@@ -261,6 +261,7 @@ public class Profile extends Fragment {
         profileName.setText(user.name);
         profileSurname.setText(user.surname);
         pval = user.distanceToShowPosts;
+        distancePosts.setProgress(pval);
         distancePosts.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {

@@ -135,6 +135,8 @@ public class AddPost extends Fragment {
 
         }else {
 
+            ((MenuActivity) getActivity()).setFragmentPosition(-1);
+
             deletePost.setVisibility(view.VISIBLE);
 
             ((MenuActivity) getActivity()).getSupportActionBar().setTitle("Editar Anuncio");

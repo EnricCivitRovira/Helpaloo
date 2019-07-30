@@ -105,6 +105,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
 
     private double latitude;
     private double longitude;
+    private int distancePosts = -1;
 
     private String provider;
 
@@ -148,6 +149,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
                 Log.i("RegisterActivity", "Location no Available");
                 latitude = 40.4165000;
                 longitude = -3.7025600;
+                distancePosts = 750;
                 onLocationChanged(location);
             }
         }
@@ -175,13 +177,9 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
                 createAccount(mEmailView.getText().toString(), mPasswordView.getText().toString(), latitude, longitude);
             }
         });
-
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
-
         mAuth = FirebaseAuth.getInstance();
-
-
     }
 
     private void createAccount(String email, String password, final double latitude, final double longitude) {
@@ -206,7 +204,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
                                     latitude,
                                     longitude,
                                     randomProfilePicture(),
-                                    -1);
+                                    distancePosts);
                             insertUserInformation(newUser);
                             finish();
 
