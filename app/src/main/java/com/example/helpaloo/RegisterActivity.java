@@ -204,7 +204,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
                                     latitude,
                                     longitude,
                                     randomProfilePicture(),
-                                    distancePosts);
+                                    distancePosts, 0, 0);
                             insertUserInformation(newUser);
                             finish();
 

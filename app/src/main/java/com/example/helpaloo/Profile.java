@@ -175,7 +175,7 @@ public class Profile extends Fragment {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             progressDialog.dismiss();
-                            Toast.makeText(getActivity(), "Subido", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "Perfil Editado", Toast.LENGTH_SHORT).show();
                             route = ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                 @Override
                                 public void onSuccess(Uri uri) {
@@ -204,7 +204,7 @@ public class Profile extends Fragment {
                         }
                     });
         }else {
-            uploadProfileData(userID, routeString, profileName.getText().toString(), profileSurname.getText().toString(), profileEmail.getText().toString(), pval);
+            uploadProfileData(userID, user.route, profileName.getText().toString(), profileSurname.getText().toString(), profileEmail.getText().toString(), pval);
             progressDialog.dismiss();
             Toast.makeText(getActivity(), "Perfil Editado", Toast.LENGTH_SHORT).show();
 

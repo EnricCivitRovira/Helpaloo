@@ -10,12 +10,14 @@ public class User {
         public Double longitude;
         public String route;
         public int distanceToShowPosts;
+        public float mediumValoration;
+        public int nValorations;
 
         public User() {
             // Default constructor required for calls to DataSnapshot.getValue(User.class)
         }
 
-        public User(String userID, String email, String name, String surname, Double latitude, Double longitude, String route, int distanceToShowPosts) {
+        public User(String userID, String email, String name, String surname, Double latitude, Double longitude, String route, int distanceToShowPosts, float mediumValoration, int nValorations) {
             this.userID = userID;
             this.email = email;
             this.name = name;
@@ -28,6 +30,8 @@ public class User {
             }else {
                 this.distanceToShowPosts = distanceToShowPosts;
             }
+            this.mediumValoration = mediumValoration;
+            this.nValorations = nValorations;
         };
 
     public int getDistanceToShowPosts() {
@@ -56,6 +60,22 @@ public class User {
 
     public String getName() {
         return name;
+    }
+
+    public float getMediumValoration() {
+        return mediumValoration;
+    }
+
+    public void setMediumValoration(float mediumValoration) {
+        this.mediumValoration = mediumValoration;
+    }
+
+    public int getnValorations() {
+        return nValorations;
+    }
+
+    public void setnValorations(int nValorations) {
+        this.nValorations = nValorations;
     }
 
     public void setName(String name) {
@@ -104,6 +124,9 @@ public class User {
                 ", latitude=" + latitude +
                 ", longitude=" + longitude +
                 ", route='" + route + '\'' +
+                ", distanceToShowPosts=" + distanceToShowPosts +
+                ", mediumValoration=" + mediumValoration +
+                ", nValorations=" + nValorations +
                 '}';
     }
 }

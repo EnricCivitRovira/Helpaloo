@@ -42,7 +42,7 @@ public class PostDescription extends Fragment {
     private String route;
     private ImageView profilePicSender;
     private TextView usernamePostDescription;
-    private Profile senderProfile;
+    private ForeignProfile foreignProfile;
     private User user;
 
     @SuppressLint("ValidFragment")
@@ -113,9 +113,8 @@ public class PostDescription extends Fragment {
             @Override
             public void onClick(View v) {
                 AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                // TODO realizar nueva classe para mostrar información de los otros usuarios
-                // senderProfile = new Profile (post.userId, 1);
-                //activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment, senderProfile).addToBackStack(null).commit();
+                foreignProfile = new ForeignProfile(post.userId);
+                activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment, foreignProfile).addToBackStack(null).commit();
             }
         });
 
