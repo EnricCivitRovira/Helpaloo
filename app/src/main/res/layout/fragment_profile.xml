@@ -131,15 +131,24 @@
 
         <SeekBar
             android:id="@+id/distancePosts"
-            android:layout_width="301dp"
-            android:layout_height="35dp"
+            android:layout_width="255dp"
+            android:layout_height="29dp"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginBottom="12dp"
+            android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toTopOf="@+id/myPosts"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.404"
+            app:layout_constraintEnd_toStartOf="@+id/distancePostShow"
+            app:layout_constraintHorizontal_bias="0.894"
             app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/distancePostShow"
+            android:layout_width="50dp"
+            android:layout_height="29dp"
+            android:layout_marginEnd="52dp"
+            app:layout_constraintBottom_toBottomOf="@+id/distancePosts"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/distancePosts" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

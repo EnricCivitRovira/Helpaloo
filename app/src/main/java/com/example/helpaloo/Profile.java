@@ -45,6 +45,7 @@ import static androidx.constraintlayout.widget.Constraints.TAG;
 @SuppressLint("ValidFragment")
 public class Profile extends Fragment {
 
+    public TextView showKilometers;
     public ImageView profilePic;
     public EditText profileEmail;
     public EditText profileName;
@@ -53,6 +54,8 @@ public class Profile extends Fragment {
     public Button signOut;
     public Button resetPass;
     public Button saveChanges;
+    private Button myPosts;
+
     public SeekBar distancePosts;
     private FirebaseStorage storage;
     StorageReference storageReference;
@@ -65,21 +68,18 @@ public class Profile extends Fragment {
     private static final int PICK_IMAGE_REQUEST = 1;
     private static String routeString;
     private Task<Uri> route;
-    private Button myPosts;
+
     private int type;
     private int pval;
 
     @SuppressLint("ValidFragment")
-    public Profile(String userId, int type) {
-        this.userID = userId;
-        this.type = type;
+    public Profile(User user) {
+        this.user = user;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_profile, container, false);
-
-        ((MenuActivity) getActivity()).getSupportActionBar().setTitle("Mi Perfil");
 
         // BIND
         profilePic = view.findViewById(R.id.profilePicture);
@@ -92,40 +92,20 @@ public class Profile extends Fragment {
         myPosts = view.findViewById(R.id.myPosts);
         profileSurname = view.findViewById(R.id.profileSurname);
         distancePosts = view.findViewById(R.id.distancePosts);
+        showKilometers = view.findViewById(R.id.distancePostShow);
 
         // FIREBASE
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
 
-        // DATA
-        if (type == 0) {
-            mAuth = FirebaseAuth.getInstance();
-            userID = mAuth.getUid();
-        }else{
-            resetPass.setVisibility(view.GONE);
-            saveChanges.setVisibility(view.GONE);
-            profileSurname.setVisibility(view.GONE);
-            signOut.setVisibility(view.GONE);
-            newProfilePic.setVisibility(view.GONE);
-            distancePosts.setVisibility(view.GONE);
-            profileEmail.setVisibility(view.GONE);
-            profileName.setEnabled(false);
-            profileName.setCursorVisible(false);
-            profileName.setKeyListener(null);
-            profileName.setBackgroundColor(Color.TRANSPARENT);
-        }
+        mAuth = FirebaseAuth.getInstance();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mFirebaseDatabase.getReference("users/"+userID).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                showData(dataSnapshot);
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+        // DATA
+        ((MenuActivity) getActivity()).getSupportActionBar().setTitle("Mi Perfil");
+        userID = user.userID;
+        showData(user);
 
-            }
-        });
 
         newProfilePic.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -160,7 +140,7 @@ public class Profile extends Fragment {
             @Override
             public void onClick(View v) {
                 if (type == 0) {
-                    SearchPost myPosts = new SearchPost(1);
+                    SearchPost myPosts = new SearchPost(1, user);
                     getActivity().getSupportFragmentManager().beginTransaction()
                             .replace(R.id.fragment, myPosts, "findThisFragment")
                             .addToBackStack(null)
@@ -255,17 +235,19 @@ public class Profile extends Fragment {
         });
     }
 
-    private void showData(DataSnapshot dataSnapshot) {
-        user = dataSnapshot.getValue(User.class);
+    private void showData(User user) {
         profileEmail.setText(user.email);
         profileName.setText(user.name);
         profileSurname.setText(user.surname);
         pval = user.distanceToShowPosts;
         distancePosts.setProgress(pval);
+        showKilometers.setText(Integer.toString(pval)+ " Km");
+        distancePosts.setMax(300);
         distancePosts.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 pval = progress;
+                showKilometers.setText(Integer.toString(pval)+" Km");
             }
 
             @Override
@@ -275,7 +257,7 @@ public class Profile extends Fragment {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-
+                showKilometers.setText(Integer.toString(pval)+ " Km");
             }
         });
         Log.i("Picture: ", user.toString());

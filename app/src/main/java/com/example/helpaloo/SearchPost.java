@@ -3,6 +3,7 @@ package com.example.helpaloo;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -50,11 +51,15 @@ public class SearchPost extends Fragment {
     private RecyclerView rv;
     private int type ;
     private int context;
-
+    private User user;
+    float distance;
+    Location locationPost = new Location("PostLocation");
+    Location locationUser = new Location("UserLocation");
 
     @SuppressLint("ValidFragment")
-    public SearchPost(int type) {
-        this.type = type; // 0 -> All posots, 1 -> My posts, 2-> Their Posts
+    public SearchPost(int type, User user) {
+        this.type = type; // 0 -> All posts, 1 -> My posts, 2-> Their Posts
+        this.user = user;
     }
 
     public SearchPost(int type, String userID) {
@@ -67,28 +72,32 @@ public class SearchPost extends Fragment {
         this.context = context; // 0 -> Coming From Edit MyPost, 1 -> Coming From new Post
     }
 
+
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_search_post, container, false);
 
-
-
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mAuth = FirebaseAuth.getInstance();
-        FirebaseUser user = mAuth.getCurrentUser();
+        FirebaseUser userFirebase = mAuth.getCurrentUser();
 
         if (type != 2) {
-            userID = user.getUid();
+            userID = userFirebase.getUid();
         }
         rv = view.findViewById(R.id.rv);
 
         if(type == 0) {
+
+            locationUser.setLatitude(user.latitude);
+            locationUser.setLongitude(user.longitude);
+
             ((MenuActivity) getActivity()).getSupportActionBar().setTitle("Buscar Anuncios");
 
             mFirebaseDatabase.getReference("allPosts").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    showData(dataSnapshot);
+                    showData(dataSnapshot, type);
                 }
 
                 @Override
@@ -103,7 +112,7 @@ public class SearchPost extends Fragment {
             mFirebaseDatabase.getReference("posts/"+userID).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    showData(dataSnapshot);
+                    showData(dataSnapshot, type);
                 }
 
                 @Override
@@ -119,7 +128,7 @@ public class SearchPost extends Fragment {
             mFirebaseDatabase.getReference("posts/"+userID).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    showData(dataSnapshot);
+                    showData(dataSnapshot, type);
                 }
 
                 @Override
@@ -133,25 +142,37 @@ public class SearchPost extends Fragment {
         return view;
     }
 
-    private void showData(DataSnapshot dataSnapshot) {
+    @SuppressLint("LongLogTag")
+    private void showData(DataSnapshot dataSnapshot, int type ) {
         for(DataSnapshot ds : dataSnapshot.getChildren()){
             Post post = ds.getValue(Post.class);
-            posts.add(post);
+            if(type == 0) {
+                locationPost.setLatitude(post.latitude);
+                locationPost.setLongitude(post.longitude);
+                distance = locationUser.distanceTo(locationPost)/1000;
+                Log.i(
+                        "DISTANCIA ", "entre: Lat "+ locationPost.getLatitude() +
+                        " Long " + locationPost.getLongitude() +
+                        " y Lat: "+ locationUser.getLatitude() +
+                                " Long: "+ locationUser.getLongitude() +" es de: "+ String.valueOf(distance)+ " Kilometros");
+                if(user.distanceToShowPosts>distance) {
+                    posts.add(post);
+                }
+            }else{
+                posts.add(post);
+            }
         }
-
         if (posts.size() == 0){
             if (context != 1) {
                 openDialog();
             }
             // Toast.makeText(getActivity(), "No tienes publicaciones :( ", Toast.LENGTH_SHORT).show();
         }
-
         rv.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(getContext());
         rv.setLayoutManager(layoutManager);
-        MyAdapter adapter =  new MyAdapter(posts, type);
+        MyAdapter adapter =  new MyAdapter(posts, type, user);
         rv.setAdapter(adapter);
-
     }
 
     private void openDialog() {

@@ -14,11 +14,13 @@ public class Post {
         public String postId;
         public String postNameUser;
         public String postSurnameUser;
+        public double latitude;
+        public double longitude;
         public Post() {
             // Default constructor required for calls to DataSnapshot.getValue(User.class)
         }
 
-        public Post(String postId, String userId, String title, String description, String prize, String time, String route, String postNameUser, String postSurnameUser) {
+        public Post(String postId, String userId, String title, String description, String prize, String time, String route, String postNameUser, String postSurnameUser, double latitude, double longitude) {
             this.postId = postId;
             this.userId = userId;
             this.title = title;
@@ -34,10 +36,25 @@ public class Post {
             }
             this.postNameUser = postNameUser;
             this.postSurnameUser = postSurnameUser;
-
+            this.latitude = latitude;
+            this.longitude = longitude;
         }
 
+    public double getLatitude() {
+        return latitude;
+    }
 
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
 
     @Override
     public String toString() {
@@ -50,8 +67,14 @@ public class Post {
                 ", status=" + status +
                 ", route='" + route + '\'' +
                 ", postId='" + postId + '\'' +
+                ", postNameUser='" + postNameUser + '\'' +
+                ", postSurnameUser='" + postSurnameUser + '\'' +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                ", posts=" + posts +
                 '}';
     }
+
     public ArrayList<Post> posts;
 
     public String getUserId() {

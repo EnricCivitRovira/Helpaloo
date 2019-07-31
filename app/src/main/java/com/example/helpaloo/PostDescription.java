@@ -43,10 +43,12 @@ public class PostDescription extends Fragment {
     private ImageView profilePicSender;
     private TextView usernamePostDescription;
     private Profile senderProfile;
+    private User user;
 
     @SuppressLint("ValidFragment")
-    public PostDescription(Post post) {
+    public PostDescription(Post post, User user) {
         this.post = post;
+        this.user = user;
     }
 
     @Override
@@ -70,25 +72,15 @@ public class PostDescription extends Fragment {
         };
 
         postTitle.setText(post.getTitle());
-        postPrice.setText(post.getPrize());
+        postPrice.setText(post.getPrize()+ " €");
         postDescription.setText(post.getDescription());
 
         mAuth = FirebaseAuth.getInstance();
         userID = mAuth.getUid();
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mFirebaseDatabase.getReference("users/"+userID).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                userName = dataSnapshot.getValue(User.class).name;
-                userSurname = dataSnapshot.getValue(User.class).surname;
-                }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+        userName = user.name;
+        userSurname = user.surname;
 
         mFirebaseDatabase.getReference("users/"+post.userId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -121,8 +113,9 @@ public class PostDescription extends Fragment {
             @Override
             public void onClick(View v) {
                 AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                senderProfile = new Profile (post.userId, 1);
-                activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment, senderProfile).addToBackStack(null).commit();
+                // TODO realizar nueva classe para mostrar información de los otros usuarios
+                // senderProfile = new Profile (post.userId, 1);
+                //activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment, senderProfile).addToBackStack(null).commit();
             }
         });
 

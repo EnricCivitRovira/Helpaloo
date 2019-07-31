@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -103,9 +104,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (!validateForm()) {
             return;
         }
-
-        // showProgressDialog();
-
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Iniciando Sesión..");
+        progressDialog.show();
         // [START sign_in_with_email]
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -115,19 +116,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            tv.setText("Te has logeado correctamente!");
+                            progressDialog.dismiss();
+                            Toast.makeText(MainActivity.this, "Autentificación correcta!",
+                                    Toast.LENGTH_SHORT).show();
                             updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
-                            Toast.makeText(MainActivity.this, "Authentication failed.",
+                            progressDialog.dismiss();
+                            Toast.makeText(MainActivity.this, "Authentication fallida.",
                                     Toast.LENGTH_SHORT).show();
                             // updateUI(null);
                         }
 
                         // [START_EXCLUDE]
                         if (!task.isSuccessful()) {
-                            tv.setText("Autentificación fallida");
+                            progressDialog.dismiss();
+                            Toast.makeText(MainActivity.this, "Autentificación fallida",
+                                    Toast.LENGTH_SHORT).show();
+
                         }
                         // hideProgressDialog();
                         // [END_EXCLUDE]

@@ -36,6 +36,7 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     private String userID;
     private FirebaseAuth mAuth;
     private int context;
+    private User user;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -58,10 +59,10 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public MyAdapter(ArrayList<Post> postslist, int context) {
+    public MyAdapter(ArrayList<Post> postslist, int context, User user) {
         this.postslist = postslist;
         this.context = context; // 0 -> AllPosts, 1 -> MyPosts
-
+        this.user = user;
     }
 
     // Create new views (invoked by the layout manager)
@@ -81,7 +82,7 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     public void onBindViewHolder(MyViewHolder holder, int position) {
         final Post post = postslist.get(position);
         MyViewHolder.postName.setText(post.title);
-        MyViewHolder.postPrice.setText(post.prize);
+        MyViewHolder.postPrice.setText(post.prize+ " €");
         String url = post.route;
         if(!url.equals("")){
             Picasso.get().load(url).fit().centerCrop().into(MyViewHolder.postPhoto);
@@ -91,11 +92,11 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             public void onClick(View v) {
                 if(post.userId.equals(userID)){
                     AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                    AddPost myPost = new AddPost(post, 1, context);
+                    AddPost myPost = new AddPost(post, 1, context, user);
                     activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment, myPost).addToBackStack(null).commit();
                 }else {
                     AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                    PostDescription openPost = new PostDescription(post);
+                    PostDescription openPost = new PostDescription(post, user);
                     activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment, openPost).addToBackStack(null).commit();
                 }
 

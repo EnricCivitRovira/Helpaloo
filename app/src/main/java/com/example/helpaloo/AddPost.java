@@ -76,22 +76,26 @@ public class AddPost extends Fragment {
     private Post post;
     private int type;
     private int context;
+    private User user;
 
     @SuppressLint("ValidFragment")
-    AddPost(Post post, int type, int context) {
+    AddPost(Post post, int type, int context, User user) {
         this.type = type; // 0 -> No editable 1 -> editable
         this.context = context; // 0 -> All Posts, 1-> MyPosts
         if (type == 1) {
             this.post = post;
         }
+        this.user = user;
     }
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_add_post, container, false);
-
+        // BIND
         uploadImage = view.findViewById(R.id.addImage);
         uploadPost = view.findViewById(R.id.addPost);
         introducedTitle = view.findViewById(R.id.postTitle);
@@ -101,15 +105,16 @@ public class AddPost extends Fragment {
         imageView = view.findViewById(R.id.postImage);
         deletePost = view.findViewById(R.id.deletePost);
 
+        // firebase
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
-
         mDatabase = FirebaseDatabase.getInstance().getReference();
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
-
         mFirebaseDatabase = FirebaseDatabase.getInstance();
 
+
+        // Añadir Anuncio
         if(type == 0) {
             ((MenuActivity) getActivity()).getSupportActionBar().setTitle("Añadir Anuncio");
 
@@ -117,22 +122,10 @@ public class AddPost extends Fragment {
 
             userid = currentUser.getUid();
             postid = mDatabase.child("posts").child(userid).push().getKey();
+            userName = user.name;
+            userSurname = user.surname;
 
-
-            mFirebaseDatabase.getReference("users/" + userid).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    userName = dataSnapshot.getValue(User.class).name;
-                    userSurname = dataSnapshot.getValue(User.class).surname;
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
-
-
+        // Editar Anuncio
         }else {
 
             ((MenuActivity) getActivity()).setFragmentPosition(-1);
@@ -216,7 +209,7 @@ public class AddPost extends Fragment {
                                 @Override
                                 public void onSuccess(Uri uri) {
                                     routeString = route.getResult().toString();
-                                    insertPost(postid, userid, introducedTitle.getText().toString(), introducedDescription.getText().toString(), introducedPrize.getText().toString(), introducedTime.getSelectedItem().toString(), routeString, 0);
+                                    insertPost(postid, userid, introducedTitle.getText().toString(), introducedDescription.getText().toString(), introducedPrize.getText().toString(), introducedTime.getSelectedItem().toString(), routeString, user.latitude, user.longitude, 0);
                                 }
                             });
 
@@ -240,7 +233,7 @@ public class AddPost extends Fragment {
                         }
                     });
         }else {
-            updatePostPart(postId, userid, introducedTitle.getText().toString(), introducedDescription.getText().toString(), introducedPrize.getText().toString(), introducedTime.getSelectedItem().toString(), "noedited", 0);
+            updatePostPart(postId, userid, introducedTitle.getText().toString(), introducedDescription.getText().toString(), introducedPrize.getText().toString(), introducedTime.getSelectedItem().toString(), "noedited", user.latitude,user.longitude,0);
             progressDialog.dismiss();
             Toast.makeText(getActivity(), "Articulo Editado", Toast.LENGTH_SHORT).show();
         }
@@ -266,7 +259,7 @@ public class AddPost extends Fragment {
                                 @Override
                                 public void onSuccess(Uri uri) {
                                     routeString = route.getResult().toString();
-                                    insertPost(postid, userid, introducedTitle.getText().toString(), introducedDescription.getText().toString(), introducedPrize.getText().toString(), introducedTime.getSelectedItem().toString(), routeString, 0);
+                                    insertPost(postid, userid, introducedTitle.getText().toString(), introducedDescription.getText().toString(), introducedPrize.getText().toString(), introducedTime.getSelectedItem().toString(), routeString, user.latitude, user.longitude, 0);
                                     Toast.makeText(getActivity(), "Subido", Toast.LENGTH_SHORT).show();
                                     ((MenuActivity) getActivity()).setFragment(4);
                                 }
@@ -293,7 +286,7 @@ public class AddPost extends Fragment {
                         }
                     });
         }else {
-            insertPost(postid, userid, introducedTitle.getText().toString(), introducedDescription.getText().toString(), introducedPrize.getText().toString(), introducedTime.getSelectedItem().toString(), "", 0);
+            insertPost(postid, userid, introducedTitle.getText().toString(), introducedDescription.getText().toString(), introducedPrize.getText().toString(), introducedTime.getSelectedItem().toString(), "",user.latitude, user.longitude,  0);
             progressDialog.dismiss();
             Toast.makeText(getActivity(), "Articulo Subido", Toast.LENGTH_SHORT).show();
             ((MenuActivity) getActivity()).setFragment(4);
@@ -303,11 +296,11 @@ public class AddPost extends Fragment {
     }
 
 
-    private void insertPost(String postId, String userId, String title, String description, String prize, String time, String route, int type) {
+    private void insertPost(String postId, String userId, String title, String description, String prize, String time, String route, double latitude, double longitude, int type) {
         if(route.equals("")){
             route = "https://firebasestorage.googleapis.com/v0/b/helpaloo.appspot.com/o/images%2FW8ImpGhMsShzkZ3qVkbcytf05uB3%2F-LjGqfKpgmWgP58ip6pC%2Fdownload.jpg?alt=media&token=2aa54b1d-e114-49a4-886c-567ca06b7b82";
         }
-        Post post = new Post (postId,userId,title,description, prize, time, route, userName, userSurname);
+        Post post = new Post (postId,userId,title,description, prize, time, route, userName, userSurname, latitude, longitude);
         Log.w("POST: "+userId+" postid: "+ postId, "TEST");
         if (type == 0){
             Log.i("AllPosts: ", postId);
@@ -318,9 +311,9 @@ public class AddPost extends Fragment {
         ref.setValue(post);
     }
 
-    private void updatePostPart(String postId, String userId, String title, String description, String prize, String time, String route, int type) {
+    private void updatePostPart(String postId, String userId, String title, String description, String prize, String time, String route,double latitude, double longitude, int type) {
 
-        Post post = new Post (postId,userId,title,description, prize, time, route, userName, userSurname);
+        Post post = new Post (postId,userId,title,description, prize, time, route, userName, userSurname, latitude, longitude);
 
         DatabaseReference refAll = mDatabase.child("allPosts").child(postId);
         DatabaseReference ref = mDatabase.child("posts").child(userId).child(postId);
@@ -333,6 +326,12 @@ public class AddPost extends Fragment {
 
         refAll.child("prize").setValue(post.prize);
         ref.child("prize").setValue(post.prize);
+
+        refAll.child("latitude").setValue(post.latitude);
+        ref.child("latitude").setValue(post.latitude);
+
+        refAll.child("longitude").setValue(post.longitude);
+        ref.child("longitude").setValue(post.longitude);
 
         if(!route.equals("noedited")){
             refAll.child(route).setValue(post.route);
