@@ -119,7 +119,6 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         surname = findViewById(R.id.registerSurname);
 
         // Location
-
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         Criteria criteria = new Criteria();
         provider = locationManager.getBestProvider(criteria, false);
@@ -222,8 +221,8 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
     private String randomProfilePicture() {
             String route;
             Random random = new Random();
-            int n = random.nextInt(1);
-            if(n == 0){
+            int n = random.nextInt(20) ;
+            if(n >= 10){
                 route = "https://firebasestorage.googleapis.com/v0/b/helpaloo.appspot.com/o/RandomProfilePics%2Fboyavatar.jpg?alt=media&token=8b7f9aec-0cbf-4539-8c4b-8b4f91df6ccd";
             }else {
                 route = "https://firebasestorage.googleapis.com/v0/b/helpaloo.appspot.com/o/RandomProfilePics%2Fgirlavatar.jpg?alt=media&token=7cb0d0f6-ead8-4165-8259-89fdad0c23d7";

@@ -32,13 +32,6 @@ public class MessagesListAdapter extends ArrayAdapter<Message> {
         TextView from;
     }
 
-    public void refreshList(ArrayList<Message> messages){
-        this.messages.clear();
-        this.messages.addAll(messages);
-        notifyDataSetChanged();
-    }
-
-
     @SuppressLint("ViewHolder")
     @NonNull
     @Override

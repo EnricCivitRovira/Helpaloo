@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -80,7 +81,7 @@ public class PostDescription extends Fragment {
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         userName = user.name;
-        userSurname = user.surname;
+
 
         mFirebaseDatabase.getReference("users/"+post.userId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -103,7 +104,8 @@ public class PostDescription extends Fragment {
             @Override
             public void onClick(View v) {
                 AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                chat = new Chat (userID, post.userId, post.postId, userName , post.postNameUser, post.getTitle());
+                chat = new Chat (userID, post.userId, post.postId, user.name , post.postNameUser, post.getTitle());
+                Log.i("Chat info: ", chat.toString());
                 MessageBox newMessage = new MessageBox(chat, 0);
                 activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment, newMessage).addToBackStack(null).commit();
             }
@@ -113,7 +115,7 @@ public class PostDescription extends Fragment {
             @Override
             public void onClick(View v) {
                 AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                foreignProfile = new ForeignProfile(post.userId);
+                foreignProfile = new ForeignProfile(post.userId, 0);
                 activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment, foreignProfile).addToBackStack(null).commit();
             }
         });

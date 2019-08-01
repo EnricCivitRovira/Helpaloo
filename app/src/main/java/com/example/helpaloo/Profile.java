@@ -54,6 +54,7 @@ public class Profile extends Fragment {
     public Button signOut;
     public Button resetPass;
     public Button saveChanges;
+    public Button myValorations;
     private Button myPosts;
 
     public SeekBar distancePosts;
@@ -93,6 +94,7 @@ public class Profile extends Fragment {
         profileSurname = view.findViewById(R.id.profileSurname);
         distancePosts = view.findViewById(R.id.distancePosts);
         showKilometers = view.findViewById(R.id.distancePostShow);
+        myValorations = view.findViewById(R.id.myValorations);
 
         // FIREBASE
         storage = FirebaseStorage.getInstance();
@@ -152,6 +154,17 @@ public class Profile extends Fragment {
                             .addToBackStack(null)
                             .commit();
                 }
+            }
+        });
+
+        myValorations.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ForeignProfile myValorations = new ForeignProfile(userID, 1);
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment, myValorations, "findThisFragment")
+                        .addToBackStack(null)
+                        .commit();
             }
         });
 
@@ -240,9 +253,9 @@ public class Profile extends Fragment {
         profileName.setText(user.name);
         profileSurname.setText(user.surname);
         pval = user.distanceToShowPosts;
+        distancePosts.setMax(300);
         distancePosts.setProgress(pval);
         showKilometers.setText(Integer.toString(pval)+ " Km");
-        distancePosts.setMax(300);
         distancePosts.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {

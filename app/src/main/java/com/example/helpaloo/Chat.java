@@ -85,4 +85,17 @@ public class Chat {
     public void setChatTitle(String chatTitle) {
         this.chatTitle = chatTitle;
     }
+
+    @Override
+    public String toString() {
+        return "Chat{" +
+                "chatID='" + chatID + '\'' +
+                ", chatFromID='" + chatFromID + '\'' +
+                ", chatToID='" + chatToID + '\'' +
+                ", chatPostID='" + chatPostID + '\'' +
+                ", nameFrom='" + nameFrom + '\'' +
+                ", nameTo='" + nameTo + '\'' +
+                ", chatTitle='" + chatTitle + '\'' +
+                '}';
+    }
 }

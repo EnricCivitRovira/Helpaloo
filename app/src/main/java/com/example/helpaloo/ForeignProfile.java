@@ -23,6 +23,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -51,10 +52,17 @@ public class ForeignProfile extends Fragment {
 
     private ValorationFragment foreignNewValoration;
     private ArrayList<Valoration> valorationList = new ArrayList<>();
+    private CommentAdapter adapter;
+    private String comment;
+    private String userValorationID;
+    private Object starRate;
+    private int type;
 
+    private Valoration val = new Valoration();
 
-    public ForeignProfile(String foreignUserID){
+    public ForeignProfile(String foreignUserID, int type){
         this.foreignUserID = foreignUserID;
+        this.type = type; // 0 -> Visto desde fuera. 1 -> visto desde dentro
     }
 
     @Nullable
@@ -73,12 +81,21 @@ public class ForeignProfile extends Fragment {
         numberValorations = view.findViewById(R.id.nValorationsView);
         newValoration = view.findViewById(R.id.openValoration);
 
+        if(type == 1){
+            newValoration.setVisibility(view.GONE);
+        }
+
         //FIREBASE
         mAuth = FirebaseAuth.getInstance();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
+        adapter = new CommentAdapter(getContext(), R.layout.comment, valorationList );
+        mListValorationView.setAdapter(adapter);
         final ProgressDialog progressDialog = new ProgressDialog(getContext());
         progressDialog.setTitle("Cargando información de usuario...");
         progressDialog.show();
+
+        fillComments(foreignUserID);
+
         mFirebaseDatabase.getReference("users/"+foreignUserID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -106,7 +123,6 @@ public class ForeignProfile extends Fragment {
 
     private void showData(DataSnapshot dataSnapshot) {
         foreignUser = dataSnapshot.getValue(User.class);
-        fillComments(foreignUser.userID);
         profileName.setText(foreignUser.name);
         profileSurname.setText(foreignUser.surname);
         profileValoration.setRating(foreignUser.mediumValoration/foreignUser.nValorations);
@@ -116,25 +132,67 @@ public class ForeignProfile extends Fragment {
 
     private void fillComments(String userID) {
 
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mFirebaseDatabase.getReference("userValorations/"+userID).addListenerForSingleValueEvent(new ValueEventListener() {
+        mFirebaseDatabase.getReference("userValorations/"+ userID).addListenerForSingleValueEvent(new ValueEventListener() {
+          @Override
+          public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+              valorationList.clear();
+              Log.i("Lo que nos llega:", dataSnapshot.toString());
+              for(DataSnapshot ds : dataSnapshot.getChildren()){
+                  val = ds.getValue(Valoration.class);
+                  valorationList.add(val);
+                  Log.i("Nueva valoración: ", val.toString());
+              }
+              adapter.notifyDataSetChanged();
+              Log.i("Lista actual:", valorationList.toString());
+          }
+
+          @Override
+          public void onCancelled(@NonNull DatabaseError databaseError) {
+
+          }
+      }
+        );
+
+        /*
+        mFirebaseDatabase.getReference("userValorations/" + userID).addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot ds2 : dataSnapshot.getChildren()){
-                    Valoration val = ds2.getValue(Valoration.class);
-                    if(!val.getComment().equals(""))
-                    valorationList.add(val);
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                Log.i("Lo que nos llega:", dataSnapshot.toString());
+                for(DataSnapshot ds : dataSnapshot.getChildren()){
+                    switch (ds.getKey()) {
+                        case "comment":
+                            comment = ds.getValue().toString();
+                            break;
+                        case "userID":
+                            userValorationID = ds.getValue().toString();
+                            break;
                     }
-                final CommentAdapter adapter = new CommentAdapter(getContext(), R.layout.comment, valorationList );
-                mListValorationView.setAdapter(adapter);
-                mListValorationView.deferNotifyDataSetChanged();
+                }
+                Valoration newVal = new Valoration (comment, 0, userValorationID);
+                Log.i("Nueva valoración: ", newVal.toString());
+                valorationList.add(newVal);
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        });
-
+        });*/
     }
 }

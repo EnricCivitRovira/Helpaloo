@@ -14,11 +14,15 @@ import java.util.ArrayList;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 public class ChatListAdapter extends ArrayAdapter<Chat> {
 
     private Context mContext;
     private int mResource;
     private int lastPosition = -1;
+    private FirebaseAuth mAuth;
+    private String name;
 
     public ChatListAdapter(@NonNull Context context, int resource, ArrayList<Chat> chats) {
         super(context, resource, chats);
@@ -36,8 +40,14 @@ public class ChatListAdapter extends ArrayAdapter<Chat> {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
-        String name = getItem(position).nameTo;
+        mAuth = FirebaseAuth.getInstance();
+        if(getItem(position).getChatToID().equals(mAuth.getCurrentUser().getUid())) {
+           name = getItem(position).nameFrom;
+        }else{
+           name = getItem(position).nameTo;
+        }
         String title = getItem(position).chatTitle;
+
 
         final View result;
 
@@ -50,11 +60,8 @@ public class ChatListAdapter extends ArrayAdapter<Chat> {
         holder.title = (TextView) convertView.findViewById(R.id.chatTitle);
 
         result = convertView;
-
         convertView.setTag(holder);
-
         lastPosition = position;
-        Log.i("ChatID:" , "AdapterChatID "+ name + title);
         holder.name.setText(name);
         holder.title.setText(title);
 

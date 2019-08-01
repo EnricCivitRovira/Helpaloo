@@ -52,6 +52,7 @@ public class ValorationFragment extends Fragment {
         newValoration = view.findViewById(R.id.sendValoration);
         valorationText = view.findViewById(R.id.commentValoration);
         valorationValue = view.findViewById(R.id.rateValoration);
+
         //AUTH
         mAuth = FirebaseAuth.getInstance();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
@@ -77,4 +78,6 @@ public class ValorationFragment extends Fragment {
         getFragmentManager().popBackStackImmediate();
 
     }
+
+
 }

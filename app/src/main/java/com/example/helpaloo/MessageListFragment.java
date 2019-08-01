@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -43,6 +44,10 @@ public class MessageListFragment extends Fragment {
     private ListView mListView;
     private TextView messageFromView;
     private TextView titleMessageView;
+    public ChatListAdapter adapter;
+
+    public String chatFromID, chatID, chatPostID, chatTitle, chatToID, nameFrom, nameTo;
+
 
     @Nullable
     @Override
@@ -56,28 +61,7 @@ public class MessageListFragment extends Fragment {
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
         userID = user.getUid();
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mFirebaseDatabase.getReference("chats_user/"+userID).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                showData(dataSnapshot);
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
-        });
-
-        return view;
-    }
-
-    private void showData(DataSnapshot dataSnapshot) {
-        for(DataSnapshot ds : dataSnapshot.getChildren()){
-            Chat chat = ds.getValue(Chat.class);
-            Log.i("Chat", chat.chatID + "  "+ chat.chatFromID);
-            chatList.add(chat);
-        }
-        Log.i(TAG, chatList.toString());
-        final ChatListAdapter adapter = new ChatListAdapter(getContext(), R.layout.chat, chatList);
+        adapter = new ChatListAdapter(getContext(), R.layout.chat, chatList);
         mListView.setAdapter(adapter);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -88,6 +72,72 @@ public class MessageListFragment extends Fragment {
                 activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment, openChat).addToBackStack(null).commit();
             }
         });
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        mFirebaseDatabase.getReference("chats_user/"+userID).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                showData(dataSnapshot);
+            }
 
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        return view;
+    }
+
+    private void showData(DataSnapshot dataSnapshot) {
+        Log.i("Lo que nos llega:", dataSnapshot.toString());
+        for(DataSnapshot ds : dataSnapshot.getChildren()){
+            switch (ds.getKey()) {
+                case "chatFromID":
+                    chatFromID = ds.getValue().toString();
+                    break;
+                case "chatID":
+                    chatID = ds.getValue().toString();
+                    break;
+                case "chatPostID":
+                    chatPostID = ds.getValue().toString();
+                    break;
+                case "chatTitle":
+                    chatTitle = ds.getValue().toString();
+                    break;
+                case "chatToID":
+                    chatToID = ds.getValue().toString();
+                    break;
+                case "nameFrom":
+                    nameFrom = ds.getValue().toString();
+                    break;
+                case "nameTo":
+                    nameTo = ds.getValue().toString();
+                    break;
+            }
+
+        }
+
+        Chat newChat = new Chat(chatFromID, chatToID, chatPostID, nameFrom,  nameTo,  chatTitle);
+        Log.i("Chat a introducir: ", newChat.toString());
+        chatList.add(newChat);
+        adapter.notifyDataSetChanged();
+        Log.i("ListInfo:", chatList.toString());
+
+        //TODO las notificaciones de los nuvos mensajes
     }
 }

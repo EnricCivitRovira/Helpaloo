@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -65,6 +66,10 @@ public class MessageBox extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_messagebox, container, false);
+
+        ((MenuActivity) getActivity()).setFragmentPosition(-1);
+
+            // BIND
             send = view.findViewById(R.id.MBsendMessage);
             messageTV  = view.findViewById(R.id.MBmessageToSend);
             messageListView = view.findViewById(R.id.messagesList);
@@ -85,11 +90,8 @@ public class MessageBox extends Fragment {
             } else {
                 mAuth = FirebaseAuth.getInstance();
                 final FirebaseUser user = mAuth.getCurrentUser();
-
                 userIDFrom = user.getUid();
                 userIDTo = chat.chatToID;
-
-
                 mFirebaseDatabase.getReference("users/"+userIDFrom).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -197,21 +199,6 @@ public class MessageBox extends Fragment {
         messageList.add(message);
         adapter.notifyDataSetChanged();
     }
-
-    /*
-    private void showMessagesFirstTime(DataSnapshot dataSnapshot) {
-        for(DataSnapshot ds : dataSnapshot.getChildren()){
-            Message message = ds.getValue(Message.class);
-            Log.i("Message to Add", message.message);
-            messageList.add(message);
-        }
-        Log.i("ArrayList", messageList.size()+" "+messageList.toString());
-        adapter.notifyDataSetChanged();
-        //adapter.refreshList(messageList);
-
-
-
-    }*/
 
     private void insertMessage(final String message) {
         final String currentTime = Calendar.getInstance().getTime().toString();
