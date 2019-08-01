@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    private void signIn(String email, String password) {
+    private void signIn(String email, final String password) {
         Log.d(TAG, "signIn:" + email);
         if (!validateForm()) {
             return;
@@ -123,6 +123,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
+                            mPasswordField.setText("");
                             progressDialog.dismiss();
                             Toast.makeText(MainActivity.this, "Authentication fallida.",
                                     Toast.LENGTH_SHORT).show();

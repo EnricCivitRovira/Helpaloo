@@ -22,6 +22,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
+
 
 public class ValorationFragment extends Fragment {
 
@@ -30,14 +32,8 @@ public class ValorationFragment extends Fragment {
     private Button newValoration;
     private EditText valorationText;
     private RatingBar valorationValue;
-
-    private Valoration newVal;
-
-    private FirebaseAuth mAuth;
-    private FirebaseDatabase mFirebaseDatabase;
+    private String userID;
     private DatabaseReference mDatabaseReference;
-    private float totalValoration;
-
 
     public ValorationFragment(User foreignUser) {
         this.foreignUser = foreignUser;
@@ -54,8 +50,9 @@ public class ValorationFragment extends Fragment {
         valorationValue = view.findViewById(R.id.rateValoration);
 
         //AUTH
-        mAuth = FirebaseAuth.getInstance();
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        userID = mAuth.getUid();
+        FirebaseDatabase mFirebaseDatabase = FirebaseDatabase.getInstance();
         mDatabaseReference = FirebaseDatabase.getInstance().getReference();
 
         newValoration.setOnClickListener(new View.OnClickListener() {
@@ -70,8 +67,8 @@ public class ValorationFragment extends Fragment {
     }
 
     private void insertNewValoration(String comment, float rating) {
-        newVal = new Valoration(comment, rating, foreignUser.userID);
-        totalValoration = foreignUser.mediumValoration + rating;
+        Valoration newVal = new Valoration(comment, rating, userID);
+        float totalValoration = foreignUser.mediumValoration + rating;
         mDatabaseReference.child("userValorations").child(foreignUser.userID).push().setValue(newVal);
         mDatabaseReference.child("users").child(foreignUser.userID).child("nValorations").setValue(foreignUser.nValorations+1);
         mDatabaseReference.child("users").child(foreignUser.userID).child("mediumValoration").setValue(totalValoration);

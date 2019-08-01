@@ -21,6 +21,7 @@ import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -56,6 +57,7 @@ public class ForeignProfile extends Fragment {
     private String comment;
     private String userValorationID;
     private Object starRate;
+    private ArrayList<String> blackList = new ArrayList<>();
     private int type;
 
     private Valoration val = new Valoration();
@@ -113,7 +115,13 @@ public class ForeignProfile extends Fragment {
             public void onClick(View v) {
                 AppCompatActivity activity = (AppCompatActivity) v.getContext();
                 foreignNewValoration = new ValorationFragment(foreignUser);
-                activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment, foreignNewValoration).addToBackStack(null).commit();
+                Log.i("BlackList: ",blackList.toString());
+                Log.i("Nuevo usuario:", mAuth.getUid());
+                if(blackList.contains(mAuth.getUid())){
+                    Toast.makeText(getActivity(), "Ya has valorado a este usuario.", Toast.LENGTH_SHORT).show();
+                }else{
+                    activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment, foreignNewValoration).addToBackStack(null).commit();
+                }
             }
         });
 
@@ -130,20 +138,23 @@ public class ForeignProfile extends Fragment {
         Picasso.get().load(foreignUser.route).fit().centerCrop().into(profilePic);
     }
 
-    private void fillComments(String userID) {
+    private void fillComments(final String userID) {
 
         mFirebaseDatabase.getReference("userValorations/"+ userID).addListenerForSingleValueEvent(new ValueEventListener() {
           @Override
           public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
               valorationList.clear();
+              blackList.clear();
               Log.i("Lo que nos llega:", dataSnapshot.toString());
               for(DataSnapshot ds : dataSnapshot.getChildren()){
                   val = ds.getValue(Valoration.class);
                   valorationList.add(val);
+                  blackList.add(val.getUserID());
                   Log.i("Nueva valoración: ", val.toString());
               }
               adapter.notifyDataSetChanged();
               Log.i("Lista actual:", valorationList.toString());
+              Log.i("BlackList: ", blackList.toString());
           }
 
           @Override

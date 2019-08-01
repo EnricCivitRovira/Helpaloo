@@ -25,6 +25,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,32 +33,29 @@ import androidx.fragment.app.Fragment;
 
 @SuppressLint("ValidFragment")
 public class MessageBox extends Fragment {
-    public Button send;
-    public EditText messageTV;
-    public String message;
-    public DatabaseReference mDatabase;
-    public String userIDFrom;
-    public String userIDTo;
-    public String chatID;
-    public Chat chat;
-    public String senderName;
-    public String recieverName;
-    public Integer type;
-    public final ArrayList<Message> messageList = new ArrayList<Message>();
-    public ListView messageListView;
-    public MessagesListAdapter adapter;
-    public String messageText = "";
-    public String nameFrom = "";
-    public String nameTo = "";
-    public String timestamp = "";
-    public String userIDFromValue = "";
-    public String userIDToValue = "";
+    private EditText messageTV;
+    private String message;
+    private DatabaseReference mDatabase;
+    private String userIDFrom;
+    private String userIDTo;
+    private String chatID;
+    private Chat chat;
+    private String senderName;
+    private String recieverName;
+    private Integer type;
+    private final ArrayList<Message> messageList = new ArrayList<Message>();
+    private MessagesListAdapter adapter;
+    private String messageText = "";
+    private String nameFrom = "";
+    private String nameTo = "";
+    private String timestamp = "";
+    private String userIDFromValue = "";
+    private String userIDToValue = "";
 
 
     FirebaseAuth mAuth;
-    FirebaseDatabase mFirebaseDatabase;
 
-    public MessageBox(Chat chat, Integer type) {
+    MessageBox(Chat chat, Integer type) {
         this.chat = chat;
         this.type = type;
     }
@@ -70,13 +68,13 @@ public class MessageBox extends Fragment {
         ((MenuActivity) getActivity()).setFragmentPosition(-1);
 
             // BIND
-            send = view.findViewById(R.id.MBsendMessage);
+        Button send = view.findViewById(R.id.MBsendMessage);
             messageTV  = view.findViewById(R.id.MBmessageToSend);
-            messageListView = view.findViewById(R.id.messagesList);
+        ListView messageListView = view.findViewById(R.id.messagesList);
 
             adapter = new MessagesListAdapter(getContext(), R.layout.message, messageList);
             messageListView.setAdapter(adapter);
-            mFirebaseDatabase = FirebaseDatabase.getInstance();
+        FirebaseDatabase mFirebaseDatabase = FirebaseDatabase.getInstance();
 
             chatID = chat.chatID;
             if(type == 0) {
@@ -170,34 +168,32 @@ public class MessageBox extends Fragment {
     private void insertIntroducedMessage(DataSnapshot dataSnapshot) {
         for (DataSnapshot ds : dataSnapshot.getChildren()) {
 
-            switch (ds.getKey()) {
+            switch (Objects.requireNonNull(ds.getKey())) {
                 case "message":
-                    messageText = ds.getValue().toString();
+                    messageText = Objects.requireNonNull(ds.getValue()).toString();
                     break;
                 case "nameFrom":
-                    nameFrom = ds.getValue().toString();
+                    nameFrom = Objects.requireNonNull(ds.getValue()).toString();
                     break;
                 case "nameTo":
-                    nameTo = ds.getValue().toString();
+                    nameTo = Objects.requireNonNull(ds.getValue()).toString();
                     break;
                 case "timestamp":
-                    timestamp = ds.getValue().toString();
+                    timestamp = Objects.requireNonNull(ds.getValue()).toString();
                     break;
                 case "userIDFrom":
-                    userIDFromValue = ds.getValue().toString();
+                    userIDFromValue = Objects.requireNonNull(ds.getValue()).toString();
                     break;
                 case "userIDTo":
-                    userIDToValue = ds.getValue().toString();
+                    userIDToValue = Objects.requireNonNull(ds.getValue()).toString();
                     break;
             }
-
-
-
         }
         Message message = new Message(messageText, timestamp, userIDFromValue, userIDToValue, nameFrom, nameTo);
         Log.i("Mensaje a añadir: ", message.toString());
         messageList.add(message);
         adapter.notifyDataSetChanged();
+
     }
 
     private void insertMessage(final String message) {
@@ -212,5 +208,7 @@ public class MessageBox extends Fragment {
         DatabaseReference refAll3 = mDatabase.child("messages").child(chatID).push();
         refAll3.setValue(messageObject);
     }
+
+
 
 }

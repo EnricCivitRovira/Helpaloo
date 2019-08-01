@@ -1,9 +1,16 @@
 package com.example.helpaloo;
 
 import android.app.Application;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -18,6 +25,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.view.GravityCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -27,7 +36,8 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 public class MenuActivity extends AppCompatActivity {
-
+    private final String CHANNEL_ID = "Personal Notifications";
+    private final int NOTIFICATION_ID = 001;
     private TextView mTextMessage;
     private FirebaseAuth mAuth;
     private Post newPost;
@@ -74,6 +84,10 @@ public class MenuActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+
+
         setContentView(R.layout.activity_menu);
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Cargando página principal...");
@@ -162,6 +176,35 @@ public class MenuActivity extends AppCompatActivity {
                     fragmentPosition = 5;
 
                 break;
+        }
+    }
+
+    public void showNotification(String from) {
+
+        createNotificationChannel();
+        Log.i("Notificacion: ", "Nueva");
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID);
+        builder.setSmallIcon(R.drawable.ic_add_post)
+                .setContentTitle("Nuevo Mensaje")
+                .setContentText(from)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT).setChannelId(CHANNEL_ID);
+
+        NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
+        notificationManagerCompat.notify(NOTIFICATION_ID,builder.build());
+
+    }
+
+    private void createNotificationChannel(){
+        if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.O){
+            CharSequence name = "Personal Notifications";
+            String description = "Include all the personal notifications";
+            int importance =  NotificationManager.IMPORTANCE_DEFAULT;
+
+            NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, name, importance);
+            notificationChannel.setDescription(description);
+
+            NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            notificationManager.createNotificationChannel(notificationChannel);
         }
     }
 
