@@ -173,7 +173,9 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                createAccount(mEmailView.getText().toString(), mPasswordView.getText().toString(), latitude, longitude);
+                if(validateForm()) {
+                    createAccount(mEmailView.getText().toString(), mPasswordView.getText().toString(), latitude, longitude);
+                }
             }
         });
         mLoginFormView = findViewById(R.id.login_form);
@@ -521,6 +523,44 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
             showProgress(false);
         }
 
+    }
+
+    private boolean validateForm() {
+        boolean valid = true;
+
+        String email = mEmailView.getText().toString();
+        if (TextUtils.isEmpty(email)) {
+            mEmailView.setError("Debes introducir un Correo electrónico.");
+            valid = false;
+        } else {
+            mEmailView.setError(null);
+        }
+
+        String password = mPasswordView.getText().toString();
+        if (TextUtils.isEmpty(password)) {
+            mPasswordView.setError("Debes introducir una contraseña");
+            valid = false;
+        } else {
+            mPasswordView.setError(null);
+        }
+
+        String surnametext = surname.getText().toString();
+        if (TextUtils.isEmpty(surnametext)) {
+            surname.setError("Debes introducir un apellido");
+            valid = false;
+        } else {
+            surname.setError(null);
+        }
+
+        String nametext = name.getText().toString();
+        if (TextUtils.isEmpty(nametext)) {
+            name.setError("Debes introducir un nombre");
+            valid = false;
+        } else {
+            name.setError(null);
+        }
+
+        return valid;
     }
 }
 

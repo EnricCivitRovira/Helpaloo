@@ -1,6 +1,8 @@
 package com.example.helpaloo;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,8 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -29,6 +34,7 @@ import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.Fragment;
 
 @SuppressLint("ValidFragment")
@@ -36,8 +42,9 @@ public class MessageBox extends Fragment {
     private EditText messageTV;
     private String message;
     private DatabaseReference mDatabase;
-    private String userIDFrom;
+    private String me;
     private String userIDTo;
+    private String userIDFrom;
     private String chatID;
     private Chat chat;
     private String senderName;
@@ -51,7 +58,7 @@ public class MessageBox extends Fragment {
     private String timestamp = "";
     private String userIDFromValue = "";
     private String userIDToValue = "";
-
+    private ListView messageListView;
 
     FirebaseAuth mAuth;
 
@@ -67,61 +74,41 @@ public class MessageBox extends Fragment {
 
         ((MenuActivity) getActivity()).setFragmentPosition(-1);
 
-            // BIND
+        // BIND
         Button send = view.findViewById(R.id.MBsendMessage);
-            messageTV  = view.findViewById(R.id.MBmessageToSend);
-        ListView messageListView = view.findViewById(R.id.messagesList);
+        messageTV  = view.findViewById(R.id.MBmessageToSend);
+        messageListView = view.findViewById(R.id.messagesList);
+        messageListView.setOnItemClickListener(null);
 
-            adapter = new MessagesListAdapter(getContext(), R.layout.message, messageList);
-            messageListView.setAdapter(adapter);
+        mAuth = FirebaseAuth.getInstance();
+        final FirebaseUser user = mAuth.getCurrentUser();
+        adapter = new MessagesListAdapter(getContext(), R.layout.message, messageList, user.getUid());
+        messageListView.setAdapter(adapter);
         FirebaseDatabase mFirebaseDatabase = FirebaseDatabase.getInstance();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
 
+            me = user.getUid();
             chatID = chat.chatID;
-            if(type == 0) {
+            if(chat.chatFromID.equals(me)){
                 userIDFrom = chat.chatFromID;
                 userIDTo = chat.chatToID;
                 senderName = chat.nameFrom;
                 recieverName = chat.nameTo;
                 ((MenuActivity) getActivity()).getSupportActionBar().setTitle(recieverName);
 
-
-            } else {
-                mAuth = FirebaseAuth.getInstance();
-                final FirebaseUser user = mAuth.getCurrentUser();
-                userIDFrom = user.getUid();
-                userIDTo = chat.chatToID;
-                mFirebaseDatabase.getReference("users/"+userIDFrom).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        senderName = dataSnapshot.getValue(User.class).name;
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                    }
-                });
-
-
-
-                mFirebaseDatabase.getReference("users/"+userIDTo).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        recieverName = dataSnapshot.getValue(User.class).name;
-                        ((MenuActivity) getActivity()).getSupportActionBar().setTitle(recieverName);
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                    }
-                });
-
+            }else{
+                userIDFrom = chat.chatToID;
+                userIDTo = me;
+                senderName = chat.nameTo;
+                recieverName = chat.nameFrom;
+                ((MenuActivity) getActivity()).getSupportActionBar().setTitle(recieverName);
             }
 
             mFirebaseDatabase.getReference("messages/"+chatID).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 insertIntroducedMessage(dataSnapshot);
+
             }
 
             @Override
@@ -144,23 +131,17 @@ public class MessageBox extends Fragment {
 
             }
         });
-            mDatabase = FirebaseDatabase.getInstance().getReference();
 
-            Log.i("ChatInfo: ", senderName + recieverName);
-
-            send.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    message = messageTV.getText().toString();
-                    if(!message.equals("")) {
-                        insertMessage(message);
-                        messageTV.setText("");
-                    }
+        send.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                message = messageTV.getText().toString();
+                if(!message.equals("")) {
+                    insertMessage(message);
+                    messageTV.setText("");
                 }
-            });
-
-
+            }
+        });
 
         return view;
     }
@@ -191,8 +172,10 @@ public class MessageBox extends Fragment {
         }
         Message message = new Message(messageText, timestamp, userIDFromValue, userIDToValue, nameFrom, nameTo);
         Log.i("Mensaje a añadir: ", message.toString());
+
         messageList.add(message);
         adapter.notifyDataSetChanged();
+        messageListView.setSelection(adapter.getCount() -1) ;
 
     }
 
@@ -208,7 +191,5 @@ public class MessageBox extends Fragment {
         DatabaseReference refAll3 = mDatabase.child("messages").child(chatID).push();
         refAll3.setValue(messageObject);
     }
-
-
 
 }

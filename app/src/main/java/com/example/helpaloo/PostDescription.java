@@ -58,6 +58,7 @@ public class PostDescription extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_post_description, container, false);
 
         ((MenuActivity) getActivity()).setFragmentPosition(-1);
+        ((MenuActivity) getActivity()).getSupportActionBar().setTitle("Información de tarea");
 
         contact =  view.findViewById(R.id.PDContact);
         postPhoto =  view.findViewById(R.id.PDImage);

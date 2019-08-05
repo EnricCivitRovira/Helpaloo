@@ -74,6 +74,7 @@ public class ForeignProfile extends Fragment {
 
         ((MenuActivity) getActivity()).setFragmentPosition(-1);
 
+
         // BIND
         profilePic = view.findViewById(R.id.foreignAvatar);
         profileName = view.findViewById(R.id.foreignName);
@@ -82,9 +83,12 @@ public class ForeignProfile extends Fragment {
         mListValorationView = view.findViewById(R.id.commentList);
         numberValorations = view.findViewById(R.id.nValorationsView);
         newValoration = view.findViewById(R.id.openValoration);
-
+        mListValorationView.setOnItemClickListener(null);
         if(type == 1){
             newValoration.setVisibility(view.GONE);
+            ((MenuActivity) getActivity()).getSupportActionBar().setTitle("Mis Valoraciones");
+        }else{
+            ((MenuActivity) getActivity()).getSupportActionBar().setTitle("Perfil del publicante");
         }
 
         //FIREBASE
@@ -163,47 +167,5 @@ public class ForeignProfile extends Fragment {
           }
       }
         );
-
-        /*
-        mFirebaseDatabase.getReference("userValorations/" + userID).addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                Log.i("Lo que nos llega:", dataSnapshot.toString());
-                for(DataSnapshot ds : dataSnapshot.getChildren()){
-                    switch (ds.getKey()) {
-                        case "comment":
-                            comment = ds.getValue().toString();
-                            break;
-                        case "userID":
-                            userValorationID = ds.getValue().toString();
-                            break;
-                    }
-                }
-                Valoration newVal = new Valoration (comment, 0, userValorationID);
-                Log.i("Nueva valoración: ", newVal.toString());
-                valorationList.add(newVal);
-                adapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });*/
     }
 }

@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import android.provider.ContactsContract;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -163,10 +164,12 @@ public class AddPost extends Fragment {
         uploadPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(type == 0) {
-                    uploadImage(postid);
-                }else{
-                    updatePost(post.postId, post.userId);
+                if(validateForm()){
+                    if(type == 0) {
+                        uploadImage(postid);
+                    }else{
+                        updatePost(post.postId, post.userId);
+                    }
                 }
 
             }
@@ -359,5 +362,35 @@ public class AddPost extends Fragment {
             Picasso.get().load(imageUri).into(imageView);
         }
 
+    }
+
+    private boolean validateForm() {
+        boolean valid = true;
+
+        String title = introducedTitle.getText().toString();
+        if (TextUtils.isEmpty(title)) {
+            introducedTitle.setError("Debes introducir un Titulo en la tarea.");
+            valid = false;
+        } else {
+            introducedTitle.setError(null);
+        }
+
+        String price = introducedPrize.getText().toString();
+        if (TextUtils.isEmpty(price)) {
+            introducedPrize.setError("Debes introducir un precio para tu tarea");
+            valid = false;
+        } else {
+            introducedPrize.setError(null);
+        }
+
+        String description = introducedDescription.getText().toString();
+        if (TextUtils.isEmpty(description)) {
+            introducedDescription.setError("Debes introducir una breve descripción");
+            valid = false;
+        } else {
+            introducedDescription.setError(null);
+        }
+
+        return valid;
     }
 }

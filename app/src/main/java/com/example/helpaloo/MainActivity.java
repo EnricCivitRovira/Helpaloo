@@ -85,13 +85,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return valid;
     }
 
+    private boolean validateResetPass() {
+        boolean valid = true;
+
+        String email = mEmailField.getText().toString();
+        if (TextUtils.isEmpty(email)) {
+            mEmailField.setError("Email requerido.");
+            valid = false;
+        } else {
+            mEmailField.setError(null);
+        }
+
+        return valid;
+    }
+
 
     public void onClick(View v) {
         int i = v.getId();
         if (i == R.id.signin) {
             signIn(mEmailField.getText().toString(), mPasswordField.getText().toString());
         } else if (i == R.id.forgetPass) {
-            forgetPassword();
+            if(validateResetPass()) {
+                forgetPassword();
+            }
         } else if (i ==  R.id.register) {
             Intent intent = new Intent(MainActivity.this, RegisterActivity.class);
             startActivity(intent);
