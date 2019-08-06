@@ -2,7 +2,6 @@ package com.example.helpaloo;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,11 +20,8 @@ public class ChatListAdapter extends ArrayAdapter<Chat> {
 
     private Context mContext;
     private int mResource;
-    private int lastPosition = -1;
-    private FirebaseAuth mAuth;
-    private String name;
 
-    public ChatListAdapter(@NonNull Context context, int resource, ArrayList<Chat> chats) {
+    ChatListAdapter(@NonNull Context context, int resource, ArrayList<Chat> chats) {
         super(context, resource, chats);
         mContext = context;
         mResource = resource;
@@ -40,28 +37,28 @@ public class ChatListAdapter extends ArrayAdapter<Chat> {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
-        mAuth = FirebaseAuth.getInstance();
-        if(getItem(position).getChatToID().equals(mAuth.getCurrentUser().getUid())) {
-           name = getItem(position).nameFrom;
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        String name;
+        Chat chat = getItem(position);
+        String currentUser = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
+
+        if(Objects.requireNonNull(chat).getChatToID().equals(currentUser)) {
+           name = chat.getNameFrom();
         }else{
-           name = getItem(position).nameTo;
+           name = chat.getNameTo();
         }
-        String title = getItem(position).chatTitle;
+        String title = chat.getChatTitle();
 
-
-        final View result;
 
         ViewHolder holder;
 
         LayoutInflater inflater = LayoutInflater.from(mContext);
         convertView = inflater.inflate(mResource, parent, false);
         holder= new ViewHolder();
-        holder.name = (TextView) convertView.findViewById(R.id.chatPerson);
-        holder.title = (TextView) convertView.findViewById(R.id.chatTitle);
+        holder.name =  convertView.findViewById(R.id.chatPerson);
+        holder.title =  convertView.findViewById(R.id.chatTitle);
 
-        result = convertView;
         convertView.setTag(holder);
-        lastPosition = position;
         holder.name.setText(name);
         holder.title.setText(title);
 

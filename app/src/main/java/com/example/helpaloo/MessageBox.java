@@ -1,13 +1,9 @@
 package com.example.helpaloo;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
-import android.net.Uri;
+import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -15,9 +11,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.Toolbar;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -27,16 +20,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
-
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Objects;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.Fragment;
 
 @SuppressLint("ValidFragment")
@@ -44,14 +32,13 @@ public class MessageBox extends Fragment {
     private EditText messageTV;
     private String message;
     private DatabaseReference mDatabase;
-    private String me;
     private String userIDTo;
     private String userIDFrom;
     private String chatID;
     private Chat chat;
     private String senderName;
     private String recieverName;
-    private final ArrayList<Message> messageList = new ArrayList<Message>();
+    private final ArrayList<Message> messageList = new ArrayList<>();
     private MessagesListAdapter adapter;
     private String messageText = "";
     private String nameFrom = "";
@@ -62,7 +49,6 @@ public class MessageBox extends Fragment {
     private ListView messageListView;
     private ImageView profilePic;
     private TextView profileName;
-    private User user;
 
     FirebaseAuth mAuth;
 
@@ -75,8 +61,11 @@ public class MessageBox extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_messagebox, container, false);
 
-        ((MenuActivity) getActivity()).setFragmentPosition(-1);
-
+        ((MenuActivity) Objects.requireNonNull(getActivity())).setFragmentPosition(-1);
+        //dialog
+        final ProgressDialog progressDialog = new ProgressDialog(getContext());
+        progressDialog.setTitle("Cargando Mensajes...");
+        progressDialog.show();
         // BIND
         Button send = view.findViewById(R.id.MBsendMessage);
         messageTV  = view.findViewById(R.id.MBmessageToSend);
@@ -88,27 +77,27 @@ public class MessageBox extends Fragment {
 
         mAuth = FirebaseAuth.getInstance();
         final FirebaseUser user = mAuth.getCurrentUser();
-        adapter = new MessagesListAdapter(getContext(), R.layout.message, messageList, user.getUid());
+        adapter = new MessagesListAdapter(Objects.requireNonNull(getContext()), R.layout.message, messageList, Objects.requireNonNull(user).getUid());
         messageListView.setAdapter(adapter);
         FirebaseDatabase mFirebaseDatabase = FirebaseDatabase.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        ((MenuActivity) getActivity()).getSupportActionBar().hide();
+        Objects.requireNonNull(((MenuActivity) getActivity()).getSupportActionBar()).hide();
 
-        me = user.getUid();
-        chatID = chat.chatID;
-        if(chat.chatFromID.equals(me)){
-            userIDFrom = chat.chatFromID;
-            userIDTo = chat.chatToID;
-            senderName = chat.nameFrom;
-            recieverName = chat.nameTo;
-            ((MenuActivity) getActivity()).getSupportActionBar().setTitle(recieverName);
+        String me = user.getUid();
+        chatID = chat.getChatID();
+        if(chat.getChatFromID().equals(me)){
+            userIDFrom = chat.getChatFromID();
+            userIDTo = chat.getChatToID();
+            senderName = chat.getNameFrom();
+            recieverName = chat.getNameTo();
+            Objects.requireNonNull(((MenuActivity) getActivity()).getSupportActionBar()).setTitle(recieverName);
         }else{
-            userIDFrom = chat.chatToID;
-            userIDTo = chat.chatFromID;
-            senderName = chat.nameTo;
-            recieverName = chat.nameFrom;
-            ((MenuActivity) getActivity()).getSupportActionBar().setTitle(recieverName);
+            userIDFrom = chat.getChatToID();
+            userIDTo = chat.getChatFromID();
+            senderName = chat.getNameTo();
+            recieverName = chat.getNameFrom();
+            Objects.requireNonNull(((MenuActivity) getActivity()).getSupportActionBar()).setTitle(recieverName);
         }
 
             mFirebaseDatabase.getReference("messages/"+chatID).addChildEventListener(new ChildEventListener() {
@@ -143,6 +132,7 @@ public class MessageBox extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 showProfileInfo(dataSnapshot);
+                progressDialog.dismiss();
             }
 
             @Override
@@ -166,7 +156,7 @@ public class MessageBox extends Fragment {
             @Override
             public void onClick(View v) {
                 ForeignProfile theirValorations = new ForeignProfile(userIDTo, 0);
-                getActivity().getSupportFragmentManager().beginTransaction()
+                Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment, theirValorations, "findThisFragment")
                         .addToBackStack(null)
                         .commit();
@@ -177,9 +167,9 @@ public class MessageBox extends Fragment {
     }
 
     private void showProfileInfo(DataSnapshot dataSnapshot) {
-        user = dataSnapshot.getValue(User.class);
-        profileName.setText(user.name);
-        Picasso.get().load(user.route).fit().centerCrop().into(profilePic);
+        User user = dataSnapshot.getValue(User.class);
+        profileName.setText(Objects.requireNonNull(user).getName());
+        Picasso.get().load(user.getRoute()).fit().centerCrop().into(profilePic);
     }
 
     private void insertIntroducedMessage(DataSnapshot dataSnapshot) {
@@ -207,8 +197,6 @@ public class MessageBox extends Fragment {
             }
         }
         Message message = new Message(messageText, timestamp, userIDFromValue, userIDToValue, nameFrom, nameTo);
-        Log.i("Mensaje a añadir: ", message.toString());
-
         messageList.add(message);
         adapter.notifyDataSetChanged();
         messageListView.setSelection(adapter.getCount() -1) ;

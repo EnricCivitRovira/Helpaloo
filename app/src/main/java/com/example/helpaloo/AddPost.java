@@ -5,17 +5,12 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-
-import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -23,23 +18,20 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
-
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
+import java.util.Objects;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -49,9 +41,7 @@ public class AddPost extends Fragment {
 
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
-    private FirebaseStorage storage;
-    StorageReference storageReference;
-    private FirebaseUser currentUser;
+    private StorageReference storageReference;
     private EditText introducedTitle;
     private EditText introducedDescription;
     private EditText introducedPrize;
@@ -59,8 +49,6 @@ public class AddPost extends Fragment {
 
     private static final int PICK_IMAGE_REQUEST = 1;
 
-    private Button uploadImage;
-    private Button uploadPost;
     private ImageView imageView;
     private Uri imageUri;
 
@@ -68,8 +56,6 @@ public class AddPost extends Fragment {
     private String userid;
     private Task<Uri> route;
     private static String routeString;
-    private FirebaseDatabase mFirebaseDatabase;
-    private Button deletePost;
 
     private String userName;
     private String userSurname;
@@ -92,61 +78,59 @@ public class AddPost extends Fragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_add_post, container, false);
         // BIND
-        uploadImage = view.findViewById(R.id.addImage);
-        uploadPost = view.findViewById(R.id.addPost);
+        Button uploadImage = view.findViewById(R.id.addImage);
+        Button uploadPost = view.findViewById(R.id.addPost);
         introducedTitle = view.findViewById(R.id.postTitle);
         introducedDescription = view.findViewById(R.id.postDescription);
         introducedPrize = view.findViewById(R.id.postPrice);
         introducedTime = view.findViewById(R.id.postTime);
         imageView = view.findViewById(R.id.postImage);
-        deletePost = view.findViewById(R.id.deletePost);
+        Button deletePost = view.findViewById(R.id.deletePost);
 
         // firebase
         mAuth = FirebaseAuth.getInstance();
-        currentUser = mAuth.getCurrentUser();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        storage = FirebaseStorage.getInstance();
+        FirebaseStorage storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
-
 
         // Añadir Anuncio
         if(type == 0) {
-            ((MenuActivity) getActivity()).getSupportActionBar().setTitle("Añadir Anuncio");
+            Objects.requireNonNull(((MenuActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).setTitle("Añadir Anuncio");
 
-            deletePost.setVisibility(view.GONE);
+            deletePost.setVisibility(View.GONE);
 
-            userid = currentUser.getUid();
+            userid = Objects.requireNonNull(currentUser).getUid();
             postid = mDatabase.child("posts").child(userid).push().getKey();
-            userName = user.name;
-            userSurname = user.surname;
+            userName = user.getName();
+            userSurname = user.getSurname();
 
         // Editar Anuncio
         }else {
 
-            ((MenuActivity) getActivity()).setFragmentPosition(-1);
+            ((MenuActivity) Objects.requireNonNull(getActivity())).setFragmentPosition(-1);
 
-            deletePost.setVisibility(view.VISIBLE);
+            deletePost.setVisibility(View.VISIBLE);
 
-            ((MenuActivity) getActivity()).getSupportActionBar().setTitle("Editar Anuncio");
-            Picasso.get().load(post.route).into(imageView);
-            introducedTitle.setText(post.title);
-            introducedDescription.setText(post.description);
-            introducedPrize.setText(post.prize);
+            Objects.requireNonNull(((MenuActivity) getActivity()).getSupportActionBar()).setTitle("Editar Anuncio");
+            Picasso.get().load(post.getRoute()).into(imageView);
+            introducedTitle.setText(post.getTitle());
+            introducedDescription.setText(post.getDescription());
+            introducedPrize.setText(post.getPrize());
 
             deletePost.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    deletePostElement(post.postId, post.userId);
+                    deletePostElement(post.getPostId(), post.getUserId());
                     if (context == 0) {
-                        ((MenuActivity) getActivity()).setFragment(4);
+                        ((MenuActivity) Objects.requireNonNull(getActivity())).setFragment(4);
                     }else if(context == 1){
-                        ((MenuActivity) getActivity()).setFragment(5);
+                        ((MenuActivity) Objects.requireNonNull(getActivity())).setFragment(5);
                     }
 
 
@@ -168,7 +152,7 @@ public class AddPost extends Fragment {
                     if(type == 0) {
                         uploadImage(postid);
                     }else{
-                        updatePost(post.postId, post.userId);
+                        updatePost(post.getPostId(), post.getUserId());
                     }
                 }
 
@@ -186,20 +170,19 @@ public class AddPost extends Fragment {
 
         FragmentManager fragmentManager = getFragmentManager();
         SearchPost myPosts = new SearchPost(1, 1);
-        fragmentManager.beginTransaction().replace(R.id.fragment, myPosts)
+        Objects.requireNonNull(fragmentManager).beginTransaction().replace(R.id.fragment, myPosts)
                 .commit();
     }
 
-    private void updatePost(String postId, final String userid) {
+    private void updatePost(final String postId, final String userid) {
         final ProgressDialog progressDialog = new ProgressDialog(getContext());
         progressDialog.setTitle("Editando Post...");
         progressDialog.show();
 
         if(imageUri != null)
         {
-            String[] filename = imageUri.getLastPathSegment().split("/");
-            Log.i("ImageRoute = ",imageUri.getPath() );
-            final StorageReference ref = storageReference.child("images/"+mAuth.getUid()+"/"+postid+"/"+filename[filename.length-1]);
+            String[] filename = Objects.requireNonNull(imageUri.getLastPathSegment()).split("/");
+            final StorageReference ref = storageReference.child("images/"+mAuth.getUid()+"/"+postId+"/"+filename[filename.length-1]);
 
             Log.w("POST PATH: "+ref, "TEST");
             ref.putFile(imageUri)
@@ -211,8 +194,8 @@ public class AddPost extends Fragment {
                             route = ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                 @Override
                                 public void onSuccess(Uri uri) {
-                                    routeString = route.getResult().toString();
-                                    insertPost(postid, userid, introducedTitle.getText().toString(), introducedDescription.getText().toString(), introducedPrize.getText().toString(), introducedTime.getSelectedItem().toString(), routeString, user.latitude, user.longitude, 0);
+                                    routeString = Objects.requireNonNull(route.getResult()).toString();
+                                    insertPost(postId, userid, introducedTitle.getText().toString(), introducedDescription.getText().toString(), introducedPrize.getText().toString(), introducedTime.getSelectedItem().toString(), routeString, user.getLatitude(), user.getLongitude());
                                 }
                             });
 
@@ -236,7 +219,7 @@ public class AddPost extends Fragment {
                         }
                     });
         }else {
-            updatePostPart(postId, userid, introducedTitle.getText().toString(), introducedDescription.getText().toString(), introducedPrize.getText().toString(), introducedTime.getSelectedItem().toString(), "noedited", user.latitude,user.longitude,0);
+            updatePostPart(postId, userid, introducedTitle.getText().toString(), introducedDescription.getText().toString(), introducedPrize.getText().toString(), introducedTime.getSelectedItem().toString(), user.getLatitude(),user.getLongitude());
             progressDialog.dismiss();
             Toast.makeText(getActivity(), "Articulo Editado", Toast.LENGTH_SHORT).show();
         }
@@ -249,7 +232,7 @@ public class AddPost extends Fragment {
 
         if(imageUri != null)
         {
-            String[] filename = imageUri.getLastPathSegment().split("/");
+            String[] filename = Objects.requireNonNull(imageUri.getLastPathSegment()).split("/");
             final StorageReference ref = storageReference.child("images/"+mAuth.getUid()+"/"+postid+"/"+filename[filename.length-1]);
 
             Log.w("POST PATH: "+ref, "TEST");
@@ -261,10 +244,10 @@ public class AddPost extends Fragment {
                             route = ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                 @Override
                                 public void onSuccess(Uri uri) {
-                                    routeString = route.getResult().toString();
-                                    insertPost(postid, userid, introducedTitle.getText().toString(), introducedDescription.getText().toString(), introducedPrize.getText().toString(), introducedTime.getSelectedItem().toString(), routeString, user.latitude, user.longitude, 0);
+                                    routeString = Objects.requireNonNull(route.getResult()).toString();
+                                    insertPost(postid, userid, introducedTitle.getText().toString(), introducedDescription.getText().toString(), introducedPrize.getText().toString(), introducedTime.getSelectedItem().toString(), routeString, user.getLatitude(), user.getLongitude());
                                     Toast.makeText(getActivity(), "Subido", Toast.LENGTH_SHORT).show();
-                                    ((MenuActivity) getActivity()).setFragment(4);
+                                    ((MenuActivity) Objects.requireNonNull(getActivity())).setFragment(4);
                                 }
 
                             });
@@ -289,59 +272,51 @@ public class AddPost extends Fragment {
                         }
                     });
         }else {
-            insertPost(postid, userid, introducedTitle.getText().toString(), introducedDescription.getText().toString(), introducedPrize.getText().toString(), introducedTime.getSelectedItem().toString(), "",user.latitude, user.longitude,  0);
+            insertPost(postid, userid, introducedTitle.getText().toString(), introducedDescription.getText().toString(), introducedPrize.getText().toString(), introducedTime.getSelectedItem().toString(), "",user.getLatitude(), user.getLongitude());
             progressDialog.dismiss();
             Toast.makeText(getActivity(), "Articulo Subido", Toast.LENGTH_SHORT).show();
-            ((MenuActivity) getActivity()).setFragment(4);
+            ((MenuActivity) Objects.requireNonNull(getActivity())).setFragment(4);
         }
 
 
     }
 
 
-    private void insertPost(String postId, String userId, String title, String description, String prize, String time, String route, double latitude, double longitude, int type) {
+    private void insertPost(String postId, String userId, String title, String description, String prize, String time, String route, double latitude, double longitude) {
         if(route.equals("")){
-            route = "https://firebasestorage.googleapis.com/v0/b/helpaloo.appspot.com/o/images%2FW8ImpGhMsShzkZ3qVkbcytf05uB3%2F-LjGqfKpgmWgP58ip6pC%2Fdownload.jpg?alt=media&token=2aa54b1d-e114-49a4-886c-567ca06b7b82";
+            route = "https://firebasestorage.googleapis.com/v0/b/helpaloo.appspot.com/o/DefaultPics%2Fdownload.jpg?alt=media&token=90322697-5e5d-4a37-81d4-7acde7b326f9";
         }
         Post post = new Post (postId,userId,title,description, prize, time, route, userName, userSurname, latitude, longitude);
-        Log.w("POST: "+userId+" postid: "+ postId, "TEST");
-        if (type == 0){
-            Log.i("AllPosts: ", postId);
-            DatabaseReference refAll = mDatabase.child("allPosts").child(postId);
-            refAll.setValue(post);
-        }
+
+        DatabaseReference refAll = mDatabase.child("allPosts").child(postId);
+        refAll.setValue(post);
+
         DatabaseReference ref = mDatabase.child("posts").child(userId).child(postId);
         ref.setValue(post);
     }
 
-    private void updatePostPart(String postId, String userId, String title, String description, String prize, String time, String route,double latitude, double longitude, int type) {
+    private void updatePostPart(String postId, String userId, String title, String description, String prize, String time, double latitude, double longitude) {
 
-        Post post = new Post (postId,userId,title,description, prize, time, route, userName, userSurname, latitude, longitude);
+        Post post = new Post (postId,userId,title,description, prize, time, "noedited", userName, userSurname, latitude, longitude);
 
         DatabaseReference refAll = mDatabase.child("allPosts").child(postId);
         DatabaseReference ref = mDatabase.child("posts").child(userId).child(postId);
 
-        refAll.child("title").setValue(post.title);
-        ref.child("title").setValue(post.title);
+        refAll.child("title").setValue(post.getTitle());
+        ref.child("title").setValue(post.getTitle());
 
-        refAll.child("description").setValue(post.description);
-        ref.child("description").setValue(post.description);
+        refAll.child("description").setValue(post.getDescription());
+        ref.child("description").setValue(post.getDescription());
 
-        refAll.child("prize").setValue(post.prize);
-        ref.child("prize").setValue(post.prize);
+        refAll.child("prize").setValue(post.getPrize());
+        ref.child("prize").setValue(post.getPrize());
 
-        refAll.child("latitude").setValue(post.latitude);
-        ref.child("latitude").setValue(post.latitude);
+        refAll.child("latitude").setValue(post.getLatitude());
+        ref.child("latitude").setValue(post.getLatitude());
 
-        refAll.child("longitude").setValue(post.longitude);
-        ref.child("longitude").setValue(post.longitude);
+        refAll.child("longitude").setValue(post.getLongitude());
+        ref.child("longitude").setValue(post.getLongitude());
 
-        if(!route.equals("noedited")){
-            refAll.child(route).setValue(post.route);
-            ref.child(route).setValue(post.route);
-        }
-
-        Log.i("Articulo Editado: ", post.description + post.prize);
     }
 
     private void openFileChooser() {

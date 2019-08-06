@@ -1,17 +1,12 @@
 package com.example.helpaloo;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,21 +14,16 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RatingBar;
-import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-
+import java.util.Objects;
 
 public class ForeignProfile extends Fragment {
 
@@ -42,8 +32,6 @@ public class ForeignProfile extends Fragment {
     private TextView profileSurname;
     private TextView numberValorations;
     private RatingBar profileValoration;
-    private ListView mListValorationView;
-    private Button newValoration;
 
     private FirebaseAuth mAuth;
     private FirebaseDatabase mFirebaseDatabase;
@@ -54,15 +42,12 @@ public class ForeignProfile extends Fragment {
     private ValorationFragment foreignNewValoration;
     private ArrayList<Valoration> valorationList = new ArrayList<>();
     private CommentAdapter adapter;
-    private String comment;
-    private String userValorationID;
-    private Object starRate;
     private ArrayList<String> blackList = new ArrayList<>();
     private int type;
 
     private Valoration val = new Valoration();
 
-    public ForeignProfile(String foreignUserID, int type){
+    ForeignProfile(String foreignUserID, int type){
         this.foreignUserID = foreignUserID;
         this.type = type; // 0 -> Visto desde fuera. 1 -> visto desde dentro
     }
@@ -72,7 +57,7 @@ public class ForeignProfile extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_foreign_profile, container, false);
 
-        ((MenuActivity) getActivity()).setFragmentPosition(-1);
+        ((MenuActivity) Objects.requireNonNull(getActivity())).setFragmentPosition(-1);
 
 
         // BIND
@@ -80,21 +65,23 @@ public class ForeignProfile extends Fragment {
         profileName = view.findViewById(R.id.foreignName);
         profileSurname = view.findViewById(R.id.foreignSurname);
         profileValoration = view.findViewById(R.id.mediumValoration);
-        mListValorationView = view.findViewById(R.id.commentList);
+        ListView mListValorationView = view.findViewById(R.id.commentList);
         numberValorations = view.findViewById(R.id.nValorationsView);
-        newValoration = view.findViewById(R.id.openValoration);
+        Button newValoration = view.findViewById(R.id.openValoration);
+        Button theirPosts = view.findViewById(R.id.theirPosts);
+
         mListValorationView.setOnItemClickListener(null);
         if(type == 1){
-            newValoration.setVisibility(view.GONE);
-            ((MenuActivity) getActivity()).getSupportActionBar().setTitle("Mis Valoraciones");
+            newValoration.setVisibility(View.GONE);
+            Objects.requireNonNull(((MenuActivity) getActivity()).getSupportActionBar()).setTitle("Mis Valoraciones");
         }else{
-            ((MenuActivity) getActivity()).getSupportActionBar().setTitle("Perfil del publicante");
+            Objects.requireNonNull(((MenuActivity) getActivity()).getSupportActionBar()).setTitle("Perfil del publicante");
         }
 
         //FIREBASE
         mAuth = FirebaseAuth.getInstance();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        adapter = new CommentAdapter(getContext(), R.layout.comment, valorationList );
+        adapter = new CommentAdapter(Objects.requireNonNull(getContext()), R.layout.comment, valorationList );
         mListValorationView.setAdapter(adapter);
         final ProgressDialog progressDialog = new ProgressDialog(getContext());
         progressDialog.setTitle("Cargando información de usuario...");
@@ -119,8 +106,6 @@ public class ForeignProfile extends Fragment {
             public void onClick(View v) {
                 AppCompatActivity activity = (AppCompatActivity) v.getContext();
                 foreignNewValoration = new ValorationFragment(foreignUser);
-                Log.i("BlackList: ",blackList.toString());
-                Log.i("Nuevo usuario:", mAuth.getUid());
                 if(blackList.contains(mAuth.getUid())){
                     Toast.makeText(getActivity(), "Ya has valorado a este usuario.", Toast.LENGTH_SHORT).show();
                 }else{
@@ -129,17 +114,29 @@ public class ForeignProfile extends Fragment {
             }
         });
 
+        theirPosts.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SearchPost theirPosts = new SearchPost(2, foreignUserID);
+                Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment, theirPosts, "findThisFragment")
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
+
 
         return view;
     }
 
+    @SuppressLint("SetTextI18n")
     private void showData(DataSnapshot dataSnapshot) {
         foreignUser = dataSnapshot.getValue(User.class);
-        profileName.setText(foreignUser.name);
-        profileSurname.setText(foreignUser.surname);
-        profileValoration.setRating(foreignUser.mediumValoration/foreignUser.nValorations);
-        numberValorations.setText(String.valueOf(foreignUser.nValorations)+" Valoraciones.");
-        Picasso.get().load(foreignUser.route).fit().centerCrop().into(profilePic);
+        profileName.setText(Objects.requireNonNull(foreignUser).getName());
+        profileSurname.setText(foreignUser.getSurname());
+        profileValoration.setRating(foreignUser.getMediumValoration()/foreignUser.getnValorations());
+        numberValorations.setText(foreignUser.getnValorations()+" Valoraciones.");
+        Picasso.get().load(foreignUser.getRoute()).fit().centerCrop().into(profilePic);
     }
 
     private void fillComments(final String userID) {
@@ -149,16 +146,12 @@ public class ForeignProfile extends Fragment {
           public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
               valorationList.clear();
               blackList.clear();
-              Log.i("Lo que nos llega:", dataSnapshot.toString());
               for(DataSnapshot ds : dataSnapshot.getChildren()){
                   val = ds.getValue(Valoration.class);
                   valorationList.add(val);
                   blackList.add(val.getUserID());
-                  Log.i("Nueva valoración: ", val.toString());
               }
               adapter.notifyDataSetChanged();
-              Log.i("Lista actual:", valorationList.toString());
-              Log.i("BlackList: ", blackList.toString());
           }
 
           @Override

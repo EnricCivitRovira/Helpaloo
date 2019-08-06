@@ -7,11 +7,8 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
-
 import androidx.annotation.NonNull;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
@@ -20,13 +17,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-
 import android.app.LoaderManager.LoaderCallbacks;
-
 import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
@@ -36,11 +30,9 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
-
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -54,13 +46,10 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 import java.util.Random;
-import java.util.concurrent.Executor;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -97,10 +86,6 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
     private CheckBox termsOfUse;
 
 
-    private LocationManager locationManager;
-
-    private Location location;
-
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
     private User newUser;
@@ -108,8 +93,6 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
     private double latitude;
     private double longitude;
     private int distancePosts = -1;
-
-    private String provider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,12 +104,12 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         surname = findViewById(R.id.registerSurname);
         termsOfUse = findViewById(R.id.termsAndConditions);
 
-        getSupportActionBar().hide();
+        Objects.requireNonNull(getSupportActionBar()).hide();
 
         // Location
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         Criteria criteria = new Criteria();
-        provider = locationManager.getBestProvider(criteria, false);
+        String provider = locationManager.getBestProvider(criteria, false);
 
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)
@@ -142,7 +125,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
             // result of the request.
         } else {
 
-            location = locationManager.getLastKnownLocation(provider);
+            Location location = locationManager.getLastKnownLocation(provider);
             // Initialize the location fields
             if (location != null) {
 
@@ -150,7 +133,6 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
                 longitude = location.getLongitude();
                 onLocationChanged(location);
             } else {
-                Log.i("RegisterActivity", "Location no Available");
                 latitude = 40.4165000;
                 longitude = -3.7025600;
                 distancePosts = 750;
@@ -174,7 +156,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         }
         );
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+        Button mEmailSignInButton = findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -203,7 +185,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            newUser = new User (user.getUid(),
+                            newUser = new User (Objects.requireNonNull(user).getUid(),
                                     user.getEmail(),
                                     name.getText().toString(),
                                     surname.getText().toString(),
@@ -240,7 +222,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
 
 
     private void insertUserInformation(User user) {
-        mDatabase.child("users").child(user.userID).setValue(user);
+        mDatabase.child("users").child(user.getUserID()).setValue(user);
     }
 
     private void populateAutoComplete() {
@@ -279,24 +261,9 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_FINE_LOCATION: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                    // permission was granted
-                } else {
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                    // showAlert(getString(R.string.error), getString(R.string.message));
-                    Log.i("RegisterActivity: ", "NO HAY PERMISOS DE UBICACION");
-                }
-            }
-
-            // other 'case' lines to check for other
-            // permissions this app might request
-        }
+        // If request is cancelled, the result arrays are empty.
+        // other 'case' lines to check for other
+        // permissions this app might request
     }
 
 
@@ -370,32 +337,25 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
         // for very easy animations. If available, use these APIs to fade-in
         // the progress spinner.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+        int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
-            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-            mLoginFormView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-                }
-            });
+        mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+        mLoginFormView.animate().setDuration(shortAnimTime).alpha(
+                show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+            }
+        });
 
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mProgressView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-                }
-            });
-        } else {
-            // The ViewPropertyAnimator APIs are not available, so simply show
-            // and hide the relevant UI components.
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-        }
+        mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+        mProgressView.animate().setDuration(shortAnimTime).alpha(
+                show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            }
+        });
     }
 
     @Override
@@ -469,13 +429,13 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         };
 
         int ADDRESS = 0;
-        int IS_PRIMARY = 1;
     }
 
     /**
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
+    @SuppressLint("StaticFieldLeak")
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
         private final String mEmail;

@@ -1,62 +1,47 @@
 package com.example.helpaloo;
 
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
 import java.util.ArrayList;
-
-
-
+import java.util.Objects;
 
 public class MessageListFragment extends Fragment {
 
-    private FirebaseAuth mAuth;
-    private FirebaseDatabase mFirebaseDatabase;
-    private DatabaseReference mDatabase;
-    private String userID;
-    private RecyclerView.LayoutManager layoutManager;
     private ArrayList<Chat> chatList = new ArrayList<>();
-    private ListView mListView;
-    private TextView messageFromView;
-    private TextView titleMessageView;
-    public ChatListAdapter adapter;
-
-    public String chatFromID, chatID, chatPostID, chatTitle, chatToID, nameFrom, nameTo;
-
+    private ChatListAdapter adapter;
+    private String chatFromID;
+    private String chatPostID;
+    private String chatTitle;
+    private String chatToID;
+    private String nameFrom;
+    private String nameTo;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_messagelist_list, container, false);
-        ((MenuActivity) getActivity()).getSupportActionBar().setTitle("Mensajes");
-        mListView = view.findViewById(R.id.listView);
-        messageFromView = view.findViewById(R.id.messageFromView);
-        titleMessageView = view.findViewById(R.id.messageTitleView);
-        mAuth = FirebaseAuth.getInstance();
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        Objects.requireNonNull(((MenuActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).setTitle("Mensajes");
+        ListView mListView = view.findViewById(R.id.listView);
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseDatabase mFirebaseDatabase;
         FirebaseUser user = mAuth.getCurrentUser();
-        userID = user.getUid();
-        adapter = new ChatListAdapter(getContext(), R.layout.chat, chatList);
+        String userID = Objects.requireNonNull(user).getUid();
+        adapter = new ChatListAdapter(Objects.requireNonNull(getContext()), R.layout.chat, chatList);
         mListView.setAdapter(adapter);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -68,7 +53,7 @@ public class MessageListFragment extends Fragment {
             }
         });
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mFirebaseDatabase.getReference("chats_user/"+userID).addChildEventListener(new ChildEventListener() {
+        mFirebaseDatabase.getReference("chats_user/"+ userID).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 showData(dataSnapshot);
@@ -99,41 +84,32 @@ public class MessageListFragment extends Fragment {
     }
 
     private void showData(DataSnapshot dataSnapshot) {
-        Log.i("Lo que nos llega:", dataSnapshot.toString());
+
         for(DataSnapshot ds : dataSnapshot.getChildren()){
-            switch (ds.getKey()) {
+            switch (Objects.requireNonNull(ds.getKey())) {
                 case "chatFromID":
-                    chatFromID = ds.getValue().toString();
-                    break;
-                case "chatID":
-                    chatID = ds.getValue().toString();
+                    chatFromID = Objects.requireNonNull(ds.getValue()).toString();
                     break;
                 case "chatPostID":
-                    chatPostID = ds.getValue().toString();
+                    chatPostID = Objects.requireNonNull(ds.getValue()).toString();
                     break;
                 case "chatTitle":
-                    chatTitle = ds.getValue().toString();
+                    chatTitle = Objects.requireNonNull(ds.getValue()).toString();
                     break;
                 case "chatToID":
-                    chatToID = ds.getValue().toString();
+                    chatToID = Objects.requireNonNull(ds.getValue()).toString();
                     break;
                 case "nameFrom":
-                    nameFrom = ds.getValue().toString();
+                    nameFrom = Objects.requireNonNull(ds.getValue()).toString();
                     break;
                 case "nameTo":
-                    nameTo = ds.getValue().toString();
+                    nameTo = Objects.requireNonNull(ds.getValue()).toString();
                     break;
             }
 
         }
-
         Chat newChat = new Chat(chatFromID, chatToID, chatPostID, nameFrom,  nameTo,  chatTitle);
-        Log.i("Chat a introducir: ", newChat.toString());
         chatList.add(newChat);
         adapter.notifyDataSetChanged();
-        Log.i("ListInfo:", chatList.toString());
-
-
-
     }
 }

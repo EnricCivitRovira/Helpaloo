@@ -1,58 +1,26 @@
 package com.example.helpaloo;
 
-import android.app.Application;
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.Intent;
-import android.content.res.Resources;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
-
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
-import androidx.core.view.GravityCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-
-import android.util.Log;
 import android.view.MenuItem;
-import android.widget.TextView;
+
+import java.util.Objects;
 
 public class MenuActivity extends AppCompatActivity {
-    private final String CHANNEL_ID = "Personal Notifications";
-    private final int NOTIFICATION_ID = 001;
-    private TextView mTextMessage;
-    private FirebaseAuth mAuth;
-    private Post newPost;
+
     BottomNavigationView navigation;
     private int fragmentPosition = 99;
-    private String userID;
     private User user;
-
-    private FirebaseUser currentUser;
-    private FirebaseDatabase mFirebaseDatabase;
-
-
-    public int getFragmentPosition() {
-        return fragmentPosition;
-    }
 
     public void setFragmentPosition(int fragmentPosition) {
         this.fragmentPosition = fragmentPosition;
@@ -85,19 +53,19 @@ public class MenuActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-
-
         setContentView(R.layout.activity_menu);
         final ProgressDialog progressDialog = new ProgressDialog(this);
+
         progressDialog.setTitle("Cargando página principal...");
         progressDialog.show();
-        mAuth = FirebaseAuth.getInstance();
-        userID = mAuth.getUid();
 
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        navigation = findViewById(R.id.navigation);
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        mFirebaseDatabase.getReference("users/"+userID).addValueEventListener(new ValueEventListener() {
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        String userID = mAuth.getUid();
+        FirebaseDatabase mFirebaseDatabase = FirebaseDatabase.getInstance();
+        mFirebaseDatabase.getReference("users/"+ userID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 user = dataSnapshot.getValue(User.class);
@@ -114,10 +82,6 @@ public class MenuActivity extends AppCompatActivity {
             }
         });
 
-        mTextMessage = (TextView) findViewById(R.id.message);
-        navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-
     }
 
     public void setFragment(int position) {
@@ -128,14 +92,17 @@ public class MenuActivity extends AppCompatActivity {
         switch (position) {
             case 0:
                     if(fragmentPosition != 0) {
+                        Objects.requireNonNull(getSupportActionBar()).show();
                         SearchPost searchPost = new SearchPost(0, user);
                         fragmentTransaction.replace(R.id.fragment, searchPost);
                         fragmentTransaction.commit();
                         fragmentPosition = 0;
+
                     }
                 break;
             case 1:
                 if(fragmentPosition != 1) {
+                    Objects.requireNonNull(getSupportActionBar()).show();
                     navigation.getMenu().findItem(R.id.addPostMenu).setChecked(true);
                     Post post = new Post();
                     AddPost addPost = new AddPost(post, 0, 0, user);
@@ -146,6 +113,7 @@ public class MenuActivity extends AppCompatActivity {
                 break;
             case 2:
                 if(fragmentPosition != 2) {
+                    Objects.requireNonNull(getSupportActionBar()).show();
                     navigation.getMenu().findItem(R.id.profileMenu).setChecked(true);
                     Profile myProfile = new Profile(user);
                     fragmentTransaction.replace(R.id.fragment, myProfile);
@@ -155,6 +123,7 @@ public class MenuActivity extends AppCompatActivity {
                 break;
             case 3:
                 if(fragmentPosition != 3) {
+                    Objects.requireNonNull(getSupportActionBar()).show();
                     navigation.getMenu().findItem(R.id.messagesMenu).setChecked(true);
                     MessageListFragment chatList = new MessageListFragment();
                     fragmentTransaction.replace(R.id.fragment, chatList);
@@ -163,6 +132,7 @@ public class MenuActivity extends AppCompatActivity {
                 }
                 break;
             case 4:
+                    Objects.requireNonNull(getSupportActionBar()).show();
                     navigation.getMenu().findItem(R.id.searchPostMenu).setChecked(true);
                     SearchPost searchPosts = new SearchPost(0, user);
                     fragmentTransaction.replace(R.id.fragment, searchPosts);
@@ -170,6 +140,7 @@ public class MenuActivity extends AppCompatActivity {
                     fragmentPosition = 0;
                 break;
             case 5:
+                    Objects.requireNonNull(getSupportActionBar()).show();
                     SearchPost profilePosts = new SearchPost(1, user);
                     fragmentTransaction.replace(R.id.fragment, profilePosts);
                     fragmentTransaction.commit();
@@ -178,35 +149,5 @@ public class MenuActivity extends AppCompatActivity {
                 break;
         }
     }
-
-    public void showNotification(String from) {
-
-        createNotificationChannel();
-        Log.i("Notificacion: ", "Nueva");
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID);
-        builder.setSmallIcon(R.drawable.ic_add_post)
-                .setContentTitle("Nuevo Mensaje")
-                .setContentText(from)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT).setChannelId(CHANNEL_ID);
-
-        NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
-        notificationManagerCompat.notify(NOTIFICATION_ID,builder.build());
-
-    }
-
-    private void createNotificationChannel(){
-        if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.O){
-            CharSequence name = "Personal Notifications";
-            String description = "Include all the personal notifications";
-            int importance =  NotificationManager.IMPORTANCE_DEFAULT;
-
-            NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, name, importance);
-            notificationChannel.setDescription(description);
-
-            NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-            notificationManager.createNotificationChannel(notificationChannel);
-        }
-    }
-
 
 }

@@ -1,18 +1,20 @@
 package com.example.helpaloo;
 
+import androidx.annotation.NonNull;
+
 public class Chat {
 
-    public String chatID;
-    public String chatFromID;
-    public String chatToID;
-    public String chatPostID;
-    public String nameFrom;
-    public String nameTo;
-    public String chatTitle;
+    private String chatID;
+    private String chatFromID;
+    private String chatToID;
+    private String chatPostID;
+    private String nameFrom;
+    private String nameTo;
+    private String chatTitle;
 
     public Chat(){}
 
-    public Chat(String chatFromID,String chatToID, String chatPostID, String nameFrom, String nameTo, String chatTitle){
+    Chat(String chatFromID, String chatToID, String chatPostID, String nameFrom, String nameTo, String chatTitle){
         this.chatID = idChatOrganizer(chatToID, chatFromID);
         this.chatFromID = chatFromID;
         this.chatToID = chatToID;
@@ -38,7 +40,7 @@ public class Chat {
         this.chatFromID = chatFromID;
     }
 
-    public String getChatToID() {
+    String getChatToID() {
         return chatToID;
     }
 
@@ -54,7 +56,7 @@ public class Chat {
         this.chatPostID = chatPostID;
     }
 
-    public String idChatOrganizer(String id1, String id2) {
+    private String idChatOrganizer(String id1, String id2) {
         if(id1.compareTo(id2)>0){
             return id1+id2;
         }else{
@@ -86,6 +88,7 @@ public class Chat {
         this.chatTitle = chatTitle;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "Chat{" +

@@ -1,17 +1,19 @@
 package com.example.helpaloo;
 
+import androidx.annotation.NonNull;
+
 public class User {
 
-        public String userID;
-        public String email;
-        public String name;
-        public String surname;
-        public Double latitude;
-        public Double longitude;
-        public String route;
-        public int distanceToShowPosts;
-        public float mediumValoration;
-        public int nValorations;
+        private String userID;
+        private String email;
+        private String name;
+        private String surname;
+        private Double latitude;
+        private Double longitude;
+        private String route;
+        private int distanceToShowPosts;
+        private float mediumValoration;
+        private int nValorations;
 
         public User() {
             // Default constructor required for calls to DataSnapshot.getValue(User.class)
@@ -114,6 +116,7 @@ public class User {
         this.route = route;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "User{" +

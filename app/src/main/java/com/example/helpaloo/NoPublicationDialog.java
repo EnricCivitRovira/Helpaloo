@@ -5,19 +5,17 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-
-import com.google.android.material.navigation.NavigationView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDialogFragment;
+import java.util.Objects;
 
 
 @SuppressLint("ValidFragment")
 public class NoPublicationDialog extends AppCompatDialogFragment {
-    int type;
+    private int type;
     @SuppressLint("ValidFragment")
-    public NoPublicationDialog(int type) {
+    NoPublicationDialog(int type) {
         this.type = type;
     }
 
@@ -30,13 +28,13 @@ public class NoPublicationDialog extends AppCompatDialogFragment {
             builder.setNegativeButton("De acuerdo", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    ((MenuActivity) getActivity()).setFragment(2);
+                    ((MenuActivity) Objects.requireNonNull(getActivity())).setFragment(2);
                 }
             });
             builder.setPositiveButton("Crear Anuncio", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    ((MenuActivity) getActivity()).setFragment(1);
+                    ((MenuActivity) Objects.requireNonNull(getActivity())).setFragment(1);
                 }
             });
         }else {
@@ -44,13 +42,13 @@ public class NoPublicationDialog extends AppCompatDialogFragment {
             builder.setNegativeButton("De acuerdo", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    ((MenuActivity) getActivity()).setFragment(0);
+                    ((MenuActivity) Objects.requireNonNull(getActivity())).setFragment(0);
                 }
             });
             builder.setPositiveButton("Ampliar rango de zona", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    ((MenuActivity) getActivity()).setFragment(2);
+                    ((MenuActivity) Objects.requireNonNull(getActivity())).setFragment(2);
                 }
             });
         }

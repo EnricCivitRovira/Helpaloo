@@ -1,22 +1,17 @@
 package com.example.helpaloo;
 
 import android.annotation.SuppressLint;
-import android.media.Image;
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -24,22 +19,15 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.util.Objects;
 
 @SuppressLint("ValidFragment")
 public class PostDescription extends Fragment {
 
-    public Post post;
-    private Button contact;
-    private ImageView postPhoto;
-    private TextView postTitle;
-    private TextView postPrice;
-    private TextView postDescription;
+    private Post post;
     private String userID;
     private Chat chat;
-    private FirebaseAuth mAuth;
-    private FirebaseDatabase mFirebaseDatabase;
     private String userName;
-    private String userSurname;
     private String route;
     private ImageView profilePicSender;
     private TextView usernamePostDescription;
@@ -47,49 +35,49 @@ public class PostDescription extends Fragment {
     private User user;
 
     @SuppressLint("ValidFragment")
-    public PostDescription(Post post, User user) {
+    PostDescription(Post post, User user) {
         this.post = post;
         this.user = user;
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         final View view = inflater.inflate(R.layout.fragment_post_description, container, false);
 
-        ((MenuActivity) getActivity()).setFragmentPosition(-1);
-        ((MenuActivity) getActivity()).getSupportActionBar().setTitle("Información de tarea");
+        ((MenuActivity) Objects.requireNonNull(getActivity())).setFragmentPosition(-1);
+        Objects.requireNonNull(((MenuActivity) getActivity()).getSupportActionBar()).setTitle("Información de tarea");
 
-        contact =  view.findViewById(R.id.PDContact);
-        postPhoto =  view.findViewById(R.id.PDImage);
-        postTitle = view.findViewById(R.id.PDTitle);
-        postPrice = view.findViewById(R.id.PDPrice);
-        postDescription = view.findViewById(R.id.PDDescription);
+        Button contact = view.findViewById(R.id.PDContact);
+        ImageView postPhoto = view.findViewById(R.id.PDImage);
+        TextView postTitle = view.findViewById(R.id.PDTitle);
+        TextView postPrice = view.findViewById(R.id.PDPrice);
+        TextView postDescription = view.findViewById(R.id.PDDescription);
 
         profilePicSender = view.findViewById(R.id.profilePicturePostDescription);
         usernamePostDescription = view.findViewById(R.id.userNamePostDescription);
 
-        if(!post.route.equals("")) {
-            Picasso.get().load(post.route).fit().centerCrop().into(postPhoto);
-        };
+        if(!post.getRoute().equals("")) {
+            Picasso.get().load(post.getRoute()).fit().centerCrop().into(postPhoto);
+        }
 
         postTitle.setText(post.getTitle());
         postPrice.setText(post.getPrize()+ " €");
         postDescription.setText(post.getDescription());
 
-        mAuth = FirebaseAuth.getInstance();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
         userID = mAuth.getUid();
 
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
-        userName = user.name;
+        FirebaseDatabase mFirebaseDatabase = FirebaseDatabase.getInstance();
+        userName = user.getName();
 
 
-        mFirebaseDatabase.getReference("users/"+post.userId).addListenerForSingleValueEvent(new ValueEventListener() {
+        mFirebaseDatabase.getReference("users/"+post.getUserId()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                userName = dataSnapshot.getValue(User.class).name;
-                userSurname = dataSnapshot.getValue(User.class).surname;
-                route = dataSnapshot.getValue(User.class).route;
+                userName = Objects.requireNonNull(dataSnapshot.getValue(User.class)).getName();
+                route = Objects.requireNonNull(dataSnapshot.getValue(User.class)).getRoute();
 
                 Picasso.get().load(route).fit().centerCrop().into(profilePicSender);
                 usernamePostDescription.setText(userName);
@@ -105,8 +93,7 @@ public class PostDescription extends Fragment {
             @Override
             public void onClick(View v) {
                 AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                chat = new Chat (userID, post.userId, post.postId, user.name , post.postNameUser, post.getTitle());
-                Log.i("Chat info: ", chat.toString());
+                chat = new Chat (userID, post.getUserId(), post.getPostId(), user.getName() , post.getPostNameUser(), post.getTitle());
                 MessageBox newMessage = new MessageBox(chat);
                 activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment, newMessage).addToBackStack(null).commit();
             }
@@ -116,7 +103,7 @@ public class PostDescription extends Fragment {
             @Override
             public void onClick(View v) {
                 AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                foreignProfile = new ForeignProfile(post.userId, 0);
+                foreignProfile = new ForeignProfile(post.getUserId(), 0);
                 activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment, foreignProfile).addToBackStack(null).commit();
             }
         });

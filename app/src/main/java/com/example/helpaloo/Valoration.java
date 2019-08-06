@@ -1,20 +1,22 @@
 package com.example.helpaloo;
 
+import androidx.annotation.NonNull;
+
 public class Valoration {
 
     private String comment;
     private float starRate;
     private String userID;
 
-    public Valoration(){};
+    Valoration(){};
 
-    public Valoration(String comment, float starRate, String userID){
+    Valoration(String comment, float starRate, String userID){
         this.comment = comment;
         this.starRate = starRate;
         this.userID = userID;
     }
 
-    public String getComment() {
+    String getComment() {
         return comment;
     }
 
@@ -38,6 +40,7 @@ public class Valoration {
         this.userID = userID;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "Valoration{" +

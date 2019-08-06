@@ -1,5 +1,6 @@
 package com.example.helpaloo;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,8 @@ import android.widget.TextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,17 +19,19 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     private final ArrayList<Post> postslist;
 
     private String userID;
-    private FirebaseAuth mAuth;
     private int context;
     private User user;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
-    public static class MyViewHolder extends RecyclerView.ViewHolder {
+    static class MyViewHolder extends RecyclerView.ViewHolder {
         CardView cv;
+        @SuppressLint("StaticFieldLeak")
         static TextView postName;
+        @SuppressLint("StaticFieldLeak")
         static TextView postPrice;
+        @SuppressLint("StaticFieldLeak")
         static ImageView postPhoto;
 
         MyViewHolder(View itemView) {
@@ -41,38 +46,40 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public MyAdapter(ArrayList<Post> postslist, int context, User user) {
+    MyAdapter(ArrayList<Post> postslist, int context, User user) {
         this.postslist = postslist;
         this.context = context; // 0 -> AllPosts, 1 -> MyPosts
         this.user = user;
     }
 
     // Create new views (invoked by the layout manager)
+    @NonNull
     @Override
-    public MyAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MyAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.post, parent, false);
         MyViewHolder pvh = new MyViewHolder(v);
 
-        mAuth = FirebaseAuth.getInstance();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
         userID = mAuth.getUid();
         return pvh;
 
     }
 
     // Replace the contents of a view (invoked by the layout manager)
+    @SuppressLint("SetTextI18n")
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         final Post post = postslist.get(position);
-        MyViewHolder.postName.setText(post.title);
-        MyViewHolder.postPrice.setText(post.prize+ " €");
-        String url = post.route;
+        MyViewHolder.postName.setText(post.getTitle());
+        MyViewHolder.postPrice.setText(post.getPrize()+ " €");
+        String url = post.getRoute();
         if(!url.equals("")){
             Picasso.get().load(url).fit().centerCrop().into(MyViewHolder.postPhoto);
         }
         MyViewHolder.postPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(post.userId.equals(userID)){
+                if(post.getUserId().equals(userID)){
                     AppCompatActivity activity = (AppCompatActivity) v.getContext();
                     AddPost myPost = new AddPost(post, 1, context, user);
                     activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment, myPost).addToBackStack(null).commit();
@@ -90,7 +97,7 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
 
     @Override
-    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
     }
 

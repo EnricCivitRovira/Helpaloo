@@ -1,26 +1,28 @@
 package com.example.helpaloo;
 
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 
 public class Post {
 
-        public String userId;
-        public String title;
-        public String description;
-        public String prize;
-        public String time;
-        public int status;
-        public String route;
-        public String postId;
-        public String postNameUser;
-        public String postSurnameUser;
-        public double latitude;
-        public double longitude;
-        public Post() {
+        private String userId;
+        private String title;
+        private String description;
+        private String prize;
+        private String time;
+        private int status;
+        private String route;
+        private String postId;
+        private String postNameUser;
+        private String postSurnameUser;
+        private double latitude;
+        private double longitude;
+        Post() {
             // Default constructor required for calls to DataSnapshot.getValue(User.class)
         }
 
-        public Post(String postId, String userId, String title, String description, String prize, String time, String route, String postNameUser, String postSurnameUser, double latitude, double longitude) {
+        Post(String postId, String userId, String title, String description, String prize, String time, String route, String postNameUser, String postSurnameUser, double latitude, double longitude) {
             this.postId = postId;
             this.userId = userId;
             this.title = title;
@@ -30,7 +32,6 @@ public class Post {
             this.status = 0;
             if (route == null) {
                 this.route = "";
-            }else if(route.equals("noedited")) {
             }else{
                 this.route = route;
             }
@@ -56,6 +57,7 @@ public class Post {
         this.longitude = longitude;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "Post{" +
@@ -75,7 +77,7 @@ public class Post {
                 '}';
     }
 
-    public ArrayList<Post> posts;
+    private ArrayList<Post> posts;
 
     public String getUserId() {
         return userId;
@@ -85,7 +87,7 @@ public class Post {
         this.userId = userId;
     }
 
-    public String getTitle() {
+    String getTitle() {
         return title;
     }
 
@@ -93,7 +95,7 @@ public class Post {
         this.title = title;
     }
 
-    public String getDescription() {
+    String getDescription() {
         return description;
     }
 
@@ -101,7 +103,7 @@ public class Post {
         this.description = description;
     }
 
-    public String getPrize() {
+    String getPrize() {
         return prize;
     }
 
