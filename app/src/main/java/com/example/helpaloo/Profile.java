@@ -56,6 +56,7 @@ public class Profile extends Fragment {
     public Button saveChanges;
     public Button myValorations;
     private Button myPosts;
+    private ImageView helpaloo;
 
     public SeekBar distancePosts;
     private FirebaseStorage storage;
@@ -95,6 +96,7 @@ public class Profile extends Fragment {
         distancePosts = view.findViewById(R.id.distancePosts);
         showKilometers = view.findViewById(R.id.distancePostShow);
         myValorations = view.findViewById(R.id.myValorations);
+        helpaloo = view.findViewById(R.id.helpaloo);
 
         // FIREBASE
         storage = FirebaseStorage.getInstance();
@@ -165,6 +167,15 @@ public class Profile extends Fragment {
                         .replace(R.id.fragment, myValorations, "findThisFragment")
                         .addToBackStack(null)
                         .commit();
+            }
+        });
+
+        helpaloo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), ContactUs.class);
+                intent.putExtra("ContactUs", "");
+                startActivity(intent);
             }
         });
 

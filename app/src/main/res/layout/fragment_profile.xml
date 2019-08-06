@@ -81,13 +81,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="64dp"
+            android:layout_marginEnd="60dp"
+            android:layout_marginBottom="80dp"
             android:text="Cerrar Sesión"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.451"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintHorizontal_bias="0.169"
+            app:layout_constraintStart_toEndOf="@+id/helpaloo" />
 
         <Button
             android:id="@+id/saveChanges"
@@ -170,6 +170,17 @@
             app:layout_constraintEnd_toEndOf="@+id/distancePostShow"
             app:layout_constraintHorizontal_bias="0.296"
             app:layout_constraintStart_toStartOf="@+id/distancePosts" />
+
+        <ImageView
+            android:id="@+id/helpaloo"
+            android:layout_width="48dp"
+            android:layout_height="47dp"
+            android:layout_marginStart="48dp"
+            android:src="@drawable/handslogo"
+            app:layout_constraintBottom_toBottomOf="@+id/signOut"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/saveChanges"
+            app:layout_constraintVertical_bias="1.0" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

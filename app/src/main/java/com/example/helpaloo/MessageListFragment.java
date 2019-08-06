@@ -63,7 +63,7 @@ public class MessageListFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Chat chat = adapter.getItem(position);
                 AppCompatActivity activity = (AppCompatActivity) view.getContext();
-                MessageBox openChat = new MessageBox(chat, 1);
+                MessageBox openChat = new MessageBox(chat);
                 activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment, openChat).addToBackStack(null).commit();
             }
         });

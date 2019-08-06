@@ -50,6 +50,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -93,6 +94,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
     private EditText surname;
     private View mProgressView;
     private View mLoginFormView;
+    private CheckBox termsOfUse;
 
 
     private LocationManager locationManager;
@@ -117,6 +119,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         mEmailView = findViewById(R.id.email);
         name = findViewById(R.id.registerName);
         surname = findViewById(R.id.registerSurname);
+        termsOfUse = findViewById(R.id.termsAndConditions);
 
         getSupportActionBar().hide();
 
@@ -560,6 +563,13 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
             valid = false;
         } else {
             name.setError(null);
+        }
+
+        if(!termsOfUse.isChecked()){
+            termsOfUse.setError("Debes aceptar los terminos y condiciones.");
+            valid = false;
+        }else {
+            termsOfUse.setError(null);
         }
 
         return valid;

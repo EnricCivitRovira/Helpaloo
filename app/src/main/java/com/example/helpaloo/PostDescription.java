@@ -107,7 +107,7 @@ public class PostDescription extends Fragment {
                 AppCompatActivity activity = (AppCompatActivity) v.getContext();
                 chat = new Chat (userID, post.userId, post.postId, user.name , post.postNameUser, post.getTitle());
                 Log.i("Chat info: ", chat.toString());
-                MessageBox newMessage = new MessageBox(chat, 0);
+                MessageBox newMessage = new MessageBox(chat);
                 activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment, newMessage).addToBackStack(null).commit();
             }
         });

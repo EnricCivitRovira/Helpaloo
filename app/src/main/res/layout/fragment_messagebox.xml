@@ -43,16 +43,42 @@
 
         <ListView
             android:id="@+id/messagesList"
-            android:layout_width="382dp"
-            android:layout_height="464dp"
+            android:layout_width="381dp"
+            android:layout_height="433dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:listSelector="@android:color/transparent"
+            app:layout_constraintBottom_toTopOf="@+id/MBmessageToSend"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.428"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:id="@+id/mbProfile"
+            android:layout_width="74dp"
+            android:layout_height="66dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/messagesList"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.555"
+            tools:srcCompat="@tools:sample/avatars" />
+
+        <TextView
+            android:id="@+id/mbUserName"
+            android:layout_width="76dp"
+            android:layout_height="21dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toTopOf="@+id/MBmessageToSend"
+            app:layout_constraintBottom_toTopOf="@+id/messagesList"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_bias="0.017"
+            app:layout_constraintStart_toEndOf="@+id/mbProfile"
             app:layout_constraintTop_toTopOf="parent"
-            android:listSelector="@android:color/transparent"/>
+            app:layout_constraintVertical_bias="0.372" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>
