@@ -1,16 +1,22 @@
-package com.example.helpaloo;
+package com.example.helpaloo.Fragments;
 
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import android.util.Log;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+
+import com.example.helpaloo.Activities.MenuActivity;
+import com.example.helpaloo.Adapters.ChatListAdapter;
+import com.example.helpaloo.Classes.Chat;
+import com.example.helpaloo.Fragments.MessageBox;
+import com.example.helpaloo.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;

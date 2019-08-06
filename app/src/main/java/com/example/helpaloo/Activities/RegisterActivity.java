@@ -1,4 +1,4 @@
-package com.example.helpaloo;
+package com.example.helpaloo.Activities;
 
 import android.Manifest;
 import android.animation.Animator;
@@ -9,6 +9,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import androidx.annotation.NonNull;
+import com.example.helpaloo.Classes.User;
+import com.example.helpaloo.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;

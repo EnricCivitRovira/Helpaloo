@@ -1,4 +1,4 @@
-package com.example.helpaloo;
+package com.example.helpaloo.Fragments;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
@@ -16,6 +16,12 @@ import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.helpaloo.Adapters.CommentAdapter;
+import com.example.helpaloo.Classes.User;
+import com.example.helpaloo.Activities.MenuActivity;
+import com.example.helpaloo.R;
+import com.example.helpaloo.Classes.Valoration;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -47,7 +53,7 @@ public class ForeignProfile extends Fragment {
 
     private Valoration val = new Valoration();
 
-    ForeignProfile(String foreignUserID, int type){
+    public ForeignProfile(String foreignUserID, int type){
         this.foreignUserID = foreignUserID;
         this.type = type; // 0 -> Visto desde fuera. 1 -> visto desde dentro
     }
@@ -117,7 +123,7 @@ public class ForeignProfile extends Fragment {
         theirPosts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SearchPost theirPosts = new SearchPost(2, foreignUserID);
+                SearchPost theirPosts = new SearchPost(2, foreignUser);
                 Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment, theirPosts, "findThisFragment")
                         .addToBackStack(null)
@@ -132,6 +138,7 @@ public class ForeignProfile extends Fragment {
     @SuppressLint("SetTextI18n")
     private void showData(DataSnapshot dataSnapshot) {
         foreignUser = dataSnapshot.getValue(User.class);
+
         profileName.setText(Objects.requireNonNull(foreignUser).getName());
         profileSurname.setText(foreignUser.getSurname());
         profileValoration.setRating(foreignUser.getMediumValoration()/foreignUser.getnValorations());

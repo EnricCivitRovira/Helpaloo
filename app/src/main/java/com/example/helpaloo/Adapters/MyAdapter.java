@@ -1,4 +1,4 @@
-package com.example.helpaloo;
+package com.example.helpaloo.Adapters;
 
 import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
@@ -6,16 +6,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.example.helpaloo.Fragments.AddPost;
+import com.example.helpaloo.Classes.Post;
+import com.example.helpaloo.Classes.User;
+import com.example.helpaloo.Fragments.PostDescription;
+import com.example.helpaloo.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
+public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     private final ArrayList<Post> postslist;
 
     private String userID;
@@ -46,7 +50,7 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    MyAdapter(ArrayList<Post> postslist, int context, User user) {
+    public MyAdapter(ArrayList<Post> postslist, int context, User user) {
         this.postslist = postslist;
         this.context = context; // 0 -> AllPosts, 1 -> MyPosts
         this.user = user;

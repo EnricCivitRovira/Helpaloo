@@ -1,4 +1,4 @@
-package com.example.helpaloo;
+package com.example.helpaloo.Fragments;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
@@ -15,6 +15,12 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.helpaloo.Activities.ContactUs;
+import com.example.helpaloo.Activities.MainActivity;
+import com.example.helpaloo.Activities.MenuActivity;
+import com.example.helpaloo.Classes.User;
+import com.example.helpaloo.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -56,14 +62,13 @@ public class Profile extends Fragment {
     private int pval;
 
     @SuppressLint("ValidFragment")
-    Profile(User user) {
+    public Profile(User user) {
         this.user = user;
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_profile, container, false);
-        final ProgressDialog progressDialog = new ProgressDialog(getContext());
 
         // BIND
         profilePic = view.findViewById(R.id.profilePicture);

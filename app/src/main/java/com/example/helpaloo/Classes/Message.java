@@ -1,16 +1,16 @@
-package com.example.helpaloo;
+package com.example.helpaloo.Classes;
 
 import androidx.annotation.NonNull;
 
 public class Message {
     private String message;
-    String timestamp;
+    private String timestamp;
     private String userIDTo;
-    String userIDFrom;
+    private String userIDFrom;
     private String nameFrom;
     private String nameTo;
 
-    Message(String message, String timestamp, String userIDFrom, String userIDTo, String nameFrom, String nameTo) {
+    public Message(String message, String timestamp, String userIDFrom, String userIDTo, String nameFrom, String nameTo) {
         this.message = message;
         this.timestamp = timestamp;
         this.userIDFrom = userIDFrom;
@@ -22,7 +22,7 @@ public class Message {
     public Message(){
     }
 
-    String getMessage() {
+    public String getMessage() {
         return message;
     }
 

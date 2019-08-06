@@ -1,4 +1,4 @@
-package com.example.helpaloo;
+package com.example.helpaloo.Adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -9,6 +9,8 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import com.example.helpaloo.R;
+import com.example.helpaloo.Classes.Valoration;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -17,7 +19,7 @@ public class CommentAdapter extends ArrayAdapter<Valoration> {
     private Context mContext;
     private int mResource;
 
-    CommentAdapter(@NonNull Context context, int resource, ArrayList<Valoration> valorations) {
+    public CommentAdapter(@NonNull Context context, int resource, ArrayList<Valoration> valorations) {
         super(context, resource, valorations);
         mContext = context;
         mResource = resource;

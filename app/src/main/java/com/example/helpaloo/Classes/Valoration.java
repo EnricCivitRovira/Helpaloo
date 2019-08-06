@@ -1,4 +1,4 @@
-package com.example.helpaloo;
+package com.example.helpaloo.Classes;
 
 import androidx.annotation.NonNull;
 
@@ -8,15 +8,15 @@ public class Valoration {
     private float starRate;
     private String userID;
 
-    Valoration(){};
+    public Valoration(){};
 
-    Valoration(String comment, float starRate, String userID){
+    public Valoration(String comment, float starRate, String userID){
         this.comment = comment;
         this.starRate = starRate;
         this.userID = userID;
     }
 
-    String getComment() {
+    public String getComment() {
         return comment;
     }
 

@@ -1,4 +1,4 @@
-package com.example.helpaloo;
+package com.example.helpaloo.Fragments;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
@@ -11,6 +11,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import com.example.helpaloo.Activities.MenuActivity;
+import com.example.helpaloo.Adapters.MessagesListAdapter;
+import com.example.helpaloo.Classes.Chat;
+import com.example.helpaloo.Classes.Message;
+import com.example.helpaloo.Classes.User;
+import com.example.helpaloo.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -50,9 +56,7 @@ public class MessageBox extends Fragment {
     private ImageView profilePic;
     private TextView profileName;
 
-    FirebaseAuth mAuth;
-
-    MessageBox(Chat chat) {
+    public MessageBox(Chat chat) {
         this.chat = chat;
     }
 
@@ -75,7 +79,7 @@ public class MessageBox extends Fragment {
         profilePic = view.findViewById(R.id.mbProfile);
 
 
-        mAuth = FirebaseAuth.getInstance();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
         final FirebaseUser user = mAuth.getCurrentUser();
         adapter = new MessagesListAdapter(Objects.requireNonNull(getContext()), R.layout.message, messageList, Objects.requireNonNull(user).getUid());
         messageListView.setAdapter(adapter);

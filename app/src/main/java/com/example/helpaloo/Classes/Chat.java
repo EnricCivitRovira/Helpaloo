@@ -1,4 +1,4 @@
-package com.example.helpaloo;
+package com.example.helpaloo.Classes;
 
 import androidx.annotation.NonNull;
 
@@ -14,7 +14,7 @@ public class Chat {
 
     public Chat(){}
 
-    Chat(String chatFromID, String chatToID, String chatPostID, String nameFrom, String nameTo, String chatTitle){
+    public Chat(String chatFromID, String chatToID, String chatPostID, String nameFrom, String nameTo, String chatTitle){
         this.chatID = idChatOrganizer(chatToID, chatFromID);
         this.chatFromID = chatFromID;
         this.chatToID = chatToID;
@@ -40,7 +40,7 @@ public class Chat {
         this.chatFromID = chatFromID;
     }
 
-    String getChatToID() {
+    public String getChatToID() {
         return chatToID;
     }
 

@@ -1,9 +1,6 @@
-package com.example.helpaloo;
+package com.example.helpaloo.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-
 import android.annotation.SuppressLint;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -11,7 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-
+import com.example.helpaloo.R;
 import java.util.Objects;
 
 public class ContactUs extends AppCompatActivity {

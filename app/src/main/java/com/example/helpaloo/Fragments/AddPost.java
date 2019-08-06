@@ -1,4 +1,4 @@
-package com.example.helpaloo;
+package com.example.helpaloo.Fragments;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
@@ -18,6 +18,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
+
+import com.example.helpaloo.Classes.Post;
+import com.example.helpaloo.Classes.User;
+import com.example.helpaloo.Activities.MenuActivity;
+import com.example.helpaloo.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -66,7 +71,7 @@ public class AddPost extends Fragment {
     private User user;
 
     @SuppressLint("ValidFragment")
-    AddPost(Post post, int type, int context, User user) {
+    public AddPost(Post post, int type, int context, User user) {
         this.type = type; // 0 -> No editable 1 -> editable
         this.context = context; // 0 -> All Posts, 1-> MyPosts
         if (type == 1) {

@@ -1,4 +1,4 @@
-package com.example.helpaloo;
+package com.example.helpaloo.Fragments;
 
 import android.os.Bundle;
 import androidx.annotation.NonNull;
@@ -10,6 +10,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RatingBar;
+
+import com.example.helpaloo.Activities.MenuActivity;
+import com.example.helpaloo.Classes.User;
+import com.example.helpaloo.Classes.Valoration;
+import com.example.helpaloo.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -24,7 +29,7 @@ public class ValorationFragment extends Fragment {
     private String userID;
     private DatabaseReference mDatabaseReference;
 
-    ValorationFragment(User foreignUser) {
+    public ValorationFragment(User foreignUser) {
         this.foreignUser = foreignUser;
     }
 

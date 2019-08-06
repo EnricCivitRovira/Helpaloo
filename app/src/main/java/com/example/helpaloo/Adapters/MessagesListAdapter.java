@@ -1,4 +1,4 @@
-package com.example.helpaloo;
+package com.example.helpaloo.Adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.Objects;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import com.example.helpaloo.Classes.Message;
+import com.example.helpaloo.R;
 
 public class MessagesListAdapter extends ArrayAdapter<Message> {
 
@@ -20,7 +22,7 @@ public class MessagesListAdapter extends ArrayAdapter<Message> {
     private int mResource;
     private String userID;
 
-    MessagesListAdapter(@NonNull Context context, int resource, ArrayList<Message> messages, String userID) {
+    public MessagesListAdapter(@NonNull Context context, int resource, ArrayList<Message> messages, String userID) {
         super(context, resource, messages);
         mContext = context;
         mResource = resource;
@@ -39,7 +41,7 @@ public class MessagesListAdapter extends ArrayAdapter<Message> {
 
         Message message = getItem(position);
         String messageInfo = Objects.requireNonNull(message).getMessage();
-        String[] date_parts = message.timestamp.split(" ");
+        String[] date_parts = message.getTimestamp().split(" ");
         String[] timestamp_parts = date_parts[3].split(":");
         String timestamp = timestamp_parts[0]+":"+timestamp_parts[1];
 
@@ -54,7 +56,7 @@ public class MessagesListAdapter extends ArrayAdapter<Message> {
         convertView.setTag(holder);
 
         holder.message.setText(messageInfo);
-        if(!message.userIDFrom.equals(userID)) {
+        if(!message.getUserIDFrom().equals(userID)) {
             holder.message.setGravity(Gravity.RIGHT);
             holder.message.setTextColor(Color.BLUE);
         }else{

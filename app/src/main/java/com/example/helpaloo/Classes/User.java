@@ -1,4 +1,4 @@
-package com.example.helpaloo;
+package com.example.helpaloo.Classes;
 
 import androidx.annotation.NonNull;
 
@@ -36,7 +36,7 @@ public class User {
             this.nValorations = nValorations;
         };
 
-    int getDistanceToShowPosts() {
+    public int getDistanceToShowPosts() {
         return distanceToShowPosts;
     }
 
@@ -52,7 +52,7 @@ public class User {
         this.userID = userID;
     }
 
-    String getEmail() {
+    public String getEmail() {
         return email;
     }
 
@@ -64,7 +64,7 @@ public class User {
         return name;
     }
 
-    float getMediumValoration() {
+    public float getMediumValoration() {
         return mediumValoration;
     }
 
@@ -72,7 +72,7 @@ public class User {
         this.mediumValoration = mediumValoration;
     }
 
-    int getnValorations() {
+    public int getnValorations() {
         return nValorations;
     }
 
@@ -84,7 +84,7 @@ public class User {
         this.name = name;
     }
 
-    String getSurname() {
+    public String getSurname() {
         return surname;
     }
 
@@ -92,7 +92,7 @@ public class User {
         this.surname = surname;
     }
 
-    Double getLatitude() {
+    public Double getLatitude() {
         return latitude;
     }
 
@@ -100,7 +100,7 @@ public class User {
         this.latitude = latitude;
     }
 
-    Double getLongitude() {
+    public Double getLongitude() {
         return longitude;
     }
 
@@ -108,7 +108,7 @@ public class User {
         this.longitude = longitude;
     }
 
-    String getRoute() {
+    public String getRoute() {
         return route;
     }
 

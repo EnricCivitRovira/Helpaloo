@@ -1,8 +1,16 @@
-package com.example.helpaloo;
+package com.example.helpaloo.Activities;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
+
+import com.example.helpaloo.Classes.Post;
+import com.example.helpaloo.Classes.User;
+import com.example.helpaloo.Fragments.AddPost;
+import com.example.helpaloo.Fragments.MessageListFragment;
+import com.example.helpaloo.Fragments.Profile;
+import com.example.helpaloo.R;
+import com.example.helpaloo.Fragments.SearchPost;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;

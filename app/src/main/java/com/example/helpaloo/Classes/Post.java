@@ -1,4 +1,4 @@
-package com.example.helpaloo;
+package com.example.helpaloo.Classes;
 
 import androidx.annotation.NonNull;
 
@@ -18,11 +18,11 @@ public class Post {
         private String postSurnameUser;
         private double latitude;
         private double longitude;
-        Post() {
+        public Post() {
             // Default constructor required for calls to DataSnapshot.getValue(User.class)
         }
 
-        Post(String postId, String userId, String title, String description, String prize, String time, String route, String postNameUser, String postSurnameUser, double latitude, double longitude) {
+        public Post(String postId, String userId, String title, String description, String prize, String time, String route, String postNameUser, String postSurnameUser, double latitude, double longitude) {
             this.postId = postId;
             this.userId = userId;
             this.title = title;
@@ -41,7 +41,7 @@ public class Post {
             this.longitude = longitude;
         }
 
-    double getLatitude() {
+    public double getLatitude() {
         return latitude;
     }
 
@@ -49,7 +49,7 @@ public class Post {
         this.latitude = latitude;
     }
 
-    double getLongitude() {
+    public double getLongitude() {
         return longitude;
     }
 
@@ -79,7 +79,7 @@ public class Post {
 
     private ArrayList<Post> posts;
 
-    String getUserId() {
+    public String getUserId() {
         return userId;
     }
 
@@ -87,7 +87,7 @@ public class Post {
         this.userId = userId;
     }
 
-    String getTitle() {
+    public String getTitle() {
         return title;
     }
 
@@ -95,7 +95,7 @@ public class Post {
         this.title = title;
     }
 
-    String getDescription() {
+    public String getDescription() {
         return description;
     }
 
@@ -103,7 +103,7 @@ public class Post {
         this.description = description;
     }
 
-    String getPrize() {
+    public String getPrize() {
         return prize;
     }
 
@@ -127,7 +127,7 @@ public class Post {
         this.status = status;
     }
 
-    String getRoute() {
+    public String getRoute() {
         return route;
     }
 
@@ -135,7 +135,7 @@ public class Post {
         this.route = route;
     }
 
-    String getPostId() {
+    public String getPostId() {
         return postId;
     }
 
@@ -143,7 +143,7 @@ public class Post {
         this.postId = postId;
     }
 
-    String getPostNameUser() {
+    public String getPostNameUser() {
         return postNameUser;
     }
 

@@ -1,4 +1,4 @@
-package com.example.helpaloo;
+package com.example.helpaloo.Dialogs;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -8,6 +8,9 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDialogFragment;
+
+import com.example.helpaloo.Activities.MenuActivity;
+
 import java.util.Objects;
 
 
@@ -15,7 +18,7 @@ import java.util.Objects;
 public class NoPublicationDialog extends AppCompatDialogFragment {
     private int type;
     @SuppressLint("ValidFragment")
-    NoPublicationDialog(int type) {
+    public NoPublicationDialog(int type) {
         this.type = type;
     }
 

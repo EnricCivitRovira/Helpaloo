@@ -1,4 +1,4 @@
-package com.example.helpaloo;
+package com.example.helpaloo.Fragments;
 
 import android.annotation.SuppressLint;
 import android.location.Location;
@@ -12,6 +12,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.example.helpaloo.Activities.MenuActivity;
+import com.example.helpaloo.Adapters.MyAdapter;
+import com.example.helpaloo.Classes.Post;
+import com.example.helpaloo.Classes.User;
+import com.example.helpaloo.Dialogs.NoPublicationDialog;
+import com.example.helpaloo.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -34,17 +41,12 @@ public class SearchPost extends Fragment {
     private Location locationUser = new Location("UserLocation");
 
     @SuppressLint("ValidFragment")
-    SearchPost(int type, User user) {
+    public SearchPost(int type, User user) {
         this.type = type; // 0 -> All posts, 1 -> My posts, 2-> Their Posts
         this.user = user;
     }
 
-    SearchPost(int type, String userID) {
-        this.type = type;
-        this.userID = userID;
-    }
-
-    SearchPost(int type, int context) {
+    public SearchPost(int type, int context) {
         this.type = type;
         this.context = context; // 0 -> Coming From Edit MyPost, 1 -> Coming From new Post
     }
@@ -69,7 +71,7 @@ public class SearchPost extends Fragment {
             locationUser.setLatitude(user.getLatitude());
             locationUser.setLongitude(user.getLongitude());
 
-            ((MenuActivity) Objects.requireNonNull(getActivity())).getSupportActionBar().setTitle("Buscar Anuncios");
+            Objects.requireNonNull(((MenuActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).setTitle("Buscar Anuncios");
 
             mFirebaseDatabase.getReference("allPosts").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -101,7 +103,7 @@ public class SearchPost extends Fragment {
         }else if (type == 2){
             ((MenuActivity) Objects.requireNonNull(getActivity())).setFragmentPosition(-1);
             Objects.requireNonNull(((MenuActivity) getActivity()).getSupportActionBar()).setTitle("Sus Anuncios");
-            mFirebaseDatabase.getReference("posts/"+userID).addListenerForSingleValueEvent(new ValueEventListener() {
+            mFirebaseDatabase.getReference("posts/"+user.getUserID()).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     showData(dataSnapshot, type);

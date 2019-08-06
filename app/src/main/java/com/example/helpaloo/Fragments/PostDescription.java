@@ -1,4 +1,4 @@
-package com.example.helpaloo;
+package com.example.helpaloo.Fragments;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -12,6 +12,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.example.helpaloo.Activities.MenuActivity;
+import com.example.helpaloo.Classes.Chat;
+import com.example.helpaloo.Classes.Post;
+import com.example.helpaloo.Classes.User;
+import com.example.helpaloo.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -35,7 +40,7 @@ public class PostDescription extends Fragment {
     private User user;
 
     @SuppressLint("ValidFragment")
-    PostDescription(Post post, User user) {
+    public PostDescription(Post post, User user) {
         this.post = post;
         this.user = user;
     }
