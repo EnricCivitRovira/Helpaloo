@@ -118,6 +118,8 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         name = findViewById(R.id.registerName);
         surname = findViewById(R.id.registerSurname);
 
+        getSupportActionBar().hide();
+
         // Location
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         Criteria criteria = new Criteria();
