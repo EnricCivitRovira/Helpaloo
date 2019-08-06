@@ -41,7 +41,7 @@ public class Post {
             this.longitude = longitude;
         }
 
-    public double getLatitude() {
+    double getLatitude() {
         return latitude;
     }
 
@@ -49,7 +49,7 @@ public class Post {
         this.latitude = latitude;
     }
 
-    public double getLongitude() {
+    double getLongitude() {
         return longitude;
     }
 
@@ -79,7 +79,7 @@ public class Post {
 
     private ArrayList<Post> posts;
 
-    public String getUserId() {
+    String getUserId() {
         return userId;
     }
 
@@ -127,7 +127,7 @@ public class Post {
         this.status = status;
     }
 
-    public String getRoute() {
+    String getRoute() {
         return route;
     }
 
@@ -135,7 +135,7 @@ public class Post {
         this.route = route;
     }
 
-    public String getPostId() {
+    String getPostId() {
         return postId;
     }
 
@@ -143,7 +143,7 @@ public class Post {
         this.postId = postId;
     }
 
-    public String getPostNameUser() {
+    String getPostNameUser() {
         return postNameUser;
     }
 

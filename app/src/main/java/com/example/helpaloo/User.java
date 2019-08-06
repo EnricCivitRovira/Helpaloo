@@ -36,7 +36,7 @@ public class User {
             this.nValorations = nValorations;
         };
 
-    public int getDistanceToShowPosts() {
+    int getDistanceToShowPosts() {
         return distanceToShowPosts;
     }
 
@@ -52,7 +52,7 @@ public class User {
         this.userID = userID;
     }
 
-    public String getEmail() {
+    String getEmail() {
         return email;
     }
 
@@ -64,7 +64,7 @@ public class User {
         return name;
     }
 
-    public float getMediumValoration() {
+    float getMediumValoration() {
         return mediumValoration;
     }
 
@@ -72,7 +72,7 @@ public class User {
         this.mediumValoration = mediumValoration;
     }
 
-    public int getnValorations() {
+    int getnValorations() {
         return nValorations;
     }
 
@@ -84,7 +84,7 @@ public class User {
         this.name = name;
     }
 
-    public String getSurname() {
+    String getSurname() {
         return surname;
     }
 
@@ -92,7 +92,7 @@ public class User {
         this.surname = surname;
     }
 
-    public Double getLatitude() {
+    Double getLatitude() {
         return latitude;
     }
 
@@ -100,7 +100,7 @@ public class User {
         this.latitude = latitude;
     }
 
-    public Double getLongitude() {
+    Double getLongitude() {
         return longitude;
     }
 
@@ -108,7 +108,7 @@ public class User {
         this.longitude = longitude;
     }
 
-    public String getRoute() {
+    String getRoute() {
         return route;
     }
 
