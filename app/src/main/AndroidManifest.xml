@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.helpaloo">
+    package="health.tueisDeveloper.helpaloo">
     <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
@@ -16,14 +16,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activities.ContactUs"></activity>
+        <activity android:name="health.tueisDeveloper.helpaloo.Activities.ContactUs"></activity>
         <activity
-            android:name=".Activities.RegisterActivity"
+            android:name="health.tueisDeveloper.helpaloo.Activities.RegisterActivity"
             android:label="@string/title_activity_register" />
         <activity
-            android:name=".Activities.MenuActivity"
+            android:name="health.tueisDeveloper.helpaloo.Activities.MenuActivity"
             android:label="@string/title_activity_menu" />
-        <activity android:name=".Activities.MainActivity">
+        <activity android:name="health.tueisDeveloper.helpaloo.Activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

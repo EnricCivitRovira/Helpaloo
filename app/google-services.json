@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:351941377071:android:8edc222caa7e1638",
         "android_client_info": {
-          "package_name": "com.example.helpaloo"
+          "package_name": "health.tueisDeveloper.helpaloo"
         }
       },
       "oauth_client": [
@@ -18,7 +18,7 @@
           "client_id": "351941377071-p5gqhudvbavmsa9dk4hdc302450udhph.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.helpaloo",
+            "package_name": "health.tueisDeveloper.helpaloo",
             "certificate_hash": "4472862076f255f8c88076002ffdc5a8dfcc9c11"
           }
         },
