@@ -199,11 +199,9 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
                             finish();
 
                         } else {
-                            // If sign in fails, display a message to the user.
                             progressDialog.dismiss();
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(RegisterActivity.this, "Creación de usuario fallida",
-                                    Toast.LENGTH_SHORT).show();
+                            mEmailView.setError("Este email ya esta registrado");
                         }
                     }
                 });
