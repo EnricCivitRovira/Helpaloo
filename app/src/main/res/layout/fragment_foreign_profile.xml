@@ -4,97 +4,146 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ForeignProfile">
+    tools:context="health.tueisDeveloper.helpaloo.Fragments.ForeignProfile">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+        android:layout_height="match_parent">
 
         <ImageView
             android:id="@+id/foreignAvatar"
-            android:layout_width="155dp"
-            android:layout_height="143dp"
-            android:layout_marginStart="64dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toTopOf="@+id/mediumValoration"
+            android:layout_width="169dp"
+            android:layout_height="148dp"
+            android:layout_marginStart="60dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="20dp"
+            app:layout_constraintBottom_toTopOf="@+id/textViewMediumValoration"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.792"
+            app:layout_constraintVertical_bias="1.0"
             tools:src="@tools:sample/avatars" />
 
         <TextView
             android:id="@+id/foreignName"
-            android:layout_width="131dp"
-            android:layout_height="37dp"
+            android:layout_width="133dp"
+            android:layout_height="26dp"
             android:layout_marginStart="8dp"
+            android:layout_marginTop="20dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
+            android:textSize="15sp"
             app:layout_constraintBottom_toTopOf="@+id/foreignSurname"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.157"
+            app:layout_constraintHorizontal_bias="0.151"
             app:layout_constraintStart_toEndOf="@+id/foreignAvatar"
-            app:layout_constraintTop_toTopOf="@+id/foreignAvatar"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintTop_toBottomOf="@+id/userNameTextView"
+            app:layout_constraintVertical_bias="0.692" />
 
         <TextView
             android:id="@+id/foreignSurname"
-            android:layout_width="130dp"
-            android:layout_height="38dp"
+            android:layout_width="133dp"
+            android:layout_height="26dp"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginBottom="16dp"
+            android:textSize="15sp"
             app:layout_constraintBottom_toTopOf="@+id/openValoration"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.155"
+            app:layout_constraintHorizontal_bias="0.142"
             app:layout_constraintStart_toEndOf="@+id/foreignAvatar" />
 
         <RatingBar
             android:id="@+id/mediumValoration"
-            android:layout_width="243dp"
-            android:layout_height="42dp"
+            android:layout_width="244dp"
+            android:layout_height="45dp"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="12dp"
+            android:isIndicator="true"
             app:layout_constraintBottom_toTopOf="@+id/nValorationsView"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:isIndicator="true"/>
+            app:layout_constraintStart_toStartOf="parent" />
 
         <Button
             android:id="@+id/openValoration"
-            android:layout_width="116dp"
-            android:layout_height="38dp"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="105dp"
+            android:layout_height="36dp"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
+            android:fontFamily="sans-serif-medium"
             android:text="Valora"
-            app:layout_constraintBottom_toBottomOf="@+id/foreignAvatar"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toTopOf="@+id/theirPosts"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.138"
+            app:layout_constraintHorizontal_bias="0.36"
             app:layout_constraintStart_toEndOf="@+id/foreignAvatar" />
 
         <ListView
             android:id="@+id/commentList"
-            android:layout_width="410dp"
-            android:layout_height="286dp"
+            android:layout_width="403dp"
+            android:layout_height="214dp"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
+            android:layout_marginBottom="52dp"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:listSelector="@android:color/transparent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/nValorationsView"
-            android:layout_width="211dp"
-            android:layout_height="27dp"
+            android:layout_width="210dp"
+            android:layout_height="19dp"
+            android:layout_marginBottom="20dp"
+            app:layout_constraintBottom_toTopOf="@+id/textView4"
+            app:layout_constraintEnd_toEndOf="@+id/mediumValoration"
+            app:layout_constraintHorizontal_bias="0.484"
+            app:layout_constraintStart_toStartOf="@+id/mediumValoration" />
+
+        <TextView
+            android:id="@+id/textViewMediumValoration"
+            android:layout_width="118dp"
+            android:layout_height="17dp"
+            android:layout_marginBottom="8dp"
+            android:text="Valoración Media:"
+            app:layout_constraintBottom_toTopOf="@+id/mediumValoration"
+            app:layout_constraintEnd_toEndOf="@+id/mediumValoration"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/mediumValoration" />
+
+        <TextView
+            android:id="@+id/userNameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nombre de Usuario"
+            app:layout_constraintEnd_toEndOf="@+id/foreignName"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/foreignName"
+            app:layout_constraintTop_toTopOf="@+id/foreignAvatar" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="213dp"
+            android:layout_height="19dp"
+            android:layout_marginStart="16dp"
+            android:text="Comentarios de usuarios:"
+            app:layout_constraintBottom_toTopOf="@+id/commentList"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+            android:id="@+id/theirPosts"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            android:layout_width="138dp"
+            android:layout_height="39dp"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginBottom="28dp"
-            app:layout_constraintBottom_toTopOf="@+id/commentList"
+            android:text="Publicaciones"
+            app:layout_constraintBottom_toBottomOf="@+id/foreignAvatar"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.413"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintHorizontal_bias="0.192"
+            app:layout_constraintStart_toEndOf="@+id/foreignAvatar" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

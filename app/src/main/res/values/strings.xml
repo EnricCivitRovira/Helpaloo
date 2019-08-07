@@ -17,6 +17,17 @@
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
+    <string name="termsofuse">Gracias por usar Helpaloo. Esperamos que lo encuentres divertido y práctico.
+        Términos de uso
+        Para el buen funcionamiento de la comunidad, necesitamos que sigas las reglas y términos y condiciones propuestas. Los presentes Términos de uso (en adelante, “los Términos de Uso”) establecen las condiciones bajo las cuales se ofrece a los usuarios el acceso a los sitios web, servicios y aplicaciones wallapop (en adelante, “el Servicio”) , que es una plataforma que permite a los usuarios publicar ofertas para la compra–venta de una amplia variedad de artículos de su propiedad, así como la comunicación entre los usuarios ofertantes y los usuarios interesados en adquirir los artículos ofrecidos y la localización geográfica de los mismos, para completar la transacción.
+        El uso del Servicio atribuye a quien lo realiza la condición de usuario del mismo (en adelante, “el Usuario”) e implica la aceptación íntegra de estos Términos de Uso. En caso de no estar de acuerdo con todo o parte de estos Términos de Uso, el Usuario debe abstenerse de instalar y utilizar el Servicio.
+        Por medio de la aceptación de los presentes Términos de Uso, el Usuario manifiesta:
+        Que ha leído, entiende y comprende lo aquí expuesto.
+        Que asume todas las obligaciones aquí dispuestas.
+        Que es mayor de edad y tiene la capacidad legal suficiente para utilizar el Servicio.
+        Estos Términos de Uso serán aplicables a los Usuarios a partir de 24 de Octubre de 2016 y sustituyen los Términos de Uso que entraron en vigor el 02 de Mayo de 2016. Su aceptación por parte de los Usuarios será un paso previo e indispensable a la utilización del Servicio. El titular del Servicio se reserva la facultad de realizar en cualquier momento cualquier modificación o actualización de los Términos de Uso que, una vez entren en vigor, deberá ser aceptada por el Usuario para continuar utilizando el Servicio.
+
+    </string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>

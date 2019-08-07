@@ -32,8 +32,8 @@
 
             <TextView
                 android:id="@+id/postTitle"
-                android:layout_width="219dp"
-                android:layout_height="64dp"
+                android:layout_width="218dp"
+                android:layout_height="74dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="228dp"
                 android:layout_marginEnd="8dp"
@@ -45,10 +45,11 @@
 
             <TextView
                 android:id="@+id/postPrice"
-                android:layout_width="92dp"
-                android:layout_height="49dp"
+                android:layout_width="103dp"
+                android:layout_height="61dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
+                android:textSize="20sp"
                 android:layout_marginEnd="8dp"
                 app:layout_constraintBottom_toBottomOf="@+id/postTitle"
                 app:layout_constraintEnd_toEndOf="parent"
