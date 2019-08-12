@@ -24,6 +24,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+
+import android.util.Log;
 import android.view.MenuItem;
 
 import java.util.Objects;
@@ -99,8 +101,8 @@ public class MenuActivity extends AppCompatActivity {
             @Override
             public void onBackStackChanged() {
                 Fragment current =  getCurrentFragment();
-                if(current instanceof SearchPost){
-                    navigation.getMenu().findItem(R.id.profileMenu).setChecked(true);
+                if(current instanceof SearchPost && !current.getTag().equals("SearchPost")){
+                        navigation.getMenu().findItem(R.id.profileMenu).setChecked(true);
                 }else if(current instanceof AddPost ){
                     navigation.getMenu().findItem(R.id.addPostMenu).setChecked(true);
                 }else if(current instanceof PostDescription){
@@ -170,7 +172,7 @@ public class MenuActivity extends AppCompatActivity {
                     Objects.requireNonNull(getSupportActionBar()).show();
                     navigation.getMenu().findItem(R.id.searchPostMenu).setChecked(true);
                     SearchPost searchPosts = new SearchPost(0, user);
-                    fragmentTransaction.replace(R.id.fragment, searchPosts, "MyPosts").addToBackStack("SeachPost");
+                    fragmentTransaction.replace(R.id.fragment, searchPosts, "SearchPost").addToBackStack("SearchPost");
                     fragmentTransaction.commit();
                     fragmentPosition = 0;
                 break;

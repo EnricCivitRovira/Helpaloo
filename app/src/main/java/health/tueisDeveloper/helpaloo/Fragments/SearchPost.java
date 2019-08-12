@@ -9,6 +9,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -113,7 +115,6 @@ public class SearchPost extends Fragment {
                 public void onCancelled(@NonNull DatabaseError databaseError) {
 
                 }
-
             });
 
         }
@@ -122,14 +123,15 @@ public class SearchPost extends Fragment {
 
     @SuppressLint("LongLogTag")
     private void showData(DataSnapshot dataSnapshot, int type ) {
+        posts.clear();
         for(DataSnapshot ds : dataSnapshot.getChildren()){
             Post post;
-            posts.clear();
             post = ds.getValue(Post.class);
             if(type == 0) {
                 locationPost.setLatitude(Objects.requireNonNull(post).getLatitude());
                 locationPost.setLongitude(post.getLongitude());
                 float distance = locationUser.distanceTo(locationPost) / 1000;
+
                 if(user.getDistanceToShowPosts() > distance && post.getStatus() == 0) {
                     posts.add(post);
                 }
@@ -142,6 +144,7 @@ public class SearchPost extends Fragment {
                 openDialog();
             }
         }
+
         rv.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         rv.setLayoutManager(layoutManager);
