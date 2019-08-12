@@ -1,6 +1,8 @@
 package health.tueisDeveloper.helpaloo.Adapters;
 
 import android.annotation.SuppressLint;
+import android.location.Location;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +39,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         static TextView postPrice;
         @SuppressLint("StaticFieldLeak")
         static ImageView postPhoto;
+        @SuppressLint("StaticFieldLeak")
+        static TextView postDistance;
+
 
         MyViewHolder(View itemView) {
             super(itemView);
@@ -44,7 +49,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             postName = itemView.findViewById(R.id.postTitle);
             postPrice = itemView.findViewById(R.id.postPrice);
             postPhoto = itemView.findViewById(R.id.postPhoto);
-
+            postDistance = itemView.findViewById(R.id.postDistance);
         }
 
     }
@@ -77,6 +82,23 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         MyViewHolder.postName.setText(post.getTitle());
         MyViewHolder.postPrice.setText(post.getPrize()+ " €");
         String url = post.getRoute();
+        Location postLocation = new Location("postLoc");
+
+        postLocation.setLatitude(post.getLatitude());
+        postLocation.setLongitude(post.getLongitude());
+
+        Location userLocation = new Location("userLoc");
+
+        Log.i(user.getEmail(), user.getLatitude().toString());
+
+        userLocation.setLongitude(user.getLongitude());
+        userLocation.setLatitude(user.getLatitude());
+
+        float distance = postLocation.distanceTo(userLocation);
+
+        MyViewHolder.postDistance.setText("A: "+distance + " Km");
+
+
         if(!url.equals("")){
             Picasso.get().load(url).fit().centerCrop().into(MyViewHolder.postPhoto);
         }

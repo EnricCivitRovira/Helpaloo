@@ -42,8 +42,11 @@ public class MessagesListAdapter extends ArrayAdapter<Message> {
         Message message = getItem(position);
         String messageInfo = Objects.requireNonNull(message).getMessage();
         String[] date_parts = message.getTimestamp().split(" ");
+        String day = date_parts[2];
+        String month = date_parts[1];
         String[] timestamp_parts = date_parts[3].split(":");
-        String timestamp = timestamp_parts[0]+":"+timestamp_parts[1];
+
+        String timestamp = day+ " "+ month+" "+ timestamp_parts[0]+":"+timestamp_parts[1];
 
         ViewHolder holder;
 
@@ -56,7 +59,7 @@ public class MessagesListAdapter extends ArrayAdapter<Message> {
         convertView.setTag(holder);
 
         holder.message.setText(messageInfo);
-        if(!message.getUserIDFrom().equals(userID)) {
+        if(message.getUserIDFrom().equals(userID)) {
             holder.message.setGravity(Gravity.RIGHT);
             holder.message.setTextColor(Color.BLUE);
         }else{

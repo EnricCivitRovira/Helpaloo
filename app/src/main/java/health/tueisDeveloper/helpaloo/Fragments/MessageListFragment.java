@@ -15,6 +15,7 @@ import android.widget.ListView;
 import health.tueisDeveloper.helpaloo.Activities.MenuActivity;
 import health.tueisDeveloper.helpaloo.Adapters.ChatListAdapter;
 import health.tueisDeveloper.helpaloo.Classes.Chat;
+import health.tueisDeveloper.helpaloo.Classes.User;
 import health.tueisDeveloper.helpaloo.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -35,6 +36,11 @@ public class MessageListFragment extends Fragment {
     private String chatToID;
     private String nameFrom;
     private String nameTo;
+    private User user;
+
+    public MessageListFragment(User user) {
+        this.user = user;
+    }
 
     @Nullable
     @Override
@@ -44,8 +50,8 @@ public class MessageListFragment extends Fragment {
         ListView mListView = view.findViewById(R.id.listView);
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseDatabase mFirebaseDatabase;
-        FirebaseUser user = mAuth.getCurrentUser();
-        String userID = Objects.requireNonNull(user).getUid();
+        final FirebaseUser userAuth = mAuth.getCurrentUser();
+        String userID = Objects.requireNonNull(userAuth).getUid();
         adapter = new ChatListAdapter(Objects.requireNonNull(getContext()), R.layout.chat, chatList);
         mListView.setAdapter(adapter);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -53,7 +59,7 @@ public class MessageListFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Chat chat = adapter.getItem(position);
                 AppCompatActivity activity = (AppCompatActivity) view.getContext();
-                MessageBox openChat = new MessageBox(chat);
+                MessageBox openChat = new MessageBox(chat, user);
                 activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment, openChat).addToBackStack(null).commit();
             }
         });
@@ -89,7 +95,7 @@ public class MessageListFragment extends Fragment {
     }
 
     private void showData(DataSnapshot dataSnapshot) {
-
+        chatList.clear();
         for(DataSnapshot ds : dataSnapshot.getChildren()){
             switch (Objects.requireNonNull(ds.getKey())) {
                 case "chatFromID":

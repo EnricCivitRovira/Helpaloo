@@ -27,7 +27,7 @@
         <EditText
             android:id="@+id/postTitle"
             android:layout_width="282dp"
-            android:maxLength="20"
+            android:maxLength="40"
             android:layout_height="50dp"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
@@ -73,14 +73,15 @@
 
         <EditText
             android:id="@+id/postPrice"
-            android:maxLength="3"
+            android:maxLength="7"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="52dp"
             android:layout_marginEnd="8dp"
             android:ems="10"
             android:hint="Precio (€)"
-            android:inputType="textPersonName"
+            android:inputType="numberDecimal"
+            android:digits="0123456789.,"
             app:layout_constraintBottom_toTopOf="@+id/postTime"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"

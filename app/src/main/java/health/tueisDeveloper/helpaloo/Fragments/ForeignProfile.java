@@ -45,10 +45,8 @@ public class ForeignProfile extends Fragment {
     private String foreignUserID;
     private User foreignUser;
 
-    private ValorationFragment foreignNewValoration;
     private ArrayList<Valoration> valorationList = new ArrayList<>();
     private CommentAdapter adapter;
-    private ArrayList<String> blackList = new ArrayList<>();
     private int type;
 
     private Valoration val = new Valoration();
@@ -73,12 +71,10 @@ public class ForeignProfile extends Fragment {
         profileValoration = view.findViewById(R.id.mediumValoration);
         ListView mListValorationView = view.findViewById(R.id.commentList);
         numberValorations = view.findViewById(R.id.nValorationsView);
-        Button newValoration = view.findViewById(R.id.openValoration);
         Button theirPosts = view.findViewById(R.id.theirPosts);
 
         mListValorationView.setOnItemClickListener(null);
         if(type == 1){
-            newValoration.setVisibility(View.GONE);
             Objects.requireNonNull(((MenuActivity) getActivity()).getSupportActionBar()).setTitle("Mis Valoraciones");
         }else{
             Objects.requireNonNull(((MenuActivity) getActivity()).getSupportActionBar()).setTitle("Perfil del publicante");
@@ -107,18 +103,7 @@ public class ForeignProfile extends Fragment {
             }
         });
 
-        newValoration.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                foreignNewValoration = new ValorationFragment(foreignUser);
-                if(blackList.contains(mAuth.getUid())){
-                    Toast.makeText(getActivity(), "Ya has valorado a este usuario.", Toast.LENGTH_SHORT).show();
-                }else{
-                    activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment, foreignNewValoration).addToBackStack(null).commit();
-                }
-            }
-        });
+
 
         theirPosts.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -152,11 +137,9 @@ public class ForeignProfile extends Fragment {
           @Override
           public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
               valorationList.clear();
-              blackList.clear();
               for(DataSnapshot ds : dataSnapshot.getChildren()){
                   val = ds.getValue(Valoration.class);
                   valorationList.add(val);
-                  blackList.add(val.getUserID());
               }
               adapter.notifyDataSetChanged();
           }

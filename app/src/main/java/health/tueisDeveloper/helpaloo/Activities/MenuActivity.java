@@ -18,6 +18,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import android.view.MenuItem;
@@ -28,6 +29,7 @@ public class MenuActivity extends AppCompatActivity {
 
     BottomNavigationView navigation;
     private int fragmentPosition = 99;
+    private Fragment fragment;
     private User user;
 
     public void setFragmentPosition(int fragmentPosition) {
@@ -133,7 +135,7 @@ public class MenuActivity extends AppCompatActivity {
                 if(fragmentPosition != 3) {
                     Objects.requireNonNull(getSupportActionBar()).show();
                     navigation.getMenu().findItem(R.id.messagesMenu).setChecked(true);
-                    MessageListFragment chatList = new MessageListFragment();
+                    MessageListFragment chatList = new MessageListFragment(user);
                     fragmentTransaction.replace(R.id.fragment, chatList);
                     fragmentTransaction.commit();
                     fragmentPosition = 3;

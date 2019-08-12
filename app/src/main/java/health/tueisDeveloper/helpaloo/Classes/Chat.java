@@ -15,7 +15,7 @@ public class Chat {
     public Chat(){}
 
     public Chat(String chatFromID, String chatToID, String chatPostID, String nameFrom, String nameTo, String chatTitle){
-        this.chatID = idChatOrganizer(chatToID, chatFromID);
+        this.chatID = idChatOrganizer(chatToID, chatFromID)+ chatPostID;
         this.chatFromID = chatFromID;
         this.chatToID = chatToID;
         this.chatPostID = chatPostID;

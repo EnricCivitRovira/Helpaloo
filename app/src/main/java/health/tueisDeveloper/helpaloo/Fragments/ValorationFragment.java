@@ -65,8 +65,7 @@ public class ValorationFragment extends Fragment {
         mDatabaseReference.child("userValorations").child(foreignUser.getUserID()).push().setValue(newVal);
         mDatabaseReference.child("users").child(foreignUser.getUserID()).child("nValorations").setValue(foreignUser.getnValorations()+1);
         mDatabaseReference.child("users").child(foreignUser.getUserID()).child("mediumValoration").setValue(totalValoration);
-        Objects.requireNonNull(getFragmentManager()).popBackStackImmediate();
-
+        ((MenuActivity)getActivity()).setFragment(3);
     }
 
 

@@ -359,11 +359,7 @@ public class AddPost extends Fragment {
         if (TextUtils.isEmpty(price)) {
             introducedPrize.setError("Debes introducir un precio para tu tarea");
             valid = false;
-        } else if(!TextUtils.isDigitsOnly(price)){
-            introducedPrize.setError("El precio debe ser un número");
-            valid = false;
-        }
-        else {
+        }else {
             introducedPrize.setError(null);
         }
 

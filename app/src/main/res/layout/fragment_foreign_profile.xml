@@ -45,10 +45,11 @@
             android:layout_height="26dp"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
+            android:layout_marginBottom="16dp"
             android:textSize="15sp"
-            app:layout_constraintBottom_toTopOf="@+id/openValoration"
+            app:layout_constraintBottom_toTopOf="@+id/theirPosts"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.142"
+            app:layout_constraintHorizontal_bias="0.151"
             app:layout_constraintStart_toEndOf="@+id/foreignAvatar" />
 
         <RatingBar
@@ -62,21 +63,6 @@
             app:layout_constraintBottom_toTopOf="@+id/nValorationsView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
-
-        <Button
-            android:id="@+id/openValoration"
-            style="@style/Widget.AppCompat.Button.Colored"
-            android:layout_width="105dp"
-            android:layout_height="36dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:fontFamily="sans-serif-medium"
-            android:text="Valora"
-            android:textSize="12sp"
-            app:layout_constraintBottom_toTopOf="@+id/theirPosts"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.36"
-            app:layout_constraintStart_toEndOf="@+id/foreignAvatar" />
 
         <ListView
             android:id="@+id/commentList"

@@ -124,12 +124,13 @@ public class SearchPost extends Fragment {
     private void showData(DataSnapshot dataSnapshot, int type ) {
         for(DataSnapshot ds : dataSnapshot.getChildren()){
             Post post;
+            posts.clear();
             post = ds.getValue(Post.class);
             if(type == 0) {
                 locationPost.setLatitude(Objects.requireNonNull(post).getLatitude());
                 locationPost.setLongitude(post.getLongitude());
                 float distance = locationUser.distanceTo(locationPost) / 1000;
-                if(user.getDistanceToShowPosts() > distance) {
+                if(user.getDistanceToShowPosts() > distance && post.getStatus() == 0) {
                     posts.add(post);
                 }
             }else{

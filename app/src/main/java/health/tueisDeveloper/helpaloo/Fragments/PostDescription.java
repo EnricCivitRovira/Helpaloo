@@ -99,7 +99,7 @@ public class PostDescription extends Fragment {
             public void onClick(View v) {
                 AppCompatActivity activity = (AppCompatActivity) v.getContext();
                 chat = new Chat (userID, post.getUserId(), post.getPostId(), user.getName() , post.getPostNameUser(), post.getTitle());
-                MessageBox newMessage = new MessageBox(chat);
+                MessageBox newMessage = new MessageBox(chat, user);
                 activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment, newMessage).addToBackStack(null).commit();
             }
         });
