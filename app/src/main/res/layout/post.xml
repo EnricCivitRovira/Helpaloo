@@ -13,8 +13,8 @@
         android:layout_marginBottom="2dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="373dp"
-            android:layout_height="350dp">
+            android:layout_width="375dp"
+            android:layout_height="312dp">
 
             <ImageView
                 android:id="@+id/postPhoto"

@@ -131,9 +131,10 @@ public class Profile extends Fragment {
             public void onClick(View v) {
                   SearchPost myPosts = new SearchPost(1, user);
                     Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.fragment, myPosts, "findThisFragment")
-                            .addToBackStack(null)
+                            .replace(R.id.fragment, myPosts, "MyPosts")
+                            .addToBackStack("MyProfile")
                             .commit();
+
             }
         });
 
@@ -142,8 +143,8 @@ public class Profile extends Fragment {
             public void onClick(View v) {
                 ForeignProfile myValorations = new ForeignProfile(userID, 1);
                 Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment, myValorations, "findThisFragment")
-                        .addToBackStack(null)
+                        .replace(R.id.fragment, myValorations, "MyValorations")
+                        .addToBackStack("MyProfile")
                         .commit();
             }
         });

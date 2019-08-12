@@ -7,7 +7,10 @@ import androidx.annotation.NonNull;
 import health.tueisDeveloper.helpaloo.Classes.Post;
 import health.tueisDeveloper.helpaloo.Classes.User;
 import health.tueisDeveloper.helpaloo.Fragments.AddPost;
+import health.tueisDeveloper.helpaloo.Fragments.EditPost;
+import health.tueisDeveloper.helpaloo.Fragments.ForeignProfile;
 import health.tueisDeveloper.helpaloo.Fragments.MessageListFragment;
+import health.tueisDeveloper.helpaloo.Fragments.PostDescription;
 import health.tueisDeveloper.helpaloo.Fragments.Profile;
 import health.tueisDeveloper.helpaloo.R;
 import health.tueisDeveloper.helpaloo.Fragments.SearchPost;
@@ -92,6 +95,29 @@ public class MenuActivity extends AppCompatActivity {
             }
         });
 
+        this.getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+            @Override
+            public void onBackStackChanged() {
+                Fragment current =  getCurrentFragment();
+                if(current instanceof SearchPost){
+                    navigation.getMenu().findItem(R.id.profileMenu).setChecked(true);
+                }else if(current instanceof AddPost ){
+                    navigation.getMenu().findItem(R.id.addPostMenu).setChecked(true);
+                }else if(current instanceof PostDescription){
+                    navigation.getMenu().findItem(R.id.searchPostMenu).setChecked(true);
+                }else if(current instanceof Profile){
+                    navigation.getMenu().findItem(R.id.profileMenu).setChecked(true);
+                }else if(current instanceof MessageListFragment){
+                    navigation.getMenu().findItem(R.id.messagesMenu).setChecked(true);
+                }else if(current instanceof EditPost)
+                    navigation.getMenu().findItem(R.id.searchPostMenu).setChecked(true);
+            }
+        });
+
+    }
+
+    public Fragment getCurrentFragment() {
+        return this.getSupportFragmentManager().findFragmentById(R.id.fragment);
     }
 
     public void setFragment(int position) {
@@ -104,7 +130,7 @@ public class MenuActivity extends AppCompatActivity {
                     if(fragmentPosition != 0) {
                         Objects.requireNonNull(getSupportActionBar()).show();
                         SearchPost searchPost = new SearchPost(0, user);
-                        fragmentTransaction.replace(R.id.fragment, searchPost);
+                        fragmentTransaction.replace(R.id.fragment, searchPost, "SearchPost");
                         fragmentTransaction.commit();
                         fragmentPosition = 0;
 
@@ -114,9 +140,8 @@ public class MenuActivity extends AppCompatActivity {
                 if(fragmentPosition != 1) {
                     Objects.requireNonNull(getSupportActionBar()).show();
                     navigation.getMenu().findItem(R.id.addPostMenu).setChecked(true);
-                    Post post = new Post();
-                    AddPost addPost = new AddPost(post, 0, 0, user);
-                    fragmentTransaction.replace(R.id.fragment, addPost);
+                    AddPost addPost = new AddPost(user);
+                    fragmentTransaction.replace(R.id.fragment, addPost, "AddPost").addToBackStack("SearchPost");
                     fragmentTransaction.commit();
                     fragmentPosition = 1;
                 }
@@ -126,7 +151,7 @@ public class MenuActivity extends AppCompatActivity {
                     Objects.requireNonNull(getSupportActionBar()).show();
                     navigation.getMenu().findItem(R.id.profileMenu).setChecked(true);
                     Profile myProfile = new Profile(user);
-                    fragmentTransaction.replace(R.id.fragment, myProfile);
+                    fragmentTransaction.replace(R.id.fragment, myProfile, "MyProfile").addToBackStack("SearchPost");
                     fragmentTransaction.commit();
                     fragmentPosition = 2;
                 }
@@ -136,7 +161,7 @@ public class MenuActivity extends AppCompatActivity {
                     Objects.requireNonNull(getSupportActionBar()).show();
                     navigation.getMenu().findItem(R.id.messagesMenu).setChecked(true);
                     MessageListFragment chatList = new MessageListFragment(user);
-                    fragmentTransaction.replace(R.id.fragment, chatList);
+                    fragmentTransaction.replace(R.id.fragment, chatList, "MyChatList").addToBackStack("SearchPost");
                     fragmentTransaction.commit();
                     fragmentPosition = 3;
                 }
@@ -145,14 +170,14 @@ public class MenuActivity extends AppCompatActivity {
                     Objects.requireNonNull(getSupportActionBar()).show();
                     navigation.getMenu().findItem(R.id.searchPostMenu).setChecked(true);
                     SearchPost searchPosts = new SearchPost(0, user);
-                    fragmentTransaction.replace(R.id.fragment, searchPosts);
+                    fragmentTransaction.replace(R.id.fragment, searchPosts, "MyPosts").addToBackStack("SeachPost");
                     fragmentTransaction.commit();
                     fragmentPosition = 0;
                 break;
             case 5:
                     Objects.requireNonNull(getSupportActionBar()).show();
                     SearchPost profilePosts = new SearchPost(1, user);
-                    fragmentTransaction.replace(R.id.fragment, profilePosts);
+                    fragmentTransaction.replace(R.id.fragment, profilePosts, "MyProfile").addToBackStack("SearchPost");
                     fragmentTransaction.commit();
                     fragmentPosition = 5;
 

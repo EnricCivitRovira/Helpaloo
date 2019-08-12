@@ -1,6 +1,7 @@
 package health.tueisDeveloper.helpaloo.Adapters;
 
 import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.location.Location;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import health.tueisDeveloper.helpaloo.Fragments.AddPost;
 import health.tueisDeveloper.helpaloo.Classes.Post;
 import health.tueisDeveloper.helpaloo.Classes.User;
+import health.tueisDeveloper.helpaloo.Fragments.EditPost;
 import health.tueisDeveloper.helpaloo.Fragments.PostDescription;
 import health.tueisDeveloper.helpaloo.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -32,7 +34,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
     static class MyViewHolder extends RecyclerView.ViewHolder {
-        CardView cv;
+        static CardView cv;
         @SuppressLint("StaticFieldLeak")
         static TextView postName;
         @SuppressLint("StaticFieldLeak")
@@ -102,22 +104,24 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         if(!url.equals("")){
             Picasso.get().load(url).fit().centerCrop().into(MyViewHolder.postPhoto);
         }
-        MyViewHolder.postPhoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(post.getUserId().equals(userID)){
-                    AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                    AddPost myPost = new AddPost(post, 1, context, user);
-                    activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment, myPost).addToBackStack(null).commit();
-                }else {
-                    AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                    PostDescription openPost = new PostDescription(post, user);
-                    activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment, openPost).addToBackStack(null).commit();
+        if(post.getStatus() != 1) {
+            MyViewHolder.postPhoto.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (post.getUserId().equals(userID)) {
+                        AppCompatActivity activity = (AppCompatActivity) v.getContext();
+                        EditPost myPost = new EditPost(post, user);
+                        activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment, myPost).addToBackStack(null).commit();
+                    } else {
+                        AppCompatActivity activity = (AppCompatActivity) v.getContext();
+                        PostDescription openPost = new PostDescription(post, user);
+                        activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment, openPost).addToBackStack(null).commit();
+                    }
                 }
-
-            }
-        });
-
+            });
+        }else{
+            MyViewHolder.cv.setCardBackgroundColor(Color.GREEN);
+        }
     }
 
 
