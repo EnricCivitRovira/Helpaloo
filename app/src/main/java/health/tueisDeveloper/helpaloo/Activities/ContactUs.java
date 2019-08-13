@@ -2,8 +2,10 @@ package health.tueisDeveloper.helpaloo.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -39,7 +41,8 @@ public class ContactUs extends AppCompatActivity {
         termsOfUse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://helpaloo.flycricket.io/privacy.html"));
+                startActivity(browserIntent);
             }
         });
 
