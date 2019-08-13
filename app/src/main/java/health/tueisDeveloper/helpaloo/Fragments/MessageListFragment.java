@@ -6,6 +6,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,7 +46,9 @@ public class MessageListFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
         final View view = inflater.inflate(R.layout.fragment_messagelist_list, container, false);
+
         Objects.requireNonNull(((MenuActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).setTitle("Mensajes");
         ListView mListView = view.findViewById(R.id.listView);
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -60,9 +63,10 @@ public class MessageListFragment extends Fragment {
                 Chat chat = adapter.getItem(position);
                 AppCompatActivity activity = (AppCompatActivity) view.getContext();
                 MessageBox openChat = new MessageBox(chat, user);
-                activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment, openChat).addToBackStack(null).commit();
+                activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment, openChat, "MessageBox").addToBackStack("MyChatList").commit();
             }
         });
+        chatList.clear();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mFirebaseDatabase.getReference("chats_user/"+ userID).addChildEventListener(new ChildEventListener() {
             @Override
@@ -95,7 +99,8 @@ public class MessageListFragment extends Fragment {
     }
 
     private void showData(DataSnapshot dataSnapshot) {
-        chatList.clear();
+
+
         for(DataSnapshot ds : dataSnapshot.getChildren()){
             switch (Objects.requireNonNull(ds.getKey())) {
                 case "chatFromID":

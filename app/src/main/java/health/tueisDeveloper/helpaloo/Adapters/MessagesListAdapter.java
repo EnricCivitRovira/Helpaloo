@@ -68,6 +68,7 @@ public class MessagesListAdapter extends ArrayAdapter<Message> {
 
         holder.from .setText(timestamp);
 
+
         return convertView;
 
     }

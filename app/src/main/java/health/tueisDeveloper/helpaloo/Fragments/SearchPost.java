@@ -62,7 +62,7 @@ public class SearchPost extends Fragment {
         FirebaseDatabase mFirebaseDatabase = FirebaseDatabase.getInstance();
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser userFirebase = mAuth.getCurrentUser();
-
+        posts.clear();
         if (type != 2) {
             userID = Objects.requireNonNull(userFirebase).getUid();
         }
@@ -123,7 +123,7 @@ public class SearchPost extends Fragment {
 
     @SuppressLint("LongLogTag")
     private void showData(DataSnapshot dataSnapshot, int type ) {
-        posts.clear();
+
         for(DataSnapshot ds : dataSnapshot.getChildren()){
             Post post;
             post = ds.getValue(Post.class);

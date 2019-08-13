@@ -3,6 +3,7 @@ package health.tueisDeveloper.helpaloo.Fragments;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -89,6 +90,8 @@ public class MessageBox extends Fragment {
         profilePic = view.findViewById(R.id.mbProfile);
         completedPost = view.findViewById(R.id.completedPost);
 
+        messageList.clear();
+
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         final FirebaseUser userF = mAuth.getCurrentUser();
         adapter = new MessagesListAdapter(Objects.requireNonNull(getContext()), R.layout.message, messageList, Objects.requireNonNull(userF).getUid());
@@ -172,8 +175,8 @@ public class MessageBox extends Fragment {
             public void onClick(View v) {
                 ForeignProfile theirValorations = new ForeignProfile(userIDTo, 0);
                 Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment, theirValorations, "findThisFragment")
-                        .addToBackStack(null)
+                        .replace(R.id.fragment, theirValorations, "ForeignProfile")
+                        .addToBackStack("MessageBox")
                         .commit();
             }
         });
@@ -199,9 +202,7 @@ public class MessageBox extends Fragment {
     }
 
     private void insertIntroducedMessage(DataSnapshot dataSnapshot) {
-        messageList.clear();
         for (DataSnapshot ds : dataSnapshot.getChildren()) {
-
             switch (Objects.requireNonNull(ds.getKey())) {
                 case "message":
                     messageText = Objects.requireNonNull(ds.getValue()).toString();
