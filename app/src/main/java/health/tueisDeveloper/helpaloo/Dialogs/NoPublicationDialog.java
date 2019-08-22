@@ -48,7 +48,7 @@ public class NoPublicationDialog extends AppCompatDialogFragment {
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         if (type == 1) {
             builder.setTitle("Atención").setMessage("No tienes publicaciones");
             builder.setNegativeButton("De acuerdo", new DialogInterface.OnClickListener() {
@@ -89,6 +89,16 @@ public class NoPublicationDialog extends AppCompatDialogFragment {
 
                 }
             });
+        }if (type == 5){
+            builder.setTitle("Atención").setMessage("No tienes nuevos mensajes, chatea con gente para ver aqui tus chats.");
+            builder.setPositiveButton("Vale!", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+
+                }
+            });
+
         } else {
             builder.setTitle("Atención").setMessage("No hay publicaciones en tu zona...");
             builder.setNegativeButton("De acuerdo", new DialogInterface.OnClickListener() {

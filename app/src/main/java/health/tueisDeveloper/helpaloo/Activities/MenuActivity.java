@@ -111,8 +111,11 @@ public class MenuActivity extends AppCompatActivity {
                     navigation.getMenu().findItem(R.id.profileMenu).setChecked(true);
                 }else if(current instanceof MessageListFragment){
                     navigation.getMenu().findItem(R.id.messagesMenu).setChecked(true);
-                }else if(current instanceof EditPost)
+                }else if(current instanceof EditPost) {
                     navigation.getMenu().findItem(R.id.searchPostMenu).setChecked(true);
+                }else if(current instanceof SearchPost && current.getTag().equals("SearchPost")) {
+                    navigation.getMenu().findItem(R.id.searchPostMenu).setChecked(true);
+                }
             }
         });
 
@@ -132,7 +135,7 @@ public class MenuActivity extends AppCompatActivity {
                     if(fragmentPosition != 0) {
                         Objects.requireNonNull(getSupportActionBar()).show();
                         SearchPost searchPost = new SearchPost(0, user);
-                        fragmentTransaction.replace(R.id.fragment, searchPost, "SearchPost");
+                        fragmentTransaction.replace(R.id.fragment, searchPost, "SearchPost").addToBackStack("SearchPost");
                         fragmentTransaction.commit();
                         fragmentPosition = 0;
 

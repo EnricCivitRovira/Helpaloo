@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,6 +18,7 @@ import health.tueisDeveloper.helpaloo.Activities.MenuActivity;
 import health.tueisDeveloper.helpaloo.Adapters.ChatListAdapter;
 import health.tueisDeveloper.helpaloo.Classes.Chat;
 import health.tueisDeveloper.helpaloo.Classes.User;
+import health.tueisDeveloper.helpaloo.Dialogs.NoPublicationDialog;
 import health.tueisDeveloper.helpaloo.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -66,6 +68,7 @@ public class MessageListFragment extends Fragment {
                 activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment, openChat, "MessageBox").addToBackStack("MyChatList").commit();
             }
         });
+
         chatList.clear();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mFirebaseDatabase.getReference("chats_user/"+ userID).addChildEventListener(new ChildEventListener() {
@@ -94,13 +97,10 @@ public class MessageListFragment extends Fragment {
 
             }
         });
-
         return view;
     }
 
     private void showData(DataSnapshot dataSnapshot) {
-
-
         for(DataSnapshot ds : dataSnapshot.getChildren()){
             switch (Objects.requireNonNull(ds.getKey())) {
                 case "chatFromID":
@@ -127,5 +127,7 @@ public class MessageListFragment extends Fragment {
         Chat newChat = new Chat(chatFromID, chatToID, chatPostID, nameFrom,  nameTo,  chatTitle);
         chatList.add(newChat);
         adapter.notifyDataSetChanged();
+
     }
+
 }
