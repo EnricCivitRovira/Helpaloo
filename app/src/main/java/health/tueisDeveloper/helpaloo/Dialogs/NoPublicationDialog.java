@@ -5,6 +5,8 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDialogFragment;
@@ -45,6 +47,8 @@ public class NoPublicationDialog extends AppCompatDialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+
+        Log.i("Tipo = ", String.valueOf(type));
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
@@ -89,7 +93,7 @@ public class NoPublicationDialog extends AppCompatDialogFragment {
 
                 }
             });
-        }if (type == 5){
+        }else if (type == 5){
             builder.setTitle("Atención").setMessage("No tienes nuevos mensajes, chatea con gente para ver aqui tus chats.");
             builder.setPositiveButton("Vale!", new DialogInterface.OnClickListener() {
                 @Override
@@ -98,7 +102,6 @@ public class NoPublicationDialog extends AppCompatDialogFragment {
 
                 }
             });
-
         } else {
             builder.setTitle("Atención").setMessage("No hay publicaciones en tu zona...");
             builder.setNegativeButton("De acuerdo", new DialogInterface.OnClickListener() {
