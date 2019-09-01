@@ -5,9 +5,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +16,6 @@ import health.tueisDeveloper.helpaloo.Activities.MenuActivity;
 import health.tueisDeveloper.helpaloo.Adapters.ChatListAdapter;
 import health.tueisDeveloper.helpaloo.Classes.Chat;
 import health.tueisDeveloper.helpaloo.Classes.User;
-import health.tueisDeveloper.helpaloo.Dialogs.NoPublicationDialog;
 import health.tueisDeveloper.helpaloo.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -29,7 +26,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class MessageListFragment extends Fragment {
+public class ChatListFragment extends Fragment {
 
     private ArrayList<Chat> chatList = new ArrayList<>();
     private ChatListAdapter adapter;
@@ -41,7 +38,7 @@ public class MessageListFragment extends Fragment {
     private String nameTo;
     private User user;
 
-    public MessageListFragment(User user) {
+    public ChatListFragment(User user) {
         this.user = user;
     }
 
@@ -64,14 +61,14 @@ public class MessageListFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Chat chat = adapter.getItem(position);
                 AppCompatActivity activity = (AppCompatActivity) view.getContext();
-                MessageBox openChat = new MessageBox(chat, user);
-                activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment, openChat, "MessageBox").addToBackStack("MyChatList").commit();
+                MessageBoxFragment openChat = new MessageBoxFragment(chat, user);
+                activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment, openChat, "MessageBoxFragment").addToBackStack("MyChatList").commit();
             }
         });
 
         chatList.clear();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mFirebaseDatabase.getReference("chats_user/"+ userID).addChildEventListener(new ChildEventListener() {
+        mFirebaseDatabase.getReference("chatsUser/"+ userID).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 showData(dataSnapshot);

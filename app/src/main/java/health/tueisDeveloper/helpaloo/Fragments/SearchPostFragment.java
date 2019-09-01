@@ -10,16 +10,15 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import health.tueisDeveloper.helpaloo.Activities.MenuActivity;
-import health.tueisDeveloper.helpaloo.Adapters.MyAdapter;
+import health.tueisDeveloper.helpaloo.Adapters.PostAdapter;
 import health.tueisDeveloper.helpaloo.Classes.Post;
 import health.tueisDeveloper.helpaloo.Classes.User;
-import health.tueisDeveloper.helpaloo.Dialogs.NoPublicationDialog;
+import health.tueisDeveloper.helpaloo.Dialogs.AllDialogs;
 import health.tueisDeveloper.helpaloo.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -31,7 +30,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 @SuppressLint("ValidFragment")
-public class SearchPost extends Fragment {
+public class SearchPostFragment extends Fragment {
 
     private String userID;
     private ArrayList<Post> posts = new ArrayList<>();
@@ -39,16 +38,23 @@ public class SearchPost extends Fragment {
     private int type ;
     private int context;
     private User user;
+    private User foreignuser;
     private Location locationPost = new Location("PostLocation");
     private Location locationUser = new Location("UserLocation");
 
     @SuppressLint("ValidFragment")
-    public SearchPost(int type, User user) {
+    public SearchPostFragment(int type, User user) {
         this.type = type; // 0 -> All posts, 1 -> My posts, 2-> Their Posts
         this.user = user;
     }
 
-    public SearchPost(int type, int context) {
+    public SearchPostFragment(int type, User user, User foreignuser ) {
+        this.type = type; // 0 -> All posts, 1 -> My posts, 2-> Their Posts
+        this.user = user;
+        this.foreignuser = foreignuser;
+    }
+
+    public SearchPostFragment(int type, int context) {
         this.type = type;
         this.context = context; // 0 -> Coming From Edit MyPost, 1 -> Coming From new Post
     }
@@ -67,6 +73,8 @@ public class SearchPost extends Fragment {
             userID = Objects.requireNonNull(userFirebase).getUid();
         }
         rv = view.findViewById(R.id.rv);
+
+
 
         if(type == 0) {
 
@@ -103,9 +111,13 @@ public class SearchPost extends Fragment {
 
             });
         }else if (type == 2){
+
+            locationUser.setLatitude(user.getLatitude());
+            locationUser.setLongitude(user.getLongitude());
+
             ((MenuActivity) Objects.requireNonNull(getActivity())).setFragmentPosition(-1);
             Objects.requireNonNull(((MenuActivity) getActivity()).getSupportActionBar()).setTitle("Sus Anuncios");
-            mFirebaseDatabase.getReference("posts/"+user.getUserID()).addListenerForSingleValueEvent(new ValueEventListener() {
+            mFirebaseDatabase.getReference("posts/"+foreignuser.getUserID()).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     showData(dataSnapshot, type);
@@ -124,15 +136,22 @@ public class SearchPost extends Fragment {
     @SuppressLint("LongLogTag")
     private void showData(DataSnapshot dataSnapshot, int type ) {
 
-        for(DataSnapshot ds : dataSnapshot.getChildren()){
+        for(DataSnapshot ds : dataSnapshot.getChildren()) {
             Post post;
             post = ds.getValue(Post.class);
-            if(type == 0) {
+            if (type == 0) {
                 locationPost.setLatitude(Objects.requireNonNull(post).getLatitude());
                 locationPost.setLongitude(post.getLongitude());
                 float distance = locationUser.distanceTo(locationPost) / 1000;
 
-                if(user.getDistanceToShowPosts() > distance && post.getStatus() == 0) {
+                if (user.getDistanceToShowPosts() > distance && post.getStatus() == 0) {
+                    posts.add(post);
+                }
+            }else if(type == 2){
+                locationPost.setLatitude(Objects.requireNonNull(post).getLatitude());
+                locationPost.setLongitude(post.getLongitude());
+                float distance = locationUser.distanceTo(locationPost) / 1000;
+                if (user.getDistanceToShowPosts() > distance && post.getStatus() == 0) {
                     posts.add(post);
                 }
             }else{
@@ -148,13 +167,13 @@ public class SearchPost extends Fragment {
         rv.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         rv.setLayoutManager(layoutManager);
-        MyAdapter adapter =  new MyAdapter(posts, type, user);
+        PostAdapter adapter =  new PostAdapter(posts, type, user);
         rv.setAdapter(adapter);
     }
 
     private void openDialog() {
         FragmentManager manager = Objects.requireNonNull(getActivity()).getSupportFragmentManager();
-        NoPublicationDialog dialog = new NoPublicationDialog(type);
+        AllDialogs dialog = new AllDialogs(type);
         dialog.show(manager, "No Publication Dialog");
     }
 

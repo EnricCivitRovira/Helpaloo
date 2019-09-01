@@ -5,7 +5,7 @@
     android:id="@+id/frameLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="health.tueisDeveloper.helpaloo.Fragments.AddPost">
+    tools:context="health.tueisDeveloper.helpaloo.Fragments.AddPostFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -27,13 +27,14 @@
         <EditText
             android:id="@+id/postTitle"
             android:layout_width="282dp"
-            android:maxLength="40"
             android:layout_height="50dp"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
+            android:layout_marginBottom="20dp"
             android:ems="10"
             android:hint="Titulo"
             android:inputType="textPersonName"
+            android:maxLength="40"
             app:layout_constraintBottom_toTopOf="@+id/postDescription"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.398"
@@ -65,7 +66,7 @@
             android:ems="10"
             android:hint="Duración Aproximada"
             android:inputType="textPersonName"
-            app:layout_constraintBottom_toTopOf="@+id/addPost"
+            app:layout_constraintBottom_toTopOf="@+id/addPostFragment"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.241"
             app:layout_constraintStart_toStartOf="parent"
@@ -88,12 +89,12 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <Button
-            android:id="@+id/addPost"
+            android:id="@+id/addPostFragment"
             android:layout_width="174dp"
             android:layout_height="41dp"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginBottom="68dp"
+            android:layout_marginBottom="148dp"
             android:text="Publicar Anuncio"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -130,7 +131,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.19"
-            app:layout_constraintStart_toEndOf="@+id/addPost"
+            app:layout_constraintStart_toEndOf="@+id/addPostFragment"
             app:layout_constraintTop_toBottomOf="@+id/postTime"
             app:layout_constraintVertical_bias="0.0" />
     </androidx.constraintlayout.widget.ConstraintLayout>

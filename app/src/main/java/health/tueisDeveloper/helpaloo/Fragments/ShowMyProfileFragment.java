@@ -16,8 +16,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import health.tueisDeveloper.helpaloo.Activities.ContactUs;
-import health.tueisDeveloper.helpaloo.Activities.MainActivity;
+import health.tueisDeveloper.helpaloo.Activities.ContactUsActivity;
+import health.tueisDeveloper.helpaloo.Activities.SignInActivity;
 import health.tueisDeveloper.helpaloo.Activities.MenuActivity;
 import health.tueisDeveloper.helpaloo.Classes.User;
 import health.tueisDeveloper.helpaloo.R;
@@ -40,7 +40,7 @@ import java.util.Objects;
 import static android.app.Activity.RESULT_OK;
 
 @SuppressLint("ValidFragment")
-public class Profile extends Fragment {
+public class ShowMyProfileFragment extends Fragment {
 
     private TextView showKilometers;
     private ImageView profilePic;
@@ -62,7 +62,7 @@ public class Profile extends Fragment {
     private int pval;
 
     @SuppressLint("ValidFragment")
-    public Profile(User user) {
+    public ShowMyProfileFragment(User user) {
         this.user = user;
     }
 
@@ -129,7 +129,7 @@ public class Profile extends Fragment {
         myPosts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                  SearchPost myPosts = new SearchPost(1, user);
+                  SearchPostFragment myPosts = new SearchPostFragment(1, user);
                     Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction()
                             .replace(R.id.fragment, myPosts, "MyPosts")
                             .addToBackStack("MyProfile")
@@ -141,7 +141,7 @@ public class Profile extends Fragment {
         myValorations.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ForeignProfile myValorations = new ForeignProfile(userID, 1);
+                ForeignProfileFragment myValorations = new ForeignProfileFragment(user, userID, 1);
                 Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment, myValorations, "MyValorations")
                         .addToBackStack("MyProfile")
@@ -152,8 +152,8 @@ public class Profile extends Fragment {
         helpaloo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getContext(), ContactUs.class);
-                intent.putExtra("ContactUs", "");
+                Intent intent = new Intent(getContext(), ContactUsActivity.class);
+                intent.putExtra("ContactUsActivity", "");
                 startActivity(intent);
             }
         });
@@ -269,7 +269,7 @@ public class Profile extends Fragment {
     }
     private void signOut() {
         mAuth.signOut();
-        Intent intent = new Intent(getContext(), MainActivity.class);
+        Intent intent = new Intent(getContext(), SignInActivity.class);
         startActivity(intent);
         Objects.requireNonNull(getActivity()).finish();
 

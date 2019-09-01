@@ -42,7 +42,7 @@ import static android.app.Activity.RESULT_OK;
 
 
 @SuppressLint("ValidFragment")
-public class AddPost extends Fragment {
+public class AddPostFragment extends Fragment {
 
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
@@ -68,7 +68,7 @@ public class AddPost extends Fragment {
     private User user;
 
     @SuppressLint("ValidFragment")
-    public AddPost(User user) {
+    public AddPostFragment(User user) {
         this.user = user;
     }
 
@@ -81,7 +81,7 @@ public class AddPost extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_add_post, container, false);
         // BIND
         Button uploadImage = view.findViewById(R.id.addImage);
-        Button uploadPost = view.findViewById(R.id.addPost);
+        Button uploadPost = view.findViewById(R.id.addPostFragment);
         introducedTitle = view.findViewById(R.id.postTitle);
         introducedDescription = view.findViewById(R.id.postDescription);
         introducedPrize = view.findViewById(R.id.postPrice);

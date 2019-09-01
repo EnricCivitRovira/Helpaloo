@@ -9,7 +9,7 @@ public class Post {
         private String userId;
         private String title;
         private String description;
-        private String prize;
+        private String price;
         private String time;
         private int status;
         private String route;
@@ -27,7 +27,7 @@ public class Post {
             this.userId = userId;
             this.title = title;
             this.description = description;
-            this.prize = prize;
+            this.price = prize;
             this.time = time;
             this.status = 0;
             if (route == null) {
@@ -64,7 +64,7 @@ public class Post {
                 "userId='" + userId + '\'' +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
-                ", prize='" + prize + '\'' +
+                ", prize='" + price + '\'' +
                 ", time='" + time + '\'' +
                 ", status=" + status +
                 ", route='" + route + '\'' +
@@ -103,12 +103,12 @@ public class Post {
         this.description = description;
     }
 
-    public String getPrize() {
-        return prize;
+    public String getPrice() {
+        return price;
     }
 
-    public void setPrize(String prize) {
-        this.prize = prize;
+    public void setPrice(String prize) {
+        this.price = prize;
     }
 
     public String getTime() {

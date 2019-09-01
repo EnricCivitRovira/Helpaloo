@@ -25,7 +25,7 @@ import java.util.Objects;
 
 
 @SuppressLint("ValidFragment")
-public class NoPublicationDialog extends AppCompatDialogFragment {
+public class AllDialogs extends AppCompatDialogFragment {
     private int type;
 
     private Chat chat;
@@ -33,11 +33,11 @@ public class NoPublicationDialog extends AppCompatDialogFragment {
     private DatabaseReference mDatabase;
 
     @SuppressLint("ValidFragment")
-    public NoPublicationDialog(int type) {
+    public AllDialogs(int type) {
         this.type = type;
     }
 
-    public NoPublicationDialog(Chat chat, User user) {
+    public AllDialogs(Chat chat, User user) {
         this.type = 4;
         this.chat = chat;
         this.user = user;
@@ -76,8 +76,8 @@ public class NoPublicationDialog extends AppCompatDialogFragment {
                     mDatabase.child("posts").child(chat.getChatToID()).child(chat.getChatPostID()).child("status").setValue(1);
                     mDatabase.child("allPosts").child(chat.getChatPostID()).child("status").setValue(1);
 
-                    mDatabase.child("chats_user").child(chat.getChatFromID()).removeValue();
-                    mDatabase.child("chats_user").child(chat.getChatToID()).removeValue();
+                    mDatabase.child("chatsUser").child(chat.getChatFromID()).removeValue();
+                    mDatabase.child("chatsUser").child(chat.getChatToID()).removeValue();
 
                     ValorationFragment foreignNewValoration = new ValorationFragment(user);
                     Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction()

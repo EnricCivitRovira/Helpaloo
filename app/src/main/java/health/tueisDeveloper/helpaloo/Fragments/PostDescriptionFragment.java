@@ -27,7 +27,7 @@ import com.squareup.picasso.Picasso;
 import java.util.Objects;
 
 @SuppressLint("ValidFragment")
-public class PostDescription extends Fragment {
+public class PostDescriptionFragment extends Fragment {
 
     private Post post;
     private String userID;
@@ -36,11 +36,11 @@ public class PostDescription extends Fragment {
     private String route;
     private ImageView profilePicSender;
     private TextView usernamePostDescription;
-    private ForeignProfile foreignProfile;
+    private ForeignProfileFragment foreignProfileFragment;
     private User user;
 
     @SuppressLint("ValidFragment")
-    public PostDescription(Post post, User user) {
+    public PostDescriptionFragment(Post post, User user) {
         this.post = post;
         this.user = user;
     }
@@ -68,7 +68,7 @@ public class PostDescription extends Fragment {
         }
 
         postTitle.setText(post.getTitle());
-        postPrice.setText(post.getPrize()+ " €");
+        postPrice.setText(post.getPrice()+ " €");
         postDescription.setText(post.getDescription());
 
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -99,7 +99,7 @@ public class PostDescription extends Fragment {
             public void onClick(View v) {
                 AppCompatActivity activity = (AppCompatActivity) v.getContext();
                 chat = new Chat (userID, post.getUserId(), post.getPostId(), user.getName() , post.getPostNameUser(), post.getTitle());
-                MessageBox newMessage = new MessageBox(chat, user);
+                MessageBoxFragment newMessage = new MessageBoxFragment(chat, user);
                 activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment, newMessage).addToBackStack(null).commit();
             }
         });
@@ -108,8 +108,8 @@ public class PostDescription extends Fragment {
             @Override
             public void onClick(View v) {
                 AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                foreignProfile = new ForeignProfile(post.getUserId(), 0);
-                activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment, foreignProfile).addToBackStack(null).commit();
+                foreignProfileFragment = new ForeignProfileFragment(user,post.getUserId(), 0);
+                activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment, foreignProfileFragment).addToBackStack(null).commit();
             }
         });
 

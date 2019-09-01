@@ -19,7 +19,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Objects;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class SignInActivity extends AppCompatActivity implements View.OnClickListener {
     private FirebaseAuth mAuth;
     private static final String TAG = "EmailPassword";
 
@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 forgetPassword();
             }
         } else if (i ==  R.id.register) {
-            Intent intent = new Intent(MainActivity.this, RegisterActivity.class);
+            Intent intent = new Intent(SignInActivity.this, RegisterActivity.class);
             startActivity(intent);
         }
 
@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             progressDialog.dismiss();
-                            Toast.makeText(MainActivity.this, "Autentificación correcta!",
+                            Toast.makeText(SignInActivity.this, "Autentificación correcta!",
                                     Toast.LENGTH_SHORT).show();
                             updateUI(user);
                         } else {
@@ -131,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
                             mPasswordField.setText("");
                             progressDialog.dismiss();
-                            Toast.makeText(MainActivity.this, "Authentication fallida.",
+                            Toast.makeText(SignInActivity.this, "Authentication fallida.",
                                     Toast.LENGTH_SHORT).show();
                             // updateUI(null);
                         }
@@ -139,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         // [START_EXCLUDE]
                         if (!task.isSuccessful()) {
                             progressDialog.dismiss();
-                            Toast.makeText(MainActivity.this, "Autentificación fallida",
+                            Toast.makeText(SignInActivity.this, "Autentificación fallida",
                                     Toast.LENGTH_SHORT).show();
 
                         }
@@ -164,7 +164,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
                             Log.d(TAG, "Email sent to "+mEmailField.getText().toString());
-                            Toast.makeText(MainActivity.this, "Se te ha enviado un correo para reiniciar la contraseña.",
+                            Toast.makeText(SignInActivity.this, "Se te ha enviado un correo para reiniciar la contraseña.",
                                     Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -176,7 +176,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
            Log.i("State","SignOut");
         } else {
             // Sign In
-            Intent intent = new Intent(MainActivity.this, MenuActivity.class);
+            Intent intent = new Intent(SignInActivity.this, MenuActivity.class);
             intent.putExtra("User", user);
             startActivity(intent);
             finish();

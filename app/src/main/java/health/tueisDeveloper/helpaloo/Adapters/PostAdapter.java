@@ -3,17 +3,16 @@ package health.tueisDeveloper.helpaloo.Adapters;
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.location.Location;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import health.tueisDeveloper.helpaloo.Fragments.AddPost;
+
 import health.tueisDeveloper.helpaloo.Classes.Post;
 import health.tueisDeveloper.helpaloo.Classes.User;
-import health.tueisDeveloper.helpaloo.Fragments.EditPost;
-import health.tueisDeveloper.helpaloo.Fragments.PostDescription;
+import health.tueisDeveloper.helpaloo.Fragments.EditPostFragment;
+import health.tueisDeveloper.helpaloo.Fragments.PostDescriptionFragment;
 import health.tueisDeveloper.helpaloo.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
@@ -23,7 +22,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
+public class PostAdapter extends RecyclerView.Adapter<PostAdapter.MyViewHolder> {
     private final ArrayList<Post> postslist;
 
     private String userID;
@@ -57,7 +56,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public MyAdapter(ArrayList<Post> postslist, int context, User user) {
+    public PostAdapter(ArrayList<Post> postslist, int context, User user) {
         this.postslist = postslist;
         this.context = context; // 0 -> AllPosts, 1 -> MyPosts
         this.user = user;
@@ -66,7 +65,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     // Create new views (invoked by the layout manager)
     @NonNull
     @Override
-    public MyAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public PostAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.post, parent, false);
         MyViewHolder pvh = new MyViewHolder(v);
 
@@ -82,7 +81,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         final Post post = postslist.get(position);
         MyViewHolder.postName.setText(post.getTitle());
-        MyViewHolder.postPrice.setText(post.getPrize()+ " €");
+        MyViewHolder.postPrice.setText(post.getPrice()+ " €");
         String url = post.getRoute();
         Location postLocation = new Location("postLoc");
 
@@ -96,7 +95,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
         float distance = postLocation.distanceTo(userLocation);
 
-        MyViewHolder.postDistance.setText("A: "+distance + " Km");
+        MyViewHolder.postDistance.setText("A: "+String.format("%.2f", distance) + " Km");
 
 
         if(!url.equals("")){
@@ -108,11 +107,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 public void onClick(View v) {
                     if (post.getUserId().equals(userID)) {
                         AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                        EditPost myPost = new EditPost(post, user);
+                        EditPostFragment myPost = new EditPostFragment(post, user);
                         activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment, myPost).addToBackStack(null).commit();
                     } else {
                         AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                        PostDescription openPost = new PostDescription(post, user);
+                        PostDescriptionFragment openPost = new PostDescriptionFragment(post, user);
                         activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment, openPost).addToBackStack(null).commit();
                     }
                 }

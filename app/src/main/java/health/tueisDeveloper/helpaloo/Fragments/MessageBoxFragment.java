@@ -3,7 +3,6 @@ package health.tueisDeveloper.helpaloo.Fragments;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,15 +11,13 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import health.tueisDeveloper.helpaloo.Activities.MenuActivity;
 import health.tueisDeveloper.helpaloo.Adapters.MessagesListAdapter;
 import health.tueisDeveloper.helpaloo.Classes.Chat;
 import health.tueisDeveloper.helpaloo.Classes.Message;
 import health.tueisDeveloper.helpaloo.Classes.User;
-import health.tueisDeveloper.helpaloo.Classes.Valoration;
-import health.tueisDeveloper.helpaloo.Dialogs.NoPublicationDialog;
+import health.tueisDeveloper.helpaloo.Dialogs.AllDialogs;
 import health.tueisDeveloper.helpaloo.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -36,12 +33,11 @@ import java.util.Calendar;
 import java.util.Objects;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 @SuppressLint("ValidFragment")
-public class MessageBox extends Fragment {
+public class MessageBoxFragment extends Fragment {
     private EditText messageTV;
     private String message;
     private DatabaseReference mDatabase;
@@ -66,7 +62,7 @@ public class MessageBox extends Fragment {
     private ValorationFragment foreignNewValoration;
     private User user;
 
-    public MessageBox(Chat chat, User user) {
+    public MessageBoxFragment(Chat chat, User user) {
         this.chat = chat;
         this.user = user;
     }
@@ -173,10 +169,10 @@ public class MessageBox extends Fragment {
         profilePic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ForeignProfile theirValorations = new ForeignProfile(userIDTo, 0);
+                ForeignProfileFragment theirValorations = new ForeignProfileFragment(user, userIDTo, 0);
                 Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment, theirValorations, "ForeignProfile")
-                        .addToBackStack("MessageBox")
+                        .replace(R.id.fragment, theirValorations, "ForeignProfileFragment")
+                        .addToBackStack("MessageBoxFragment")
                         .commit();
             }
         });
@@ -185,7 +181,7 @@ public class MessageBox extends Fragment {
             @Override
             public void onClick(View v) {
                 FragmentManager manager = Objects.requireNonNull(getActivity()).getSupportFragmentManager();
-                NoPublicationDialog dialog = new NoPublicationDialog(chat, user);
+                AllDialogs dialog = new AllDialogs(chat, user);
                 dialog.show(manager, "No Publication Dialog");
             }
         });
@@ -236,8 +232,8 @@ public class MessageBox extends Fragment {
     private void insertMessage(final String message) {
         final String currentTime = Calendar.getInstance().getTime().toString();
 
-        DatabaseReference refAll1 = mDatabase.child("chats_user").child(userIDFrom).child(chatID);
-        DatabaseReference refAll2 = mDatabase.child("chats_user").child(userIDTo).child(chatID);
+        DatabaseReference refAll1 = mDatabase.child("chatsUser").child(userIDFrom).child(chatID);
+        DatabaseReference refAll2 = mDatabase.child("chatsUser").child(userIDTo).child(chatID);
         refAll1.setValue(chat);
         refAll2.setValue(chat);
 

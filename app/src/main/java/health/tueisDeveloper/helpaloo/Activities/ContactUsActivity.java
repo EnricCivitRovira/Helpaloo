@@ -13,7 +13,7 @@ import android.widget.TextView;
 import health.tueisDeveloper.helpaloo.R;
 import java.util.Objects;
 
-public class ContactUs extends AppCompatActivity {
+public class ContactUsActivity extends AppCompatActivity {
 
     private String versionNumber;
     private int versionCode;

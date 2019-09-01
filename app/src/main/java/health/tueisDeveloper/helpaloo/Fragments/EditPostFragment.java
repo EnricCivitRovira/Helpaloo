@@ -42,7 +42,7 @@ import static android.app.Activity.RESULT_OK;
 
 
 @SuppressLint("ValidFragment")
-public class EditPost extends Fragment {
+public class EditPostFragment extends Fragment {
 
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
@@ -66,7 +66,7 @@ public class EditPost extends Fragment {
     private User user;
 
     @SuppressLint("ValidFragment")
-    public EditPost(Post post, User user) {
+    public EditPostFragment(Post post, User user) {
         this.post = post;
         this.user = user;
     }
@@ -79,7 +79,7 @@ public class EditPost extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_add_post, container, false);
         // BIND
         Button uploadImage = view.findViewById(R.id.addImage);
-        Button uploadPost = view.findViewById(R.id.addPost);
+        Button uploadPost = view.findViewById(R.id.addPostFragment);
         introducedTitle = view.findViewById(R.id.postTitle);
         introducedDescription = view.findViewById(R.id.postDescription);
         introducedPrize = view.findViewById(R.id.postPrice);
@@ -102,7 +102,7 @@ public class EditPost extends Fragment {
         Picasso.get().load(post.getRoute()).into(imageView);
         introducedTitle.setText(post.getTitle());
         introducedDescription.setText(post.getDescription());
-        introducedPrize.setText(post.getPrize());
+        introducedPrize.setText(post.getPrice());
 
         deletePost.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -146,7 +146,7 @@ public class EditPost extends Fragment {
         Toast.makeText(getActivity(), "Articulo Eliminado", Toast.LENGTH_SHORT).show();
 
         FragmentManager fragmentManager = getFragmentManager();
-        SearchPost myPosts = new SearchPost(1, 1);
+        SearchPostFragment myPosts = new SearchPostFragment(1, 1);
         Objects.requireNonNull(fragmentManager).beginTransaction().replace(R.id.fragment, myPosts)
                 .commit();
     }
@@ -231,8 +231,8 @@ public class EditPost extends Fragment {
         refAll.child("description").setValue(post.getDescription());
         ref.child("description").setValue(post.getDescription());
 
-        refAll.child("prize").setValue(post.getPrize());
-        ref.child("prize").setValue(post.getPrize());
+        refAll.child("prize").setValue(post.getPrice());
+        ref.child("prize").setValue(post.getPrice());
 
         refAll.child("latitude").setValue(post.getLatitude());
         ref.child("latitude").setValue(post.getLatitude());

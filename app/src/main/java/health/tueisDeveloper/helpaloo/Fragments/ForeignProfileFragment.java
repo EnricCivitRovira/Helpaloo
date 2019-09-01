@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import health.tueisDeveloper.helpaloo.Adapters.CommentAdapter;
 import health.tueisDeveloper.helpaloo.Classes.User;
@@ -31,7 +29,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class ForeignProfile extends Fragment {
+public class ForeignProfileFragment extends Fragment {
 
     private ImageView profilePic;
     private TextView profileName;
@@ -44,6 +42,7 @@ public class ForeignProfile extends Fragment {
 
     private String foreignUserID;
     private User foreignUser;
+    private User user;
 
     private ArrayList<Valoration> valorationList = new ArrayList<>();
     private CommentAdapter adapter;
@@ -51,7 +50,8 @@ public class ForeignProfile extends Fragment {
 
     private Valoration val = new Valoration();
 
-    public ForeignProfile(String foreignUserID, int type){
+    public ForeignProfileFragment(User user, String foreignUserID, int type){
+        this.user = user;
         this.foreignUserID = foreignUserID;
         this.type = type; // 0 -> Visto desde fuera. 1 -> visto desde dentro
     }
@@ -108,7 +108,7 @@ public class ForeignProfile extends Fragment {
         theirPosts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SearchPost theirPosts = new SearchPost(2, foreignUser);
+                SearchPostFragment theirPosts = new SearchPostFragment(2, user,  foreignUser);
                 Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment, theirPosts, "findThisFragment")
                         .addToBackStack(null)
